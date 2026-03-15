@@ -1,0 +1,6 @@
+pos_data/
+output/
+input/*.csv
+input/*.xlsx
+__pycache__/
+.venv/
