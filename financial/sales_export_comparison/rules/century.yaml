@@ -1,0 +1,153 @@
+org_key: century
+org_display_name: Century
+client_header_label: TQSR
+sheet_date_format: "%b %d"
+stores:
+  - "2006"
+  - "2016"
+  - "2017"
+  - "2020"
+  - "2023"
+  - "2024"
+  - "2047"
+  - "4004"
+  - "4005"
+  - "4008"
+  - "4009"
+  - "4010"
+  - "4015"
+  - "4021"
+  - "4025"
+  - "4027"
+  - "4034"
+  - "4036"
+  - "4042"
+  - "4052"
+  - "4061"
+  - "4083"
+  - "5042"
+  - "5049"
+  - "5051"
+  - "5057"
+  - "5059"
+  - "5062"
+  - "5101"
+  - "5112"
+  - "5127"
+  - "6021"
+  - "6026"
+  - "6032"
+  - "6037"
+  - "6039"
+  - "6044"
+  - "6065"
+  - "6067"
+  - "6072"
+  - "6074"
+  - "6076"
+  - "6083"
+  - "6088"
+  - "6093"
+  - "6094"
+  - "6102"
+  - "7024"
+  - "7032"
+  - "7039"
+  - "7049"
+  - "7066"
+  - "13026"
+  - "13062"
+  - "13082"
+  - "13106"
+  - "13116"
+  - "13138"
+  - "13148"
+  - "13160"
+  - "13162"
+  - "13219"
+  - "37001"
+  - "37002"
+  - "37004"
+  - "37006"
+  - "37007"
+  - "37009"
+  - "37010"
+  - "37013"
+  - "37014"
+  - "37016"
+  - "49001"
+  - "49002"
+  - "49003"
+  - "49004"
+  - "49005"
+  - "49006"
+  - "49007"
+  - "49008"
+  - "49009"
+  - "49010"
+  - "49011"
+
+category_rows:
+  "Subject to Tax": 4
+  "Non-Taxable Sales": 5
+  "3rd Party Tax Exempt": 6
+  "Tax Exempt": 7
+  "Register Audit": 8
+  "Sales Tax": 9
+  "In-Store Credit Card": 10
+  "Payout": 11
+  "Online Credit Card": 12
+  "Online Credit card": 13
+  "Online Gift Card": 14
+  "Online Credit Card Tips": 15
+  "In-Store Credit Card Tips": 16
+  "Online Gift Card Tips": 17
+  "Gift Card": 18
+  "Gift Card Sold": 19
+  "3rd Party - UberEats": 20
+  "3rd Party - DoorDash": 21
+  "3rd Party - GrubHub": 22
+  "3rd Party - EZ Cater": 23
+  "House Account": 24
+  "Donation": 25
+  "Payin": 26
+  "Cash Over/Short Adjustment": 27
+  "Register Audit Adjustment": 28
+
+client:
+  format: csv
+  date_column: Date
+  store_column: Class
+  category_column: Transaction Category
+  debit_column: Debit
+  credit_column: Credit
+  memo_column: Memo
+  read_csv:
+    quotechar: "\""
+    on_bad_lines: skip
+  skip_category: SUMMARY
+  skip_zero_debit_credit: true
+  store_parse: strip
+  category_rewrites: {}
+  online_credit_card:
+    category_equals: "Online Credit Card"
+    memo_equals: "TQSR - Online Credit Card"
+    map_to: "Online Credit card"
+    skip_if_memo_no_match: true
+
+centech:
+  format: excel
+  date_column: Date
+  store_column: Class
+  category_column: Transaction Category
+  debit_column: Debit
+  credit_column: Credit
+  date_parse_format: "%d/%m/%Y"
+  skip_category: SUMMARY
+  skip_zero_debit_credit: true
+  store_parse: strip
+  category_rewrites:
+    "Online Credit Card": "Online Credit card"
+    "3rd Party - Grubhub": "3rd Party - GrubHub"
+
+mismatch_tolerance: 0.0

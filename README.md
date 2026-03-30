@@ -10,10 +10,18 @@ For full setup and usage instructions, see the payroll operations guide:
 
 ---
 
+## Financial Sales Export Comparison
+
+For setup and usage (local CSV/Excel sales comparison workbooks), see:
+
+[financial/FINANCIAL.md](financial/FINANCIAL.md)
+
+---
+
 ## Requirements
 
 - Python 3.10+
-- AWS CLI installed and configured
+- AWS CLI installed and configured (required for the payroll pipeline; not needed for financial sales comparison)
 
 ---
 

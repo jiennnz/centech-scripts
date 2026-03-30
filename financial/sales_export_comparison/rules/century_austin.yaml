@@ -1,0 +1,82 @@
+org_key: century_austin
+org_display_name: Century Austin Stores
+client_header_label: Gabe
+sheet_date_format: "%b %d"
+stores:
+  - "4028"
+  - "4041"
+  - "4055"
+  - "4062"
+  - "4064"
+  - "4071"
+  - "4078"
+  - "4079"
+  - "5124"
+  - "10013"
+  - "10023"
+  - "37017"
+  - "37019"
+
+category_rows:
+  "Subject to Tax": 4
+  "Non-Taxable Sales": 5
+  "3rd Party Tax Exempt": 6
+  "Tax Exempt": 7
+  "Register Audit": 8
+  "Sales Tax": 9
+  "In-Store Credit Card": 10
+  "Payout": 11
+  "Online Credit Card": 12
+  "Online Credit card": 13
+  "Online Gift Card": 14
+  "Online Credit Card Tips": 15
+  "In-Store Credit Card Tips": 16
+  "Online Gift Card Tips": 17
+  "Gift Card": 18
+  "Gift Card Sold": 19
+  "3rd Party - UberEats": 20
+  "3rd Party - DoorDash": 21
+  "3rd Party - GrubHub": 22
+  "3rd Party - EZ Cater": 23
+  "House Account": 24
+  "Donation": 25
+  "Payin": 26
+  "Cash Over/Short Adjustment": 27
+  "Register Audit Adjustment": 28
+
+client:
+  format: excel
+  date_column: JournalDate
+  store_column: Class
+  category_column: Description
+  debit_column: Debits
+  credit_column: Credits
+  skip_zero_debit_credit: true
+  store_parse: first_token
+  category_rewrites:
+    "OLO CC Deposit": "Online Credit card"
+    "Cash Over/Short-Cash Errors": "Cash Over/Short Adjustment"
+    "3rd Party - Grubhub": "3rd Party - GrubHub"
+    "Pay-in": "Payin"
+  category_starts_with:
+    "payout": "Payout"
+  round_debit_credit_for_categories:
+    - "Cash Over/Short Adjustment"
+
+centech:
+  format: excel
+  date_column: Date
+  store_column: Class
+  category_column: Transaction Category
+  debit_column: Debit
+  credit_column: Credit
+  date_parse_format: "%d/%m/%Y"
+  skip_category: SUMMARY
+  skip_zero_debit_credit: true
+  store_parse: strip
+  category_rewrites:
+    "Online Credit Card": "Online Credit card"
+    "3rd Party - Grubhub": "3rd Party - GrubHub"
+    "Pay-in": "Payin"
+
+mismatch_tolerance: 0.0

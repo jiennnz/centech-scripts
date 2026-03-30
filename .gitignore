@@ -4,3 +4,4 @@ input/*.xlsx
 __pycache__/
 .venv/
 payroll/runs
+financial/sales_export_comparison/runs
