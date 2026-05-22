@@ -42,6 +42,8 @@ class OrgRule:
     centech: SideInputConfig
     client: SideInputConfig
     mismatch_tolerance: float
+    ignored_categories: frozenset[str] = field(default_factory=frozenset)
+    qa: SideInputConfig | None = None
 
 
 def available_orgs(rules_dir: Path) -> list[str]:
@@ -120,10 +122,20 @@ def load_org_rule(org_key: str, rules_dir: Path) -> OrgRule:
     if not isinstance(client_raw, dict):
         raise ValueError(f"{path.name}: missing 'client' input block")
 
+    qa_raw = payload.get("qa")
+    qa_config: SideInputConfig | None = None
+    if isinstance(qa_raw, dict):
+        qa_config = _side(qa_raw, label=f"{path.name} qa")
+
     category_rows_raw = payload.get("category_rows") or {}
     if not isinstance(category_rows_raw, dict):
         raise ValueError(f"{path.name}: category_rows must be a mapping")
     category_rows = {str(k): int(v) for k, v in category_rows_raw.items()}
+
+    ignored_raw = payload.get("ignored_categories") or []
+    if not isinstance(ignored_raw, list):
+        raise ValueError(f"{path.name}: ignored_categories must be a list")
+    ignored_categories: frozenset[str] = frozenset(str(x).strip() for x in ignored_raw if str(x).strip())
 
     client_header = (
         payload.get("client_header_label")
@@ -141,4 +153,6 @@ def load_org_rule(org_key: str, rules_dir: Path) -> OrgRule:
         centech=_side(centech_raw, label=f"{path.name} centech"),
         client=_side(client_raw, label=f"{path.name} client"),
         mismatch_tolerance=float(payload.get("mismatch_tolerance", 0.0)),
+        ignored_categories=ignored_categories,
+        qa=qa_config,
     )

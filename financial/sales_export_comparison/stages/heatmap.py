@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -9,10 +9,23 @@ from openpyxl.styles import Font, PatternFill
 
 from financial.sales_export_comparison.stages.template_builder import TableLayout
 
-
-CT_OR_CLIENT_ONLY_FILL = PatternFill(fill_type="solid", start_color="FFEB9C", end_color="FFEB9C")
+CT_OR_CLIENT_ONLY_FILL = PatternFill(
+    fill_type="solid", start_color="FFEB9C", end_color="FFEB9C"
+)
 MISSING_FILL = PatternFill(fill_type="solid", start_color="FFC7CE", end_color="FFC7CE")
-WRONG_SIDE_FILL = PatternFill(fill_type="solid", start_color="FFB6C1", end_color="FFB6C1")
+WRONG_SIDE_FILL = PatternFill(
+    fill_type="solid", start_color="FFB6C1", end_color="FFB6C1"
+)
+
+
+_ALWAYS_EXCLUDED_HEATMAP_CATEGORIES = frozenset(
+    {
+        "cash over/short adjustment",
+        "cash over short adjustment",
+        "cash over/short adj",
+        "cash over short adj",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -22,6 +35,9 @@ class HeatmapConfig:
     category_rows: dict[str, int]
     tolerance: float = 0.0
     layout: TableLayout = TableLayout()
+    ignored_categories: frozenset[str] = field(default_factory=frozenset)
+    source_label: str = "Client"
+    centech_label: str = "CT"
 
 
 def _col_letter(n: int) -> str:
@@ -43,7 +59,9 @@ def _to_number(value: object) -> float:
         return 0.0
 
 
-def _build_store_mapping(ws, stores: list[str], layout: TableLayout) -> dict[str, dict[str, int]]:
+def _build_store_mapping(
+    ws, stores: list[str], layout: TableLayout
+) -> dict[str, dict[str, int]]:
     mapping: dict[str, dict[str, int]] = {}
     for idx, store in enumerate(stores):
         start_col = layout.start_col + (idx * layout.block_width)
@@ -56,7 +74,10 @@ def _build_store_mapping(ws, stores: list[str], layout: TableLayout) -> dict[str
     return mapping
 
 
-def _build_final_discrepancies(raw: dict[str, dict[str, dict[str, list]]]) -> dict[str, list[dict]]:
+def _build_final_discrepancies(
+    raw: dict[str, dict[str, dict[str, list]]],
+    source_label: str = "Client",
+) -> dict[str, list[dict]]:
     final: dict[str, list[dict]] = {date_sheet: [] for date_sheet in raw}
     for date_sheet, store_buckets in raw.items():
         for store_num, bucket in store_buckets.items():
@@ -71,7 +92,7 @@ def _build_final_discrepancies(raw: dict[str, dict[str, dict[str, list]]]) -> di
                         "client_debit": "-",
                         "client_credit": "-",
                         "variance": "-",
-                        "issue_type": "CT Only - No Client Data",
+                        "issue_type": f"CT Only - No {source_label} Data",
                         "color": "ct_or_client_only",
                     }
                 )
@@ -86,12 +107,17 @@ def _build_final_discrepancies(raw: dict[str, dict[str, dict[str, list]]]) -> di
                         "client_debit": "-",
                         "client_credit": "-",
                         "variance": "-",
-                        "issue_type": "Client Only - No CT Data",
+                        "issue_type": f"{source_label} Only - No CT Data",
                         "color": "ct_or_client_only",
                     }
                 )
             final[date_sheet].extend(bucket["mismatches"])
     return final
+
+
+def _is_always_excluded_heatmap_category(category: str) -> bool:
+    normalized = str(category).strip().lower()
+    return normalized in _ALWAYS_EXCLUDED_HEATMAP_CATEGORIES
 
 
 def run(config: HeatmapConfig) -> Path:
@@ -104,7 +130,11 @@ def run(config: HeatmapConfig) -> Path:
         wb.remove(wb["Discrepancies"])
 
     date_sheets = [s for s in wb.sheetnames if s not in {"Heatmap", "Discrepancies"}]
-    categories = list(config.category_rows.keys())
+    categories = [
+        c
+        for c in config.category_rows.keys()
+        if not _is_always_excluded_heatmap_category(c)
+    ]
 
     heatmap = wb.create_sheet("Heatmap", 0)
     heatmap["A1"] = "Category Match Heatmap"
@@ -121,7 +151,9 @@ def run(config: HeatmapConfig) -> Path:
     for idx, category in enumerate(categories):
         heatmap[f"C{6 + idx}"] = category
 
-    raw: dict[str, dict[str, dict[str, list]]] = {date_sheet: {} for date_sheet in date_sheets}
+    raw: dict[str, dict[str, dict[str, list]]] = {
+        date_sheet: {} for date_sheet in date_sheets
+    }
 
     for date_idx, date_sheet in enumerate(date_sheets):
         ws = wb[date_sheet]
@@ -134,6 +166,13 @@ def run(config: HeatmapConfig) -> Path:
             out_row = 6 + cat_idx
             is_raa = category == "Register Audit Adjustment"
 
+            if (
+                category in config.ignored_categories
+                or _is_always_excluded_heatmap_category(category)
+            ):
+                heatmap[f"{data_col}{out_row}"] = "N/A"
+                continue
+
             matches = 0
             stores_with_client_data = 0
 
@@ -143,10 +182,18 @@ def run(config: HeatmapConfig) -> Path:
                 if not cols:
                     continue
 
-                ct_debit = _to_number(ws_read.cell(row=row_num, column=cols["ct_debit"]).value)
-                ct_credit = _to_number(ws_read.cell(row=row_num, column=cols["ct_credit"]).value)
-                cl_debit = _to_number(ws_read.cell(row=row_num, column=cols["client_debit"]).value)
-                cl_credit = _to_number(ws_read.cell(row=row_num, column=cols["client_credit"]).value)
+                ct_debit = round(_to_number(
+                    ws_read.cell(row=row_num, column=cols["ct_debit"]).value
+                ), 2)
+                ct_credit = round(_to_number(
+                    ws_read.cell(row=row_num, column=cols["ct_credit"]).value
+                ), 2)
+                cl_debit = round(_to_number(
+                    ws_read.cell(row=row_num, column=cols["client_debit"]).value
+                ), 2)
+                cl_credit = round(_to_number(
+                    ws_read.cell(row=row_num, column=cols["client_credit"]).value
+                ), 2)
 
                 ct_has_debit = abs(ct_debit) > config.tolerance
                 ct_has_credit = abs(ct_credit) > config.tolerance
@@ -156,7 +203,11 @@ def run(config: HeatmapConfig) -> Path:
                 cl_has_data = cl_has_debit or cl_has_credit
 
                 if store_key not in raw[date_sheet]:
-                    raw[date_sheet][store_key] = {"ct_only": [], "client_only": [], "mismatches": []}
+                    raw[date_sheet][store_key] = {
+                        "ct_only": [],
+                        "client_only": [],
+                        "mismatches": [],
+                    }
                 bucket = raw[date_sheet][store_key]
 
                 if not ct_has_data and not cl_has_data:
@@ -176,27 +227,36 @@ def run(config: HeatmapConfig) -> Path:
                 issue_details: list[str] = []
                 color: str | None = None
 
+                lbl = config.source_label
                 if is_raa:
                     if ct_has_data and not cl_has_data:
                         is_match = False
                         color = "ct_or_client_only"
-                        issue_details.append("RAA: CenTech Has Data (Client Empty)")
+                        issue_details.append(f"RAA: CenTech Has Data ({lbl} Empty)")
                     elif cl_has_data and not ct_has_data:
                         is_match = True
                     else:
                         if cl_has_debit:
                             if not ct_has_debit:
-                                issue_details.append("RAA: Client debit but CT missing/on credit")
+                                issue_details.append(
+                                    f"RAA: {lbl} debit but CT missing/on credit"
+                                )
                                 is_match = False
                             elif abs(ct_debit - cl_debit) > config.tolerance:
-                                issue_details.append(f"RAA: Debit mismatch (${abs(ct_debit - cl_debit):.2f})")
+                                issue_details.append(
+                                    f"RAA: Debit mismatch (${abs(ct_debit - cl_debit):.2f})"
+                                )
                                 is_match = False
                         if cl_has_credit:
                             if not ct_has_credit:
-                                issue_details.append("RAA: Client credit but CT missing/on debit")
+                                issue_details.append(
+                                    f"RAA: {lbl} credit but CT missing/on debit"
+                                )
                                 is_match = False
                             elif abs(ct_credit - cl_credit) > config.tolerance:
-                                issue_details.append(f"RAA: Credit mismatch (${abs(ct_credit - cl_credit):.2f})")
+                                issue_details.append(
+                                    f"RAA: Credit mismatch (${abs(ct_credit - cl_credit):.2f})"
+                                )
                                 is_match = False
                 else:
                     if cl_has_debit:
@@ -204,10 +264,14 @@ def run(config: HeatmapConfig) -> Path:
                             issue_details.append("CT missing debit")
                             is_match = False
                         elif abs(ct_debit - cl_debit) > config.tolerance:
-                            issue_details.append(f"Debit: CT ${ct_debit:.2f} vs Client ${cl_debit:.2f}")
+                            issue_details.append(
+                                f"Debit: CT ${ct_debit:.2f} vs {lbl} ${cl_debit:.2f}"
+                            )
                             is_match = False
                         if ct_has_credit:
-                            issue_details.append("CT has credit when Client has debit (wrong side)")
+                            issue_details.append(
+                                f"CT has credit when {lbl} has debit (wrong side)"
+                            )
                             is_match = False
 
                     if cl_has_credit:
@@ -215,10 +279,14 @@ def run(config: HeatmapConfig) -> Path:
                             issue_details.append("CT missing credit")
                             is_match = False
                         elif abs(ct_credit - cl_credit) > config.tolerance:
-                            issue_details.append(f"Credit: CT ${ct_credit:.2f} vs Client ${cl_credit:.2f}")
+                            issue_details.append(
+                                f"Credit: CT ${ct_credit:.2f} vs {lbl} ${cl_credit:.2f}"
+                            )
                             is_match = False
                         if ct_has_debit:
-                            issue_details.append("CT has debit when Client has credit (wrong side)")
+                            issue_details.append(
+                                f"CT has debit when {lbl} has credit (wrong side)"
+                            )
                             is_match = False
 
                     if not is_match:
@@ -268,34 +336,55 @@ def run(config: HeatmapConfig) -> Path:
         )
         heatmap.conditional_formatting.add(data_range, rule)
 
-    disc_sheet = wb.create_sheet("Discrepancies")
+    disc_sheet = wb.create_sheet("Discrepancies", 1)
     disc_sheet["A1"] = "All Discrepancies"
     disc_sheet["A1"].font = Font(bold=True, size=16)
     current_row = 3
 
-    date_discrepancies = _build_final_discrepancies(raw)
+    date_discrepancies = _build_final_discrepancies(raw, config.source_label)
     for date_sheet in date_sheets:
         discrepancies = date_discrepancies[date_sheet]
         if not discrepancies:
             continue
 
-        disc_sheet[f"A{current_row}"] = f"{date_sheet} - {len(discrepancies)} discrepancies"
+        disc_sheet[f"A{current_row}"] = (
+            f"{date_sheet} - {len(discrepancies)} discrepancies"
+        )
         disc_sheet[f"A{current_row}"].font = Font(bold=True, size=12, color="FFFFFF")
-        disc_sheet[f"A{current_row}"].fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+        disc_sheet[f"A{current_row}"].fill = PatternFill(
+            start_color="4472C4", end_color="4472C4", fill_type="solid"
+        )
         disc_sheet.merge_cells(f"A{current_row}:H{current_row}")
         current_row += 1
 
-        headers = ["Store", "Category", "CT Debit", "CT Credit", "Client Debit", "Client Credit", "Net Variance", "Issue Type"]
+        headers = [
+            "Store",
+            "Category",
+            f"{config.centech_label} Debit",
+            f"{config.centech_label} Credit",
+            f"{config.source_label} Debit",
+            f"{config.source_label} Credit",
+            "Net Variance",
+            "Issue Type",
+        ]
         for col_idx, header in enumerate(headers, start=1):
             c = disc_sheet.cell(row=current_row, column=col_idx, value=header)
             c.font = Font(bold=True)
-            c.fill = PatternFill(start_color="D3D3D3", end_color="D3D3D3", fill_type="solid")
+            c.fill = PatternFill(
+                start_color="D3D3D3", end_color="D3D3D3", fill_type="solid"
+            )
         current_row += 1
 
         for disc in discrepancies:
             disc_sheet.cell(row=current_row, column=1, value=disc["store"])
             disc_sheet.cell(row=current_row, column=2, value=disc["category"])
-            for col_idx, key in [(3, "ct_debit"), (4, "ct_credit"), (5, "client_debit"), (6, "client_credit"), (7, "variance")]:
+            for col_idx, key in [
+                (3, "ct_debit"),
+                (4, "ct_credit"),
+                (5, "client_debit"),
+                (6, "client_credit"),
+                (7, "variance"),
+            ]:
                 cell = disc_sheet.cell(row=current_row, column=col_idx)
                 val = disc[key]
                 if val == "-":

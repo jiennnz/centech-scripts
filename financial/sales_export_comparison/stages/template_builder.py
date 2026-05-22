@@ -22,13 +22,13 @@ _CF_CELL_REF_RE = re.compile(
 @dataclass(frozen=True)
 class TableLayout:
     start_row: int = 1
-    end_row: int = 30
+    end_row: int = 31
     start_col: int = 2  # B
     end_col: int = 5  # E
     spacer_cols: int = 1
     category_col: int = 1  # A
     data_start_row: int = 4
-    data_end_row: int = 29
+    data_end_row: int = 30
 
     @property
     def width(self) -> int:
@@ -172,19 +172,41 @@ def _append_shifted_conditional_formatting(
     ws: Worksheet,
     template_cfs: list,
     col_shift: int,
+    row_filter: tuple[int, int] | None = None,
 ) -> None:
-    """Duplicate template CF rules shifted horizontally (extra store table blocks)."""
+    """Duplicate template CF rules shifted horizontally (extra store table blocks).
+
+    row_filter: if given, only apply rules whose sqref overlaps [min_row, max_row].
+    """
     for cf in template_cfs:
         new_ranges: list[CellRange] = []
         for cr in cf.sqref:
-            new_ranges.append(
-                CellRange(
-                    min_col=cr.min_col + col_shift,
-                    min_row=cr.min_row,
-                    max_col=cr.max_col + col_shift,
-                    max_row=cr.max_row,
+            if row_filter is not None:
+                filter_min, filter_max = row_filter
+                # Keep only the intersection with the allowed row band.
+                intersect_min = max(cr.min_row, filter_min)
+                intersect_max = min(cr.max_row, filter_max)
+                if intersect_min > intersect_max:
+                    continue
+                new_ranges.append(
+                    CellRange(
+                        min_col=cr.min_col + col_shift,
+                        min_row=intersect_min,
+                        max_col=cr.max_col + col_shift,
+                        max_row=intersect_max,
+                    )
                 )
-            )
+            else:
+                new_ranges.append(
+                    CellRange(
+                        min_col=cr.min_col + col_shift,
+                        min_row=cr.min_row,
+                        max_col=cr.max_col + col_shift,
+                        max_row=cr.max_row,
+                    )
+                )
+        if not new_ranges:
+            continue
         new_sqref = MultiCellRange(new_ranges)
         sqref_str = str(new_sqref)
 
@@ -210,11 +232,12 @@ def _stamp_store_headers(
     stores: list[str],
     source_label: str,
     layout: TableLayout,
+    centech_label: str = "CenTech",
 ) -> None:
     for idx, store in enumerate(stores):
         start_col, centech_col, source_col = _header_cells_for_table(layout, idx)
         ws.cell(1, start_col).value = f"Store {store}"
-        ws.cell(2, centech_col).value = "CenTech"
+        ws.cell(2, centech_col).value = centech_label
         ws.cell(2, source_col).value = source_label
 
 
@@ -232,6 +255,8 @@ def build_template_workbook(
     source_label: str,
     sheet_name_format: str = "%Y-%m-%d",
     layout: TableLayout = DEFAULT_LAYOUT,
+    centech_only: bool = False,
+    centech_label: str = "CenTech",
 ) -> Path:
     if not stores:
         raise ValueError("At least one store is required.")
@@ -254,8 +279,9 @@ def build_template_workbook(
                 new_sheet,
                 template_cf,
                 col_shift=idx * layout.block_width,
+                row_filter=(layout.end_row, layout.end_row) if centech_only else None,
             )
-        _stamp_store_headers(new_sheet, stores=stores, source_label=source_label, layout=layout)
+        _stamp_store_headers(new_sheet, stores=stores, source_label=source_label, layout=layout, centech_label=centech_label)
 
     workbook.remove(template_sheet)
     output_path.parent.mkdir(parents=True, exist_ok=True)

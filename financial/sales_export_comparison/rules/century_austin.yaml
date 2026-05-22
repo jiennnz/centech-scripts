@@ -11,6 +11,7 @@ stores:
   - "4071"
   - "4078"
   - "4079"
+  - "4089"
   - "5124"
   - "10013"
   - "10023"
@@ -42,7 +43,8 @@ category_rows:
   "Donation": 25
   "Payin": 26
   "Cash Over/Short Adjustment": 27
-  "Register Audit Adjustment": 28
+  "Discarded CC": 28
+  "Register Audit Adjustment": 29
 
 client:
   format: excel
@@ -70,7 +72,7 @@ centech:
   category_column: Transaction Category
   debit_column: Debit
   credit_column: Credit
-  date_parse_format: "%d/%m/%Y"
+  date_parse_format: "%m/%d/%Y"
   skip_category: SUMMARY
   skip_zero_debit_credit: true
   store_parse: strip
@@ -80,3 +82,21 @@ centech:
     "Pay-in": "Payin"
 
 mismatch_tolerance: 0.0
+
+# QA config — used when pos_computed.csv is fed as source (--pos-data-dir).
+# No memo_column / online_credit_card handling; category names are already canonical.
+qa:
+  format: csv
+  date_column: Date
+  store_column: Class
+  category_column: Transaction Category
+  debit_column: Debit
+  credit_column: Credit
+  skip_zero_debit_credit: true
+  store_parse: strip
+  category_rewrites: {}
+
+# Categories listed here are skipped during comparison — no highlights or discrepancy entries.
+# Example: ignore Donation
+# ignored_categories:
+#   - "Donation"

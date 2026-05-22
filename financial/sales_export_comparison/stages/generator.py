@@ -8,7 +8,7 @@ import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
 
-from financial.sales_export_comparison.rules import OrgRule
+from financial.sales_export_comparison.rules import OrgRule, SideInputConfig
 
 
 @dataclass(frozen=True)
@@ -16,9 +16,11 @@ class WorkbookFillConfig:
     workbook_path: Path
     org_rule: OrgRule
     centech_path: Path
-    client_path: Path
     start_date: date
     end_date: date
+    client_path: Path | None = None
+    client_side_config: "SideInputConfig | None" = None  # overrides org_rule.client when set
+    centech_side_config: "SideInputConfig | None" = None  # overrides org_rule.centech when set
 
 
 @dataclass(frozen=True)
@@ -241,23 +243,28 @@ def run(config: WorkbookFillConfig) -> WorkbookFillResult:
 
     wb = load_workbook(config.workbook_path)
 
-    df_client = _read_side_frame(config.client_path, rule.client)
-    df_centech = _read_side_frame(config.centech_path, rule.centech)
+    centech_cfg = config.centech_side_config or rule.centech
+    df_centech = _read_side_frame(config.centech_path, centech_cfg)
 
-    client_n = _process_side(
-        wb,
-        df_client,
-        rule.client,
-        category_rows,
-        column_offsets=(2, 3),
-        start_date=config.start_date,
-        end_date=config.end_date,
-        sheet_date_format=rule.sheet_date_format,
-    )
+    client_cfg = config.client_side_config or rule.client
+    client_n = 0
+    if config.client_path is not None:
+        df_client = _read_side_frame(config.client_path, client_cfg)
+        client_n = _process_side(
+            wb,
+            df_client,
+            client_cfg,
+            category_rows,
+            column_offsets=(2, 3),
+            start_date=config.start_date,
+            end_date=config.end_date,
+            sheet_date_format=rule.sheet_date_format,
+        )
+
     centech_n = _process_side(
         wb,
         df_centech,
-        rule.centech,
+        centech_cfg,
         category_rows,
         column_offsets=(0, 1),
         start_date=config.start_date,

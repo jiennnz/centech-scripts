@@ -112,7 +112,8 @@ category_rows:
   "Donation": 25
   "Payin": 26
   "Cash Over/Short Adjustment": 27
-  "Register Audit Adjustment": 28
+  "Discarded CC": 28
+  "Register Audit Adjustment": 29
 
 client:
   format: csv
@@ -123,7 +124,7 @@ client:
   credit_column: Credit
   memo_column: Memo
   read_csv:
-    quotechar: "\""
+    quotechar: '"'
     on_bad_lines: skip
   skip_category: SUMMARY
   skip_zero_debit_credit: true
@@ -142,7 +143,7 @@ centech:
   category_column: Transaction Category
   debit_column: Debit
   credit_column: Credit
-  date_parse_format: "%d/%m/%Y"
+  date_parse_format: "%m/%d/%Y"
   skip_category: SUMMARY
   skip_zero_debit_credit: true
   store_parse: strip
@@ -151,3 +152,24 @@ centech:
     "3rd Party - Grubhub": "3rd Party - GrubHub"
 
 mismatch_tolerance: 0.0
+
+# QA config — used when pos_computed.csv is fed as source (--pos-data-dir).
+# No memo_column / online_credit_card handling; category names are already canonical.
+qa:
+  format: csv
+  date_column: Date
+  store_column: Class
+  category_column: Transaction Category
+  debit_column: Debit
+  credit_column: Credit
+  skip_zero_debit_credit: true
+  store_parse: strip
+  category_rewrites: {}
+
+# Categories listed here are skipped during comparison — no highlights or discrepancy entries.
+# ignored_categories:
+#   - "Donation"
+ignored_categories:
+  - "Online Credit Card Tips"
+  - "Online Gift Card Tips"
+  - "Cash Over/Short Adjustment"
