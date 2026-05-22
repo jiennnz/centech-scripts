@@ -41,6 +41,7 @@ centech-scripts/
     FINANCIAL.md                     ← this guide
     sales_export_comparison/
       run.py                         ← pipeline entrypoint
+      CATEGORY_CALCULATIONS.md      ← verifier formula reference
       rules/                         ← org-specific column mappings and stores
         century.yaml
         century_austin.yaml
@@ -50,12 +51,26 @@ centech-scripts/
         template_builder.py          ← Stage 1: workbook shell
         generator.py                 ← Stage 2: fill from exports
         heatmap.py                   ← Stage 3: mismatch formatting
+        verifier.py                  ← QA: computes categories from raw POS files
+        diagnostics.py               ← Stage 4: diagnostics tab
       runs/                          ← auto-created per period + org
-        2026-03-01_2026-03-06/
+        2026-04-01_2026-04-30/
           century_austin/
-            input/                   ← centech_export + client_export archived here
-            output/
-              Sales_Comparison_2026-03-01_2026-03-06.xlsx
+            centech_vs_client/       ← CenTech export vs client GL
+            centech_vs_qa/           ← CenTech export vs QA (POS-computed)
+            qa_vs_client/            ← QA (POS-computed) vs client GL
+              input/                 ← client_export archived here
+              output/
+                Sales_Comparison_2026-04-01_2026-04-30.xlsx
+                pos_computed.csv     ← QA-computed values written here
+  pos_data/                          ← raw POS export folders (YYYY-MM-DD/)
+    2026-04-01/
+      Sales_Ticket.txt
+      Sales_Ticket_Summary.txt
+      Payment.txt
+      Store_Transactions.txt
+      DailyJournal.txt
+      Store.txt
 ```
 
 You may drop the two input files in the **repo root** before the first run; the pipeline moves them into the run folder’s `input/` directory (same idea as payroll moving `Timesheet*.csv`).
@@ -177,6 +192,31 @@ Adding a new org: copy an existing YAML, adjust keys and columns to match that c
 
 ---
 
+## Run Modes
+
+| Mode | Left side | Right side | Flag |
+|------|-----------|------------|------|
+| CenTech vs Client | CenTech export | Client GL export | (default) |
+| CenTech vs QA | CenTech export | QA (POS-computed) | `--pos-data-dir` |
+| QA vs Client | QA (POS-computed) | Client GL export | `--pos-data-dir --qa-left` |
+
+**QA mode** computes every financial category directly from raw POS files in `pos_data/`. See `CATEGORY_CALCULATIONS.md` for the full formula reference.
+
+### Running QA vs Client
+
+```powershell
+python financial/sales_export_comparison/run.py `
+  --start "Apr 1 2026" --end "Apr 30 2026" `
+  --org century_austin `
+  --qa-left `
+  --pos-data-dir pos_data `
+  --source-csv "financial/sales_export_comparison/runs/2026-04-01_2026-04-30/century_austin/centech_vs_client/input/client_export.csv"
+```
+
+The verifier scans `pos_data/` plus 14 extra days past `--end` to capture payments, transactions, and ticket summaries recorded in later folders but attributed to dates in the requested period. It writes `pos_computed.csv` to the run’s `output/` folder before filling the workbook.
+
+---
+
 ## Stages (Status)
 
 | Stage | Module | Status |
@@ -184,8 +224,10 @@ Adding a new org: copy an existing YAML, adjust keys and columns to match that c
 | 1 — Template | `stages/template_builder.py` | Done |
 | 2 — Generator | `stages/generator.py` | Done |
 | 3 — Heatmap | `stages/heatmap.py` | Done |
+| 4 — Diagnostics | `stages/diagnostics.py` | Done |
+| QA Verifier | `stages/verifier.py` | Done |
 
-All stages are wired into `financial/sales_export_comparison/run.py` (except Stage 2 and 3 are skipped when `--skip-data` is set).
+All stages are wired into `financial/sales_export_comparison/run.py` (except Stage 2, 3, and 4 are skipped when `--skip-data` is set).
 
 ### Stage 1 — Template builder
 
@@ -198,6 +240,21 @@ Reads the CenTech and client files according to the org rule, filters by date ra
 ### Stage 3 — Heatmap
 
 Compares CenTech vs client amounts per category and store, applies fills for mismatches, missing-on-one-side, and color scales to surface discrepancies quickly.
+
+### Stage 4 — Diagnostics
+
+Writes a Diagnostics tab summarizing per-store category totals and known issues.
+
+### QA Verifier (`verifier.py`)
+
+Reads raw POS files from `pos_data/<YYYY-MM-DD>/` and computes all financial categories for each store × date. Output is `pos_computed.csv` which feeds into Stage 2 as the left (QA) or right (CenTech vs QA) side.
+
+Key behaviors:
+- **Cross-date payments and ticket sales**: Payment.txt, Sales_Ticket.txt, and Sales_Ticket_Summary.txt scanned across end_date + 14 days; paid tickets are attributed by `Payment_Date`, not folder date.
+- **Cross-date transactions**: Store_Transactions.txt same 14-day window; payouts and payins attributed by `Transaction_Date`.
+- **Voided payouts**: `Transaction_ID` entries with a matching `Status == "Void"` row in the same date slice are excluded from payout totals.
+- **Gift Card Sold in ISCC**: only the CC-paid portion (`Payment_Type_ID == 14`) of gift card sold tickets is added to ISCC; cash-paid GC purchases are excluded from the CC total.
+- **Online refund handling**: refund tickets with tlen=32 payments are excluded from ISCC/ISCCT (to prevent the Tip_Paid=False row misclassifying as in-store CC), but are **included** in Online CC — their negative rows net against the original charge, matching client OLO deposit behaviour.
 
 ---
 
