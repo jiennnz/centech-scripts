@@ -24,9 +24,27 @@ from payroll.stages.s3_sync.sync import (
 )
 
 EXCLUDED_STORE_NUMBERS = {
-    4055, 5005, 13067, 13070, 13099, 13109,
-    4028, 4041, 4062, 4064, 4071, 4078,
-    4079, 5124, 10013, 10023, 37017, 37019, 4069
+    4055,
+    5005,
+    13067,
+    13070,
+    13099,
+    13109,
+    4028,
+    4041,
+    4062,
+    4064,
+    4071,
+    4078,
+    4079,
+    5124,
+    10013,
+    10023,
+    37017,
+    37019,
+    4069,
+    4089,
+    5043,
 }
 
 OUTPUT_HOURS_SUMMARY = "Employee_Hours_Summary.json"
@@ -40,6 +58,7 @@ class AttendanceConfig:
     end_date: date
     pos_data_root: Path
     output_dir: Path
+    use_end_plus_one_timeclock: bool = True
 
 
 @dataclass
@@ -54,7 +73,9 @@ def detect_encoding(file_path: Path) -> str:
         return chardet.detect(f.read())["encoding"]
 
 
-def load_employee_mapping(pos_data_root: Path, sync_dates: List[date]) -> Dict[str, str]:
+def load_employee_mapping(
+    pos_data_root: Path, sync_dates: List[date]
+) -> Dict[str, str]:
     for d in sync_dates:
         emp_file = pos_data_root / fmt_iso(d) / "Employee.txt"
         if emp_file.exists():
@@ -166,61 +187,98 @@ def run(config: AttendanceConfig) -> AttendanceResult:
         f"{config.end_date.strftime('%Y-%m-%d')} 23:59:59", DT_FMT
     )
     extra_day = config.end_date + timedelta(days=1)
+    timeclock_source_date = (
+        extra_day if config.use_end_plus_one_timeclock else config.end_date
+    )
+    timeclock_source_label = (
+        "end+1 day" if config.use_end_plus_one_timeclock else "end date"
+    )
 
-    # Use extra_day first for mappings — it has the most up-to-date employee/store data
-    all_date_folders = [extra_day, config.start_date]
+    # Use the selected timeclock source first for mappings.
+    all_date_folders = [timeclock_source_date, config.start_date]
     employee_mapping = load_employee_mapping(config.pos_data_root, all_date_folders)
     store_mapping = load_store_mapping(config.pos_data_root, all_date_folders)
-    print(f"[attendance] {len(employee_mapping)} employees, {len(store_mapping)} stores.")
+    print(
+        f"[attendance] {len(employee_mapping)} employees, {len(store_mapping)} stores."
+    )
 
     # Load timeclock rows from exactly two files
     all_rows: List[Dict] = []
 
     # 1) Start date folder — spillover candidates only (Clock_In before pay period start)
-    start_tc = config.pos_data_root / fmt_iso(config.start_date) / "Employee_Time_Clock.txt"
+    start_tc = (
+        config.pos_data_root / fmt_iso(config.start_date) / "Employee_Time_Clock.txt"
+    )
     if start_tc.exists():
         rows = load_timeclock_rows(start_tc)
         spillover_candidates = [
-            r for r in rows
-            if r.get("Start", "").strip() and
-            datetime.strptime(r["Start"].strip(), DT_FMT) < period_start
+            r
+            for r in rows
+            if r.get("Start", "").strip()
+            and datetime.strptime(r["Start"].strip(), DT_FMT) < period_start
         ]
-        print(f"[attendance] {len(spillover_candidates)} spillover candidate(s) from start folder ({fmt_iso(config.start_date)}) out of {len(rows)} rows")
+        print(
+            f"[attendance] {len(spillover_candidates)} spillover candidate(s) from start folder ({fmt_iso(config.start_date)}) out of {len(rows)} rows"
+        )
         all_rows.extend(spillover_candidates)
     else:
         print(f"[attendance] No timeclock at start folder: {start_tc}")
 
-    # 2) End + 1 day folder — main timeclock data for the pay period
-    extra_tc = config.pos_data_root / fmt_iso(extra_day) / "Employee_Time_Clock.txt"
-    if extra_tc.exists():
-        rows = load_timeclock_rows(extra_tc)
-        print(f"[attendance] {len(rows)} rows from extra day folder ({fmt_iso(extra_day)})")
+    # 2) Selected source folder - main timeclock data for the pay period
+    main_tc = (
+        config.pos_data_root
+        / fmt_iso(timeclock_source_date)
+        / "Employee_Time_Clock.txt"
+    )
+    if main_tc.exists():
+        rows = load_timeclock_rows(main_tc)
+        print(
+            f"[attendance] {len(rows)} rows from {timeclock_source_label} folder ({fmt_iso(timeclock_source_date)})"
+        )
         all_rows.extend(rows)
     else:
-        print(f"[attendance] No timeclock at extra day folder: {extra_tc}")
+        print(f"[attendance] No timeclock at {timeclock_source_label} folder: {main_tc}")
 
     # Deduplicate
     seen = set()
     unique_rows = []
     for row in all_rows:
-        key = (row.get("Store_ID"), row.get("Employee_ID"), row.get("Start"), row.get("End"))
+        key = (
+            row.get("Store_ID"),
+            row.get("Employee_ID"),
+            row.get("Start"),
+            row.get("End"),
+        )
         if key not in seen:
             seen.add(key)
             unique_rows.append(row)
-    print(f"[attendance] {len(unique_rows)} unique rows (from {len(all_rows)} total after dedup).")
+    print(
+        f"[attendance] {len(unique_rows)} unique rows (from {len(all_rows)} total after dedup)."
+    )
 
     # Filter to pay period and clip boundaries
-    filtered_rows, spillover_count = filter_and_clip_rows(unique_rows, period_start, period_end)
-    print(f"[attendance] {len(filtered_rows)} rows in pay period. {spillover_count} spillover(s) clipped.")
+    filtered_rows, spillover_count = filter_and_clip_rows(
+        unique_rows, period_start, period_end
+    )
+    print(
+        f"[attendance] {len(filtered_rows)} rows in pay period. {spillover_count} spillover(s) clipped."
+    )
 
     # Collect date range metadata
-    all_dates = (
-        [r["Start"] for r in filtered_rows if r.get("Start")] +
-        [r["End"] for r in filtered_rows if r.get("End")]
-    )
+    all_dates = [r["Start"] for r in filtered_rows if r.get("Start")] + [
+        r["End"] for r in filtered_rows if r.get("End")
+    ]
     parsed_dates = [datetime.strptime(d, DT_FMT) for d in all_dates]
-    min_date = min(parsed_dates).strftime(DT_FMT) if parsed_dates else period_start.strftime(DT_FMT)
-    max_date = max(parsed_dates).strftime(DT_FMT) if parsed_dates else period_end.strftime(DT_FMT)
+    min_date = (
+        min(parsed_dates).strftime(DT_FMT)
+        if parsed_dates
+        else period_start.strftime(DT_FMT)
+    )
+    max_date = (
+        max(parsed_dates).strftime(DT_FMT)
+        if parsed_dates
+        else period_end.strftime(DT_FMT)
+    )
 
     # Group by store and compute hours
     store_data: Dict[str, List] = defaultdict(list)
@@ -234,7 +292,9 @@ def run(config: AttendanceConfig) -> AttendanceResult:
         if not start or not end:
             continue
 
-        employee_number = employee_mapping.get(employee_id, employee_id).strip() or employee_id
+        employee_number = (
+            employee_mapping.get(employee_id, employee_id).strip() or employee_id
+        )
         store_number = store_mapping.get(store_id, store_id)
 
         try:
@@ -249,7 +309,7 @@ def run(config: AttendanceConfig) -> AttendanceResult:
             "Clock_Out": end,
             "Hours_Worked": calculate_hours(start, end),
         }
-        
+
         store_data[store_number].append(entry)
 
     # Build final outputs
@@ -261,7 +321,9 @@ def run(config: AttendanceConfig) -> AttendanceResult:
     }
     employee_hours_output = {}
 
-    for store_number, entries in tqdm(store_data.items(), desc="[attendance] Computing totals"):
+    for store_number, entries in tqdm(
+        store_data.items(), desc="[attendance] Computing totals"
+    ):
         total_hours = 0.0
         employees: Dict[str, List] = defaultdict(list)
 
@@ -328,7 +390,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generate employee hours summary from timeclock data."
     )
-    parser.add_argument("--start", type=str, help="Pay period start (e.g. 'Mar 9 2026')")
+    parser.add_argument(
+        "--start", type=str, help="Pay period start (e.g. 'Mar 9 2026')"
+    )
     parser.add_argument("--end", type=str, help="Pay period end (e.g. 'Mar 22 2026')")
     parser.add_argument("--pos-data-root", type=str, default=DEFAULT_POS_DATA_ROOT)
     parser.add_argument(
@@ -336,6 +400,15 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         default=None,
         help="Output directory (default: payroll/runs/<period>/output)",
+    )
+    parser.add_argument(
+        "--timeclock-source",
+        choices=("end+1", "end"),
+        default=None,
+        help=(
+            "Employee_Time_Clock source folder for main attendance rows: "
+            "'end+1' uses the day after the pay period, 'end' uses the pay period end date."
+        ),
     )
     return parser
 
@@ -352,14 +425,34 @@ def _prompt_date(label: str) -> date:
             print(exc)
 
 
+def _prompt_timeclock_source() -> bool:
+    while True:
+        raw = input(
+            "Employee_Time_Clock source: use end+1 date folder? [Y/n]: "
+        ).strip().lower()
+        if raw in {"", "y", "yes"}:
+            return True
+        if raw in {"n", "no"}:
+            return False
+        print("Enter Y to use end+1, or N to use the end date folder.")
+
+
 def main() -> None:
     args = build_parser().parse_args()
 
-    start_date = parse_date_flexible(args.start) if args.start else _prompt_date("Start date: ")
+    start_date = (
+        parse_date_flexible(args.start) if args.start else _prompt_date("Start date: ")
+    )
     end_date = parse_date_flexible(args.end) if args.end else _prompt_date("End date: ")
 
     if start_date > end_date:
         raise SystemExit("Start date must be <= end date.")
+
+    use_end_plus_one_timeclock = (
+        args.timeclock_source == "end+1"
+        if args.timeclock_source
+        else _prompt_timeclock_source()
+    )
 
     period_key = build_pay_period_key(start_date, end_date)
     output_dir = (
@@ -368,12 +461,15 @@ def main() -> None:
         else _REPO_ROOT / "payroll" / "runs" / period_key / "output"
     )
 
-    run(AttendanceConfig(
-        start_date=start_date,
-        end_date=end_date,
-        pos_data_root=Path(args.pos_data_root),
-        output_dir=output_dir,
-    ))
+    run(
+        AttendanceConfig(
+            start_date=start_date,
+            end_date=end_date,
+            pos_data_root=Path(args.pos_data_root),
+            output_dir=output_dir,
+            use_end_plus_one_timeclock=use_end_plus_one_timeclock,
+        )
+    )
 
 
 if __name__ == "__main__":

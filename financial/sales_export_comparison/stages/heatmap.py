@@ -165,6 +165,7 @@ def run(config: HeatmapConfig) -> Path:
             row_num = int(config.category_rows[category])
             out_row = 6 + cat_idx
             is_raa = category == "Register Audit Adjustment"
+            is_register_audit = category.lower().strip() == "register audit"
 
             if (
                 category in config.ignored_categories
@@ -213,8 +214,9 @@ def run(config: HeatmapConfig) -> Path:
                 if not ct_has_data and not cl_has_data:
                     continue
 
-                if ct_has_data and not cl_has_data and not is_raa:
-                    bucket["ct_only"].append(category)
+                if ct_has_data and not cl_has_data:
+                    if not is_raa and not is_register_audit:
+                        bucket["ct_only"].append(category)
                     continue
 
                 if cl_has_data and not ct_has_data and not is_raa:

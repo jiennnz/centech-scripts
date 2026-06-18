@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import argparse
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -54,6 +54,7 @@ from payroll.stages.comparison.main import (
 class PipelineConfig:
     start_date: date
     end_date: date
+    use_end_plus_one_timeclock: bool
     runs_root: Path
     pos_data_root: Path
     s3_prefix: str
@@ -86,6 +87,15 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--pos-data-root", type=str, default=DEFAULT_POS_DATA_ROOT)
     parser.add_argument("--s3-prefix", type=str, default=DEFAULT_S3_PREFIX)
     parser.add_argument("--force-sync", action="store_true")
+    parser.add_argument(
+        "--timeclock-source",
+        choices=("end+1", "end"),
+        default=None,
+        help=(
+            "Employee_Time_Clock source folder for main attendance rows: "
+            "'end+1' uses the day after the pay period, 'end' uses the pay period end date."
+        ),
+    )
     return parser
 
 
@@ -101,6 +111,18 @@ def _prompt_date(label: str) -> date:
             print(exc)
 
 
+def _prompt_timeclock_source() -> bool:
+    while True:
+        raw = input(
+            "Employee_Time_Clock source: use end+1 date folder? [Y/n]: "
+        ).strip().lower()
+        if raw in {"", "y", "yes"}:
+            return True
+        if raw in {"n", "no"}:
+            return False
+        print("Enter Y to use end+1, or N to use the end date folder.")
+
+
 def _resolve_config(args: argparse.Namespace) -> PipelineConfig:
     start_date = parse_date_flexible(args.start) if args.start else _prompt_date("Start date (e.g. 'Mar 9 2026'): ")
     end_date = parse_date_flexible(args.end) if args.end else _prompt_date("End date (e.g. 'Mar 22 2026'): ")
@@ -108,9 +130,16 @@ def _resolve_config(args: argparse.Namespace) -> PipelineConfig:
     if start_date > end_date:
         raise SystemExit("Start date must be <= end date.")
 
+    use_end_plus_one_timeclock = (
+        args.timeclock_source == "end+1"
+        if args.timeclock_source
+        else _prompt_timeclock_source()
+    )
+
     return PipelineConfig(
         start_date=start_date,
         end_date=end_date,
+        use_end_plus_one_timeclock=use_end_plus_one_timeclock,
         runs_root=Path(args.runs_root),
         pos_data_root=Path(args.pos_data_root),
         s3_prefix=args.s3_prefix,
@@ -131,6 +160,10 @@ def main() -> None:
     print(f"Run folder   : {run_dir}")
     print(f"POS data     : {cfg.pos_data_root}/")
     print(f"Sync folders : {', '.join(fmt_iso(d) for d in sync_dates)}")
+    tc_source = cfg.end_date + (
+        timedelta(days=1) if cfg.use_end_plus_one_timeclock else timedelta(days=0)
+    )
+    print(f"Time clocks  : Employee_Time_Clock.txt from {fmt_iso(tc_source)}")
 
     if run_dir.name != period_key:
         print("Note: Existing run detected. New rerun folder will be created.")
@@ -153,19 +186,20 @@ def main() -> None:
         )
     )
     print(f"[Stage 1] Done. {len(s3_result.local_dirs)} folders ready.")
-    
+
     # Stage 2: Attendance
     print("\n--- Stage 2: Attendance ---")
     attendance_result = run_attendance(
         AttendanceConfig(
             start_date=cfg.start_date,
             end_date=cfg.end_date,
+            use_end_plus_one_timeclock=cfg.use_end_plus_one_timeclock,
             pos_data_root=cfg.pos_data_root,
             output_dir=run_dir / "output",
         )
     )
     print(f"[Stage 2] Done. Spillovers: {attendance_result.spillover_count}")
-    
+
     # Stage 3: Hours
     print("\n--- Stage 3: Hours ---")
     hours_result = run_hours(
@@ -177,7 +211,7 @@ def main() -> None:
         )
     )
     print(f"[Stage 3] Done. Processed data -> {hours_result.processed_data_path.name}")
-    
+
     # Stage 4: Tips
     print("\n--- Stage 4: Tips ---")
     tips_result = run_tips(
@@ -189,7 +223,7 @@ def main() -> None:
         )
     )
     print(f"[Stage 4] Done. Tips summary -> {tips_result.tips_summary_path.name}")
-    
+
     # Stage 5: Generate CSV
     print("\n--- Stage 5: Generate CSV ---")
     generate_result = run_generate(
@@ -226,6 +260,16 @@ def main() -> None:
                 break
 
     if webapp_csv:
+        tips_csv = run_dir / "input" / "centech_tips.csv"
+        if not tips_csv.exists():
+            root_tips = _REPO_ROOT / "centech_tips.csv"
+            if root_tips.exists():
+                root_tips.rename(tips_csv)
+                print(f"[Stage 6] Moved centech_tips.csv -> {tips_csv}")
+            else:
+                print(f"[Stage 6] Warning: centech_tips.csv not found, tips totals will be calculated.")
+                tips_csv = None
+
         comparison_result = run_comparison(
             ComparisonConfig(
                 start_date=cfg.start_date,
@@ -233,6 +277,7 @@ def main() -> None:
                 generated_csv=run_dir / "output" / "payroll_report.csv",
                 webapp_csv=webapp_csv,
                 output_dir=run_dir / "output",
+                tips_csv=tips_csv,
             )
         )
         print(f"[Stage 6] Done. Workbook -> {comparison_result.comparison_xlsx_path.name}")

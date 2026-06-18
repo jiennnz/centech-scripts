@@ -39,6 +39,18 @@ def get_store_data(generated_data) -> list:
     return store_numbers
 
 
+def load_centech_tips(tips_csv: Path) -> dict:
+    """Returns {store_number: total_tips} from centech_tips.csv."""
+    df = pd.read_csv(tips_csv)
+    df.columns = df.columns.str.strip()
+    result = {}
+    for _, row in df.iterrows():
+        store = int(row["Store Number"])
+        tips_str = str(row["Total Tips"]).replace("$", "").replace(",", "").strip()
+        result[store] = float(tips_str)
+    return result
+
+
 def get_store_records(generated_data, webapp_data, store_number):
     """Filters records from both datasets for a given store number."""
     if generated_data is None or webapp_data is None:

@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 
 
 DT_FMT = "%Y-%m-%d %H:%M:%S"
+WEEKLY_REGULAR_CAP = 40.0
 
 
 def _to_dt(d: date, end_of_day: bool = False) -> datetime:
@@ -26,6 +27,30 @@ def calculate_hours(clock_in: str, clock_out: str, week_end: datetime) -> float:
     return round((end_dt - start_dt).total_seconds() / 3600, 2)
 
 
+def _allocate(
+    structured_data: dict,
+    store_number: str,
+    employee_number: str,
+    week_key: str,
+    hours: float,
+    running_total: float,
+) -> float:
+    """Add `hours` to a store/employee/week, splitting between regular and
+    overtime based on the running weekly total. Returns the new running total."""
+    if hours <= 0:
+        return running_total
+
+    remaining_regular = max(0.0, WEEKLY_REGULAR_CAP - running_total)
+    reg = min(hours, remaining_regular)
+    ot = hours - reg
+
+    bucket = structured_data[store_number][employee_number][week_key]
+    bucket["Regular_Hours"] = round(bucket["Regular_Hours"] + reg, 2)
+    bucket["Overtime_Hours"] = round(bucket["Overtime_Hours"] + ot, 2)
+
+    return running_total + hours
+
+
 def process_employee_data(
     employee_hours_data: dict,
     single_store_employees: dict,
@@ -45,7 +70,9 @@ def process_employee_data(
         "Week_2": {"Regular_Hours": 0, "Overtime_Hours": 0},
     }))
 
+    # ------------------------------------------------------------------
     # Single-store employees
+    # ------------------------------------------------------------------
     for store_number, employees in single_store_employees.items():
         for employee_number in employees:
             total_w1 = 0.0
@@ -65,7 +92,9 @@ def process_employee_data(
 
                 if w1_start <= clock_in_dt <= w1_end:
                     if clock_out_dt >= w2_start:
-                        w1_hours = calculate_hours(shift["Clock_In"], w1_end.strftime(DT_FMT), w2_end)
+                        w1_hours = calculate_hours(
+                            shift["Clock_In"], w1_end.strftime(DT_FMT), w2_end
+                        )
                         total_w1 += w1_hours
                         total_w2 += hours - w1_hours
                     else:
@@ -74,12 +103,15 @@ def process_employee_data(
                 elif w2_start <= clock_in_dt <= w2_end:
                     total_w2 += hours
 
-            structured_data[store_number][employee_number]["Week_1"]["Regular_Hours"] = round(min(total_w1, 40), 2)
-            structured_data[store_number][employee_number]["Week_1"]["Overtime_Hours"] = round(max(0, total_w1 - 40), 2)
-            structured_data[store_number][employee_number]["Week_2"]["Regular_Hours"] = round(min(total_w2, 40), 2)
-            structured_data[store_number][employee_number]["Week_2"]["Overtime_Hours"] = round(max(0, total_w2 - 40), 2)
+            bucket = structured_data[store_number][employee_number]
+            bucket["Week_1"]["Regular_Hours"] = round(min(total_w1, WEEKLY_REGULAR_CAP), 2)
+            bucket["Week_1"]["Overtime_Hours"] = round(max(0.0, total_w1 - WEEKLY_REGULAR_CAP), 2)
+            bucket["Week_2"]["Regular_Hours"] = round(min(total_w2, WEEKLY_REGULAR_CAP), 2)
+            bucket["Week_2"]["Overtime_Hours"] = round(max(0.0, total_w2 - WEEKLY_REGULAR_CAP), 2)
 
+    # ------------------------------------------------------------------
     # Multi-store employees
+    # ------------------------------------------------------------------
     for employee_number, store_numbers in multi_store_employees.items():
         all_shifts = []
 
@@ -102,36 +134,35 @@ def process_employee_data(
 
         for shift in all_shifts:
             clock_in_dt = datetime.strptime(shift["Clock_In"], DT_FMT)
+            clock_out_dt = datetime.strptime(shift["Clock_Out"], DT_FMT)
             hours = shift["Hours_Worked"]
             store_number = shift["Store_Number"]
 
             if w1_start <= clock_in_dt <= w1_end:
-                if datetime.strptime(shift["Clock_Out"], DT_FMT) >= w2_start:
-                    w1_hours = calculate_hours(shift["Clock_In"], w1_end.strftime(DT_FMT), w2_end)
-                    total_w1 += w1_hours
-                    total_w2 += hours - w1_hours
+                if clock_out_dt >= w2_start:
+                    w1_hours = calculate_hours(
+                        shift["Clock_In"], w1_end.strftime(DT_FMT), w2_end
+                    )
+                    w2_hours = hours - w1_hours
+
+                    total_w1 = _allocate(
+                        structured_data, store_number, employee_number,
+                        "Week_1", w1_hours, total_w1,
+                    )
+                    total_w2 = _allocate(
+                        structured_data, store_number, employee_number,
+                        "Week_2", w2_hours, total_w2,
+                    )
                 else:
-                    if total_w1 + hours > 40:
-                        reg = hours - ((total_w1 + hours) - 40)
-                        structured_data[store_number][employee_number]["Week_1"]["Regular_Hours"] += round(reg, 2)
-                    total_w1 += hours
-                    if total_w1 > 40:
-                        ot = total_w1 - 40
-                        structured_data[store_number][employee_number]["Week_1"]["Overtime_Hours"] += round(ot, 2)
-                        total_w1 = 40
-                    else:
-                        structured_data[store_number][employee_number]["Week_1"]["Regular_Hours"] += round(hours, 2)
+                    total_w1 = _allocate(
+                        structured_data, store_number, employee_number,
+                        "Week_1", hours, total_w1,
+                    )
 
             elif w2_start <= clock_in_dt <= w2_end:
-                if total_w2 + hours > 40:
-                    reg = hours - ((total_w2 + hours) - 40)
-                    structured_data[store_number][employee_number]["Week_2"]["Regular_Hours"] += round(reg, 2)
-                total_w2 += hours
-                if total_w2 > 40:
-                    ot = total_w2 - 40
-                    structured_data[store_number][employee_number]["Week_2"]["Overtime_Hours"] += round(ot, 2)
-                    total_w2 = 40
-                else:
-                    structured_data[store_number][employee_number]["Week_2"]["Regular_Hours"] += round(hours, 2)
+                total_w2 = _allocate(
+                    structured_data, store_number, employee_number,
+                    "Week_2", hours, total_w2,
+                )
 
     return structured_data

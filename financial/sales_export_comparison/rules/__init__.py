@@ -26,6 +26,8 @@ class SideInputConfig:
     store_parse: str  # "strip" | "first_token"
     round_debit_credit_for_categories: frozenset[str]
     category_starts_with: dict[str, str]
+    category_strip_prefix: str | None = None
+    category_strip_prefix_fallback: str | None = None
     read_csv_kwargs: dict[str, Any] = field(default_factory=dict)
     read_excel_kwargs: dict[str, Any] = field(default_factory=dict)
 
@@ -44,6 +46,7 @@ class OrgRule:
     mismatch_tolerance: float
     ignored_categories: frozenset[str] = field(default_factory=frozenset)
     qa: SideInputConfig | None = None
+    client_legacy: tuple[SideInputConfig, ...] = field(default_factory=tuple)
 
 
 def available_orgs(rules_dir: Path) -> list[str]:
@@ -83,6 +86,11 @@ def _side(payload: dict[str, Any], *, label: str) -> SideInputConfig:
     read_csv = dict(payload.get("read_csv") or {})
     read_excel = dict(payload.get("read_excel") or {})
 
+    csp = payload.get("category_strip_prefix")
+    category_strip_prefix = str(csp).strip() if csp else None
+    csp_fb = payload.get("category_strip_prefix_fallback")
+    category_strip_prefix_fallback = str(csp_fb).strip() if csp_fb else None
+
     return SideInputConfig(
         format=fmt,
         date_column=str(payload["date_column"]),
@@ -99,6 +107,8 @@ def _side(payload: dict[str, Any], *, label: str) -> SideInputConfig:
         store_parse=store_parse,
         round_debit_credit_for_categories=round_set,
         category_starts_with=category_starts_with,
+        category_strip_prefix=category_strip_prefix,
+        category_strip_prefix_fallback=category_strip_prefix_fallback,
         read_csv_kwargs=read_csv,
         read_excel_kwargs=read_excel,
     )
@@ -126,6 +136,17 @@ def load_org_rule(org_key: str, rules_dir: Path) -> OrgRule:
     qa_config: SideInputConfig | None = None
     if isinstance(qa_raw, dict):
         qa_config = _side(qa_raw, label=f"{path.name} qa")
+
+    client_legacy_raw = payload.get("client_legacy")
+    _legacy_items: list = []
+    if isinstance(client_legacy_raw, dict):
+        _legacy_items = [client_legacy_raw]
+    elif isinstance(client_legacy_raw, list):
+        _legacy_items = [x for x in client_legacy_raw if isinstance(x, dict)]
+    client_legacy_configs: tuple = tuple(
+        _side(item, label=f"{path.name} client_legacy[{i}]")
+        for i, item in enumerate(_legacy_items)
+    )
 
     category_rows_raw = payload.get("category_rows") or {}
     if not isinstance(category_rows_raw, dict):
@@ -155,4 +176,5 @@ def load_org_rule(org_key: str, rules_dir: Path) -> OrgRule:
         mismatch_tolerance=float(payload.get("mismatch_tolerance", 0.0)),
         ignored_categories=ignored_categories,
         qa=qa_config,
+        client_legacy=client_legacy_configs,
     )

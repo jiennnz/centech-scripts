@@ -27,6 +27,7 @@ class WorkbookFillConfig:
 class WorkbookFillResult:
     centech_rows_written: int
     client_rows_written: int
+    ignored_categories: frozenset[str] = frozenset()
 
 
 def _process_side(
@@ -64,8 +65,13 @@ def _process_side(
         if side_cfg.skip_zero_debit_credit and debit == 0 and credit == 0:
             continue
 
+        had_prefix = bool(side_cfg.category_strip_prefix and category.startswith(side_cfg.category_strip_prefix))
+        if had_prefix:
+            category = category[len(side_cfg.category_strip_prefix):]
         category = _apply_category_rewrites(category, side_cfg.category_rewrites)
         category = _apply_category_starts_with(category, side_cfg.category_starts_with)
+        if had_prefix and side_cfg.category_strip_prefix_fallback and category not in category_rows:
+            category = side_cfg.category_strip_prefix_fallback
 
         if side_cfg.online_credit_card and side_cfg.memo_column:
             memo_val = row[side_cfg.memo_column] if side_cfg.memo_column in row.index else ""
@@ -215,6 +221,61 @@ def _maybe_round_for_category(category: str, debit: float, credit: float, side_c
     return round(debit, 2), round(credit, 2)
 
 
+def _normalized_raw_categories(
+    df: pd.DataFrame,
+    side_cfg,
+    *,
+    start_date: date,
+    end_date: date,
+) -> set[str]:
+    categories: set[str] = set()
+    dates = _parse_dates(df[side_cfg.date_column], side_cfg.date_parse_format)
+    for i in range(len(df)):
+        ts = dates.iloc[i]
+        if pd.isna(ts):
+            continue
+        row_date = ts.date() if hasattr(ts, "date") else None
+        if row_date is None or row_date < start_date or row_date > end_date:
+            continue
+        debit = df.iloc[i][side_cfg.debit_column]
+        credit = df.iloc[i][side_cfg.credit_column]
+        debit = 0 if pd.isna(debit) else float(debit)
+        credit = 0 if pd.isna(credit) else float(credit)
+        if side_cfg.skip_zero_debit_credit and debit == 0 and credit == 0:
+            continue
+        raw = df.iloc[i][side_cfg.category_column]
+        category = str(raw).strip() if pd.notna(raw) else ""
+        if not category:
+            continue
+        if side_cfg.category_strip_prefix and category.startswith(side_cfg.category_strip_prefix):
+            category = category[len(side_cfg.category_strip_prefix):]
+        categories.add(category.strip())
+    return categories
+
+
+def _client_uses_combined_olo_format(
+    df: pd.DataFrame,
+    side_cfg,
+    *,
+    start_date: date,
+    end_date: date,
+) -> bool:
+    categories = _normalized_raw_categories(
+        df,
+        side_cfg,
+        start_date=start_date,
+        end_date=end_date,
+    )
+    if "OLO CC Deposit" not in categories:
+        return False
+    standalone_online = {
+        "Online Credit Card",
+        "Online Credit card",
+        "Online Gift Card",
+    }
+    return not bool(categories & standalone_online)
+
+
 def _read_side_frame(path: Path, side_cfg) -> pd.DataFrame:
     suffix = path.suffix.lower()
     if suffix == ".csv":
@@ -235,6 +296,26 @@ def _parse_dates(series: pd.Series, parse_format: str | None) -> pd.Series:
     return pd.to_datetime(series, errors="coerce")
 
 
+def _auto_select_client_cfg(df: pd.DataFrame, cfg, rule) -> tuple:
+    """Return (cfg, df) using whichever client format matches the dataframe's actual columns.
+
+    Checks primary cfg first, then each entry in rule.client_legacy in order.
+    Avoids KeyError when the client switches export formats across date ranges.
+    """
+    cols = set(df.columns)
+
+    def _matches(c) -> bool:
+        return {c.date_column, c.store_column, c.category_column,
+                c.debit_column, c.credit_column}.issubset(cols)
+
+    if _matches(cfg):
+        return cfg, df
+    for fallback in getattr(rule, "client_legacy", ()):
+        if _matches(fallback):
+            return fallback, df
+    return cfg, df  # let the original error surface with the real column names
+
+
 def run(config: WorkbookFillConfig) -> WorkbookFillResult:
     rule = config.org_rule
     category_rows = dict(rule.category_rows)
@@ -248,8 +329,18 @@ def run(config: WorkbookFillConfig) -> WorkbookFillResult:
 
     client_cfg = config.client_side_config or rule.client
     client_n = 0
+    ignored_categories: set[str] = set()
     if config.client_path is not None:
         df_client = _read_side_frame(config.client_path, client_cfg)
+        if config.client_side_config is None:
+            client_cfg, df_client = _auto_select_client_cfg(df_client, client_cfg, rule)
+        if _client_uses_combined_olo_format(
+            df_client,
+            client_cfg,
+            start_date=config.start_date,
+            end_date=config.end_date,
+        ):
+            ignored_categories.update({"Online Credit card", "Online Gift Card"})
         client_n = _process_side(
             wb,
             df_client,
@@ -273,4 +364,8 @@ def run(config: WorkbookFillConfig) -> WorkbookFillResult:
     )
 
     wb.save(config.workbook_path)
-    return WorkbookFillResult(centech_rows_written=centech_n, client_rows_written=client_n)
+    return WorkbookFillResult(
+        centech_rows_written=centech_n,
+        client_rows_written=client_n,
+        ignored_categories=frozenset(ignored_categories),
+    )

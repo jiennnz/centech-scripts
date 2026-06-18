@@ -49,10 +49,14 @@ def apply_alternating_color(ws, row: int, columns: list, alternate_row: int) -> 
         )
 
 
-def style_sheet(ws) -> None:
+def style_sheet(ws, store_number=None) -> None:
     ws.merge_cells("A1:L1")
     main_title = ws["A1"]
-    main_title.value = "Tips Computation Comparison"
+    main_title.value = (
+        f"Payroll Comparison on Store {store_number}"
+        if store_number is not None
+        else "Payroll Comparison"
+    )
     main_title.alignment = Alignment(horizontal="center", vertical="center")
     main_title.font = Font(size=18, bold=True, color="FFFFFF")
     main_title.fill = PatternFill(start_color="000000", end_color="000000", fill_type="solid")

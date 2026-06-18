@@ -81,12 +81,20 @@ It will prompt you:
 ```text
 Start date: Mar 9 2026
 End date:   Mar 22 2026
+Employee_Time_Clock source: use end+1 date folder? [Y/n]:
 ```
 
 You can also pass dates directly:
 
 ```powershell
 python payroll/run_payroll.py --start "Mar 9 2026" --end "Mar 22 2026"
+```
+
+To choose the time-clock source non-interactively:
+
+```powershell
+python payroll/run_payroll.py --start "Mar 9 2026" --end "Mar 22 2026" --timeclock-source end+1
+python payroll/run_payroll.py --start "Mar 9 2026" --end "Mar 22 2026" --timeclock-source end
 ```
 
 ### Step 3: Review the sync summary
@@ -99,6 +107,7 @@ Pay period   : Mar-09-2026_Mar-22-2026
 Run folder   : payroll/runs/Mar-09-2026_Mar-22-2026
 POS data     : pos_data/
 Sync folders : 2026-03-09, 2026-03-16, 2026-03-23
+Time clocks  : Employee_Time_Clock.txt from 2026-03-23
 
 Continue? [Y/n]:
 ```
@@ -209,6 +218,7 @@ Optional flags:
 ```text
 --pos-data-root   Override default pos_data/ location
 --output-dir      Override default output directory
+--timeclock-source end+1|end
 ```
 
 Outputs written to `payroll/runs/<period>/output/`:
@@ -220,7 +230,7 @@ Employee_Total_Hours.json
 
 What this stage does:
 
-- Reads `Employee_Time_Clock.txt` from the pay period start folder and the end+1 day folder
+- Reads start-folder spillover candidates, then reads main `Employee_Time_Clock.txt` rows from either the end+1 folder or the pay period end folder
 - Clips timeclock entries that spill across the pay period boundaries
 - Maps Employee_ID and Store_ID to their human-readable numbers
 - Excludes internal/non-payroll stores

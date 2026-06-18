@@ -10,6 +10,7 @@ stores:
   - "2023"
   - "2024"
   - "2047"
+  - "4003"
   - "4004"
   - "4005"
   - "4008"
@@ -24,8 +25,10 @@ stores:
   - "4042"
   - "4052"
   - "4061"
+  - "4074"
   - "4083"
   - "5042"
+  - "5043"
   - "5049"
   - "5051"
   - "5057"
@@ -75,6 +78,7 @@ stores:
   - "37013"
   - "37014"
   - "37016"
+  - "37020"
   - "49001"
   - "49002"
   - "49003"
@@ -117,24 +121,69 @@ category_rows:
 
 client:
   format: csv
-  date_column: Date
+  date_column: JournalDate
   store_column: Class
-  category_column: Transaction Category
-  debit_column: Debit
-  credit_column: Credit
-  memo_column: Memo
+  category_column: Description
+  debit_column: Debits
+  credit_column: Credits
   read_csv:
     quotechar: '"'
     on_bad_lines: skip
-  skip_category: SUMMARY
   skip_zero_debit_credit: true
-  store_parse: strip
-  category_rewrites: {}
-  online_credit_card:
-    category_equals: "Online Credit Card"
-    memo_equals: "TQSR - Online Credit Card"
-    map_to: "Online Credit card"
-    skip_if_memo_no_match: true
+  store_parse: first_token
+  category_starts_with:
+    "payout - ": "Payout"
+    "payout": "Payout"
+  category_rewrites:
+    "OLO CC Deposit": "Online Credit card"
+    "Pay-in": "Payin"
+    "Cash Over/Short-Cash Errors": "Cash Over/Short Adjustment"
+    "3rd Party - Grubhub": "3rd Party - GrubHub"
+    "Online Credit Card": "Online Credit card"
+
+# Legacy client export formats — tried in order when primary columns absent from CSV.
+client_legacy:
+  # Format B: LOCATION_ID/MEMO/DEBIT/CREDIT journal-entry export (~early 2026)
+  - format: csv
+    date_column: Date
+    store_column: LOCATION_ID
+    category_column: MEMO
+    debit_column: DEBIT
+    credit_column: CREDIT
+    read_csv:
+      quotechar: '"'
+      on_bad_lines: skip
+    skip_zero_debit_credit: true
+    store_parse: strip
+    category_strip_prefix: "TQSR - "
+    category_strip_prefix_fallback: "Payout"
+    category_rewrites:
+      "OLO CC Deposit": "Online Credit card"
+      "3rd Party - Grubhub": "3rd Party - GrubHub"
+      "Online Credit Card": "Online Credit card"
+  # Format A: original Date/Class/Transaction Category/Debit/Credit export
+  # OLO CC Deposit rows have Transaction Category="Online Credit Card" but Memo="TQSR - OLO CC Deposit".
+  # The online_credit_card handler skips those rows; real Online CC rows have matching memo.
+  - format: csv
+    date_column: Date
+    store_column: Class
+    category_column: Transaction Category
+    debit_column: Debit
+    credit_column: Credit
+    memo_column: Memo
+    read_csv:
+      quotechar: '"'
+      on_bad_lines: skip
+    skip_zero_debit_credit: true
+    store_parse: strip
+    online_credit_card:
+      category_equals: "Online Credit Card"
+      memo_equals: "TQSR - Online Credit Card"
+      map_to: "Online Credit card"
+      skip_if_memo_no_match: true
+    category_rewrites:
+      "3rd Party - Grubhub": "3rd Party - GrubHub"
+      "Online Credit Card": "Online Credit card"
 
 centech:
   format: excel

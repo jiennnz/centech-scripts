@@ -18,9 +18,12 @@ from payroll.stages.comparison.data_processing import (
     read_and_clean_data,
     get_store_data,
     get_store_records,
+    load_centech_tips,
 )
 from payroll.stages.comparison.workbook import (
+    add_discrepancy_sheets,
     create_workbook,
+    create_discrepancy_collector,
     add_store_data_to_sheet,
     save_workbook,
 )
@@ -35,6 +38,7 @@ class ComparisonConfig:
     generated_csv: Path
     webapp_csv: Path
     output_dir: Path
+    tips_csv: Path | None = None
 
 
 @dataclass
@@ -64,15 +68,37 @@ def run(config: ComparisonConfig) -> ComparisonResult:
     if generated_data is None or webapp_data is None:
         raise RuntimeError("[comparison] Failed to read input CSV files.")
 
+    tips_csv = config.tips_csv or (config.webapp_csv.parent / "centech_tips.csv")
+    if not tips_csv.exists():
+        tips_csv = _REPO_ROOT / "centech_tips.csv"
+    centech_tips = None
+    if tips_csv.exists():
+        centech_tips = load_centech_tips(tips_csv)
+        print(f"[comparison] CenTech tips CSV: {tips_csv} ({len(centech_tips)} stores)")
+    else:
+        print(f"[comparison] Warning: centech_tips.csv not found, falling back to calculated totals.")
+
     store_numbers = get_store_data(generated_data)
     print(f"[comparison] Processing {len(store_numbers)} stores.")
 
     wb = create_workbook()
+    discrepancies = create_discrepancy_collector()
+    tip_date_label = config.end_date.strftime("%b-%d-%Y")
 
     for store in store_numbers:
         print(f"[comparison] Store {store}")
         generated_store, webapp_store = get_store_records(generated_data, webapp_data, store)
-        add_store_data_to_sheet(wb, store, generated_store, webapp_store)
+        add_store_data_to_sheet(
+            wb,
+            store,
+            generated_store,
+            webapp_store,
+            centech_tips=centech_tips,
+            discrepancies=discrepancies,
+            tip_date_label=tip_date_label,
+        )
+
+    add_discrepancy_sheets(wb, discrepancies)
 
     period_key = build_pay_period_key(config.start_date, config.end_date)
     output_path = config.output_dir / get_output_filename(period_key)

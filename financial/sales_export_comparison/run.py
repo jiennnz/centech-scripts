@@ -50,6 +50,7 @@ class RunConfig:
     pos_data_dir: Path | None = None
     qa_on_left: bool = False  # QA fills centech slot (QA vs Client)
     centech_label: str = "CenTech"
+    include_cross_date_lookahead: bool = True
 
 
 def parse_date_flexible(raw: str) -> date:
@@ -112,6 +113,19 @@ def _prompt_path(label: str) -> Path:
 def _prompt_with_default(label: str, default_value: str) -> str:
     raw = input(f"{label} [{default_value}]: ").strip()
     return raw or default_value
+
+
+def _prompt_cross_date_lookahead() -> bool:
+    print("\nQA/POS date scan mode:")
+    print("  1. Include 30-day lookahead for cross-date payments/payouts [default]")
+    print("  2. Only scan folders within the selected date range")
+    while True:
+        raw = input("Select [1]: ").strip() or "1"
+        if raw == "1":
+            return True
+        if raw == "2":
+            return False
+        print("Enter 1 or 2.")
 
 
 def _prompt_qa_side() -> tuple[str | None, Path | None]:
@@ -329,6 +343,19 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Put QA on left side (QA vs Client) instead of right",
     )
+    scan_group = parser.add_mutually_exclusive_group()
+    scan_group.add_argument(
+        "--strict-date-range",
+        action="store_true",
+        default=None,
+        help="For QA/POS verification, scan only folders within --start/--end; disables the 30-day cross-date lookahead",
+    )
+    scan_group.add_argument(
+        "--include-cross-date-lookahead",
+        action="store_true",
+        default=None,
+        help="For QA/POS verification, include the default 30-day lookahead after --end",
+    )
     return parser
 
 
@@ -371,6 +398,14 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         elif qa_side == "left":
             pos_data_dir = prompted_pos_dir
             qa_on_left = True
+
+    include_cross_date_lookahead = True
+    if args.strict_date_range is True:
+        include_cross_date_lookahead = False
+    elif args.include_cross_date_lookahead is True:
+        include_cross_date_lookahead = True
+    elif not args.skip_data and pos_data_dir is not None:
+        include_cross_date_lookahead = _prompt_cross_date_lookahead()
 
     if centech_only:
         source_label = args.source_label or default_client_label
@@ -432,6 +467,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         pos_data_dir=pos_data_dir,
         qa_on_left=qa_on_left,
         centech_label="QA" if qa_on_left else "CenTech",
+        include_cross_date_lookahead=include_cross_date_lookahead,
     )
 
 
@@ -442,7 +478,14 @@ def main() -> None:
 
     period_key = build_period_key(config.start_date, config.end_date)
     run_dir = config.output_dir / period_key / config.org_key / config.run_mode
-    output_workbook = run_dir / "output" / f"Sales_Comparison_{period_key}.xlsx"
+    _MODE_LABEL = {
+        "centech_vs_client": "CenTech_vs_Client",
+        "centech_vs_qa":     "CenTech_vs_QA",
+        "qa_vs_client":      "QA_vs_Client",
+        "centech_only":      "CenTech_only",
+    }
+    _mode_label = _MODE_LABEL.get(config.run_mode, config.run_mode)
+    output_workbook = run_dir / "output" / f"Sales_{_mode_label}_{period_key}.xlsx"
 
     pos_computed_csv = run_dir / "output" / "pos_computed.csv"
 
@@ -461,12 +504,20 @@ def main() -> None:
     elif config.pos_data_dir is not None and config.qa_on_left:
         print("Data mode    : QA vs Client (QA on left)")
         print(f"POS data dir : {config.pos_data_dir}")
+        print(
+            "QA scan mode : "
+            + ("date range + 30-day lookahead" if config.include_cross_date_lookahead else "selected date range only")
+        )
         print(f"QA CSV out   : {pos_computed_csv}")
         print(f"Client CSV   : {config.source_csv}")
     elif config.pos_data_dir is not None:
         print("Data mode    : CenTech vs QA (QA on right)")
         print(f"CenTech CSV  : {config.centech_csv}")
         print(f"POS data dir : {config.pos_data_dir}")
+        print(
+            "QA scan mode : "
+            + ("date range + 30-day lookahead" if config.include_cross_date_lookahead else "selected date range only")
+        )
         print(f"QA CSV out   : {pos_computed_csv}")
     else:
         print(f"CenTech CSV  : {config.centech_csv}")
@@ -500,16 +551,25 @@ def main() -> None:
 
         if config.pos_data_dir is not None:
             _ensure_run_dirs(run_dir)
-            qa_rows = run_verifier(
-                VerifierConfig(
-                    pos_data_dir=config.pos_data_dir,
-                    stores=org_rule.stores,
-                    start_date=config.start_date,
-                    end_date=config.end_date,
-                    output_csv_path=pos_computed_csv,
+            if pos_computed_csv.exists():
+                answer = input(f"QA data already exists at {pos_computed_csv}\nRegenerate? [y/N]: ").strip().lower()
+                regenerate = answer in {"y", "yes"}
+            else:
+                regenerate = True
+            if regenerate:
+                qa_rows = run_verifier(
+                    VerifierConfig(
+                        pos_data_dir=config.pos_data_dir,
+                        stores=org_rule.stores,
+                        start_date=config.start_date,
+                        end_date=config.end_date,
+                        output_csv_path=pos_computed_csv,
+                        include_cross_date_lookahead=config.include_cross_date_lookahead,
+                    )
                 )
-            )
-            print(f"[verifier] QA CSV written ({qa_rows} rows) -> {pos_computed_csv}")
+                print(f"[verifier] QA CSV written ({qa_rows} rows) -> {pos_computed_csv}")
+            else:
+                print(f"[verifier] Using existing QA CSV -> {pos_computed_csv}")
 
             if config.qa_on_left:
                 # QA fills centech (left) slot; use qa config so date auto-detection
@@ -542,6 +602,12 @@ def main() -> None:
         )
 
         if not config.centech_only:
+            ignored_categories = org_rule.ignored_categories | generated.ignored_categories
+            if generated.ignored_categories:
+                print(
+                    "[heatmap] Ignoring client combined OLO categories: "
+                    + ", ".join(sorted(generated.ignored_categories))
+                )
             run_heatmap(
                 HeatmapConfig(
                     workbook_path=output_workbook,
@@ -549,7 +615,7 @@ def main() -> None:
                     category_rows=org_rule.category_rows,
                     tolerance=org_rule.mismatch_tolerance,
                     layout=DEFAULT_LAYOUT,
-                    ignored_categories=org_rule.ignored_categories,
+                    ignored_categories=ignored_categories,
                     source_label=config.source_label,
                     centech_label=config.centech_label,
                 )
