@@ -1,6 +1,11 @@
-# Financial Sales Export Comparison — Operations Guide
+# Financial Operations Guide
 
-This document covers how to run the sales export comparison pipeline end to end: build a dated workbook from the sales template, load CenTech and client/GL exports, and apply mismatch highlighting.
+This document covers the financial tooling in this repo:
+
+- Sales export comparison: `financial/sales_export_comparison/run.py`
+- Royalties comparison: `financial/royalties/run.py`
+
+Both pipelines use local files only. No AWS or S3 access is required.
 
 ---
 
@@ -19,17 +24,18 @@ Install from the repo root:
 pip install -r requirements.txt
 ```
 
-The pipeline uses **pandas**, **openpyxl**, **PyYAML**, and **python-dateutil**. No AWS or S3 access is required; all inputs are local CSV or Excel files.
+The financial scripts use **pandas**, **openpyxl**, **PyYAML**, **python-dateutil**, and **tqdm**.
 
-### Template workbook
+### Templates
 
-The default template path is:
+Default template paths:
 
 ```text
 financial/sales_export_comparison/templates/Sales_Template.xlsx
+financial/royalties/templates/Royalties_Template.xlsx
 ```
 
-Ensure that file exists (or pass `--template` to point at your copy). The template defines the layout the builder clones per day and per store block.
+Pass `--template` to either runner if you need to use a different copy.
 
 ---
 
@@ -38,33 +44,49 @@ Ensure that file exists (or pass `--template` to point at your copy). The templa
 ```text
 centech-scripts/
   financial/
-    FINANCIAL.md                     ← this guide
+    FINANCIAL.md
     sales_export_comparison/
-      run.py                         ← pipeline entrypoint
-      CATEGORY_CALCULATIONS.md      ← verifier formula reference
-      rules/                         ← org-specific column mappings and stores
+      run.py
+      CATEGORY_SPEC.md
+      CATEGORY_CALCULATIONS.md
+      CALCULATION_DATA_FLOW_DIAGRAM.md
+      add_audit_check_tabs.py
+      rules/
         century.yaml
         century_austin.yaml
       templates/
-        Sales_Template.xlsx          ← base layout (required)
+        Sales_Template.xlsx
       stages/
-        template_builder.py          ← Stage 1: workbook shell
-        generator.py                 ← Stage 2: fill from exports
-        heatmap.py                   ← Stage 3: mismatch formatting
-        verifier.py                  ← QA: computes categories from raw POS files
-        diagnostics.py               ← Stage 4: diagnostics tab
-      runs/                          ← auto-created per period + org
-        2026-04-01_2026-04-30/
-          century_austin/
-            centech_vs_client/       ← CenTech export vs client GL
-            centech_vs_qa/           ← CenTech export vs QA (POS-computed)
-            qa_vs_client/            ← QA (POS-computed) vs client GL
-              input/                 ← client_export archived here
-              output/
-                Sales_Comparison_2026-04-01_2026-04-30.xlsx
-                pos_computed.csv     ← QA-computed values written here
-  pos_data/                          ← raw POS export folders (YYYY-MM-DD/)
-    2026-04-01/
+        template_builder.py
+        generator.py
+        heatmap.py
+        diagnostics.py
+        verifier.py
+      runs/
+        <start>_<end>/<org>/<mode>/
+          input/
+          output/
+            Sales_<ModeLabel>_<start>_<end>.xlsx
+            pos_computed.csv
+    royalties/
+      run.py
+      README.md
+      ROYALTY_CALCULATIONS.md
+      templates/
+        Royalties_Template.xlsx
+      stages/
+        comparison.py
+        verifier.py
+      runs/
+        <start>_<end>/<org>/<mode>/
+          input/
+          output/
+            Royalties_<Left>_vs_<Right>_<start>_<end>.xlsx
+            pos_computed.csv
+            pos_computed_detail.csv
+            pos_computed_summary.csv
+  pos_data/
+    YYYY-MM-DD/
       Sales_Ticket.txt
       Sales_Ticket_Summary.txt
       Payment.txt
@@ -73,73 +95,63 @@ centech-scripts/
       Store.txt
 ```
 
-You may drop the two input files in the **repo root** before the first run; the pipeline moves them into the run folder’s `input/` directory (same idea as payroll moving `Timesheet*.csv`).
+Treat `pos_data/` as sensitive operational data. Prefer aggregate diagnostics and generated audit files over raw ticket-level inspection.
 
 ---
 
-## Manual Inputs
+## Sales Export Comparison
 
-Before running (unless you pass explicit paths on the command line), place exports where the script can find them.
+### Manual inputs
 
-### CenTech side
+Before running, place exports in the repo root unless passing explicit paths.
 
-Filename stem must be **`centech_export`**, with extension `.csv`, `.xlsx`, or `.xls`:
-
-```text
-centech-scripts/centech_export.xlsx
-```
-
-### Client / GL side
-
-Filename stem must be **`client_export`**:
+CenTech side:
 
 ```text
-centech-scripts/client_export.csv
+centech_export.csv
+centech_export.xlsx
+centech_export.xls
 ```
 
-### Re-running the same period and org
-
-If you already ran once, copies may live under:
+Client / GL side:
 
 ```text
-financial/sales_export_comparison/runs/<period>/<org>/input/
+client_export.csv
+client_export.xlsx
+client_export.xls
 ```
 
-The pipeline prefers those files on rerun so you do not have to copy them back to the repo root.
+On reruns, the sales runner first checks the matching run folder:
 
-If nothing is found, the script prompts you to drop the files and press Enter.
+```text
+financial/sales_export_comparison/runs/<period>/<org>/<mode>/input/
+```
 
----
+If an expected input is missing, the script prompts you to drop it into the repo root or run input folder and press Enter.
 
-## Running the Pipeline
+### Standard run
 
-### Step 1: Activate virtual environment
+From the repo root:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
-```
-
-### Step 2: Run the pipeline
-
-From the **repo root**:
-
-```powershell
 python financial/sales_export_comparison/run.py
 ```
 
 You will be prompted for:
 
-- Start and end dates (inclusive), e.g. `Mar 1 2026` and `Mar 6 2026`
-- Organization — pick a name or number matching a file in `rules/` (e.g. `century`, `century_austin`)
-- Client column header label (for Excel columns D/E), defaulting to the org rule’s `client_header_label`
+- Start and end dates
+- Organization key from `financial/sales_export_comparison/rules/`
+- QA/POS comparison mode, when applicable
+- Client/source label for workbook columns D/E
 
-Pass dates and org directly:
+Non-interactive example:
 
 ```powershell
-python financial/sales_export_comparison/run.py --start "Mar 1 2026" --end "Mar 6 2026" --org century_austin
+python financial/sales_export_comparison/run.py --start "2026-03-01" --end "2026-03-06" --org century_austin
 ```
 
-Pass explicit export paths:
+With explicit exports:
 
 ```powershell
 python financial/sales_export_comparison/run.py --start "2026-03-01" --end "2026-03-06" --org century `
@@ -147,124 +159,138 @@ python financial/sales_export_comparison/run.py --start "2026-03-01" --end "2026
   --source-csv "C:\path\to\client_export.csv"
 ```
 
-### Step 3: Review the summary and confirm
-
-The pipeline prints period, organization, store list, template path, output path, and input paths, then asks:
+The runner prints the period, organization, stores, mode, inputs, template, and output workbook, then asks:
 
 ```text
 Continue? [Y/n]:
 ```
 
-Type `Y` to proceed (or `n` to cancel).
+### Sales run modes
 
-### Step 4: Outputs
+| Mode | Left side | Right side | Flags |
+|---|---|---|---|
+| `centech_vs_client` | CenTech export | Client GL export | default |
+| `centech_vs_qa` | CenTech export | QA/POS-computed sales | `--pos-data-dir pos_data` |
+| `qa_vs_client` | QA/POS-computed sales | Client GL export | `--pos-data-dir pos_data --qa-left` |
+| `centech_only` | CenTech export | blank | `--centech-only` |
+| structure only | workbook shell only | blank | `--skip-data` |
 
-After a successful run:
+Output workbooks are written under:
 
-- **Workbook:** `financial/sales_export_comparison/runs/<start>_<end>/<org>/output/Sales_Comparison_<start>_<end>.xlsx`
-- **Archived inputs:** `.../runs/<period>/<org>/input/centech_export.*` and `client_export.*`
-
----
-
-## Structure-only mode (no CSV comparison)
-
-To build the workbook shell only (date tabs, headers, store blocks) without reading exports or applying the heatmap:
-
-```powershell
-python financial/sales_export_comparison/run.py --skip-data --start "Mar 1 2026" --end "Mar 6 2026" --org century
+```text
+financial/sales_export_comparison/runs/<start>_<end>/<org>/<mode>/output/
 ```
 
-You will not be prompted for `centech_export` / `client_export` in this mode.
+Current sales workbook names include the mode:
 
----
+```text
+Sales_CenTech_vs_Client_<start>_<end>.xlsx
+Sales_CenTech_vs_QA_<start>_<end>.xlsx
+Sales_QA_vs_Client_<start>_<end>.xlsx
+Sales_CenTech_only_<start>_<end>.xlsx
+```
 
-## Organization rules (`rules/*.yaml`)
+Inputs used for the run are archived under the matching `input/` folder. QA runs also write:
 
-Each org is a YAML file named `<org_key>.yaml`. It defines:
+```text
+pos_computed.csv
+```
 
-- **stores** — store numbers included in the workbook
-- **category_rows** — maps category labels to row indices in the template tables
-- **centech** and **client** blocks — format (`csv` or `excel`), column names, optional `date_parse_format`, category rewrites, `read_csv` / `read_excel` options, etc.
-- **mismatch_tolerance** — numeric tolerance for heatmap comparison (default `0.0`)
-- **sheet_date_format** — `strftime` pattern for daily sheet names (default `%b %d`)
+### QA/POS sales runs
 
-Adding a new org: copy an existing YAML, adjust keys and columns to match that client’s export, and run with `--org <new_stem>`.
+QA mode computes every sales category directly from raw POS files in `pos_data/`. See:
 
----
+```text
+financial/sales_export_comparison/CATEGORY_SPEC.md
+financial/sales_export_comparison/CATEGORY_CALCULATIONS.md
+financial/sales_export_comparison/CALCULATION_DATA_FLOW_DIAGRAM.md
+```
 
-## Run Modes
-
-| Mode | Left side | Right side | Flag |
-|------|-----------|------------|------|
-| CenTech vs Client | CenTech export | Client GL export | (default) |
-| CenTech vs QA | CenTech export | QA (POS-computed) | `--pos-data-dir` |
-| QA vs Client | QA (POS-computed) | Client GL export | `--pos-data-dir --qa-left` |
-
-**QA mode** computes every financial category directly from raw POS files in `pos_data/`. See `CATEGORY_CALCULATIONS.md` for the full formula reference.
-
-### Running QA vs Client
+Run QA vs Client:
 
 ```powershell
 python financial/sales_export_comparison/run.py `
-  --start "Apr 1 2026" --end "Apr 30 2026" `
+  --start "2026-04-01" --end "2026-04-30" `
   --org century_austin `
   --qa-left `
   --pos-data-dir pos_data `
   --source-csv "financial/sales_export_comparison/runs/2026-04-01_2026-04-30/century_austin/centech_vs_client/input/client_export.csv"
 ```
 
-The verifier scans `pos_data/` plus 14 extra days past `--end` to capture payments, transactions, and ticket summaries recorded in later folders but attributed to dates in the requested period. It writes `pos_computed.csv` to the run’s `output/` folder before filling the workbook.
+Run CenTech vs QA:
 
----
+```powershell
+python financial/sales_export_comparison/run.py `
+  --start "2026-04-01" --end "2026-04-30" `
+  --org century_austin `
+  --pos-data-dir pos_data `
+  --centech-csv "financial/sales_export_comparison/runs/2026-04-01_2026-04-30/century_austin/centech_vs_client/input/centech_export.xlsx"
+```
 
-## Stages (Status)
+By default, the verifier scans:
 
-| Stage | Module | Status |
-| ----- | ------ | ------ |
-| 1 — Template | `stages/template_builder.py` | Done |
-| 2 — Generator | `stages/generator.py` | Done |
-| 3 — Heatmap | `stages/heatmap.py` | Done |
-| 4 — Diagnostics | `stages/diagnostics.py` | Done |
-| QA Verifier | `stages/verifier.py` | Done |
+```text
+start_date - 3 days through end_date + 30 days
+```
 
-All stages are wired into `financial/sales_export_comparison/run.py` (except Stage 2, 3, and 4 are skipped when `--skip-data` is set).
+It re-attributes tickets by `Payment_Date` and store transactions by `Transaction_Date`, so payments, sales-ticket summaries, payouts, and payins recorded in a nearby folder still land on the correct business date.
 
-### Stage 1 — Template builder
+Use `--strict-date-range` only for diagnostics where you intentionally want to scan the selected folders and ignore cross-date attribution. Use `--include-cross-date-lookahead` to force the default scan mode in a non-interactive command.
 
-Creates one sheet per day in the period, duplicates the template’s store/category grid for each configured store, and sets CenTech (B/C) vs client (D/E) headers using your source label.
+Use `--pos-source-date` when every selected business date should be computed from one POS folder date:
 
-### Stage 2 — Generator
+```powershell
+python financial/sales_export_comparison/run.py `
+  --start "2026-04-01" --end "2026-04-03" `
+  --org century_austin `
+  --pos-data-dir pos_data `
+  --pos-source-date "2026-04-05" `
+  --centech-csv "C:\path\to\centech_export.xlsx"
+```
 
-Reads the CenTech and client files according to the org rule, filters by date range and store, normalizes categories (rewrites, optional memo rules), and writes debits/credits into the workbook.
+This is a targeted diagnostic mode. It reads the per-day source files from the chosen POS folder while emitting rows for the selected business dates.
 
-### Stage 3 — Heatmap
+### Structure-only and CenTech-only
 
-Compares CenTech vs client amounts per category and store, applies fills for mismatches, missing-on-one-side, and color scales to surface discrepancies quickly.
+Build the workbook shell only:
 
-### Stage 4 — Diagnostics
+```powershell
+python financial/sales_export_comparison/run.py --skip-data --start "2026-03-01" --end "2026-03-06" --org century
+```
 
-Writes a Diagnostics tab summarizing per-store category totals and known issues.
+Fill only the CenTech side, with no client file or heatmap:
 
-### QA Verifier (`verifier.py`)
+```powershell
+python financial/sales_export_comparison/run.py --centech-only --start "2026-03-01" --end "2026-03-06" --org century
+```
 
-Reads raw POS files from `pos_data/<YYYY-MM-DD>/` and computes all financial categories for each store × date. Output is `pos_computed.csv` which feeds into Stage 2 as the left (QA) or right (CenTech vs QA) side.
+### Sales stages
+
+| Stage | Module | Purpose |
+|---|---|---|
+| Template | `stages/template_builder.py` | Creates one sheet per day and one store block per configured store |
+| Generator | `stages/generator.py` | Reads exports, normalizes categories, and writes debits/credits |
+| Heatmap | `stages/heatmap.py` | Highlights mismatches, missing rows, and category differences |
+| Diagnostics | `stages/diagnostics.py` | Adds a diagnostics tab with per-store/category summaries |
+| QA Verifier | `stages/verifier.py` | Computes `pos_computed.csv` from raw POS files |
+
+Stage 2, 3, and 4 are skipped when `--skip-data` is set.
+
+### Sales verifier behavior
 
 Key behaviors:
-- **Cross-date payments and ticket sales**: Payment.txt, Sales_Ticket.txt, and Sales_Ticket_Summary.txt scanned across end_date + 14 days; paid tickets are attributed by `Payment_Date`, not folder date.
-- **Cross-date transactions**: Store_Transactions.txt same 14-day window; payouts and payins attributed by `Transaction_Date`.
-- **Voided payouts**: `Transaction_ID` entries with a matching `Status == "Void"` row in the same date slice are excluded from payout totals.
-- **Gift Card Sold in ISCC**: only the CC-paid portion (`Payment_Type_ID == 14`) of gift card sold tickets is added to ISCC; cash-paid GC purchases are excluded from the CC total.
-- **Online refund handling**: refund tickets with tlen=32 payments are excluded from ISCC/ISCCT (to prevent the Tip_Paid=False row misclassifying as in-store CC), but are **included** in Online CC — their negative rows net against the original charge, matching client OLO deposit behaviour.
 
----
+- Cross-date payments and ticket sales: `Payment.txt`, `Sales_Ticket.txt`, and `Sales_Ticket_Summary.txt` are scanned across the 3-day lookback and 30-day lookahead window, then attributed by `Payment_Date`.
+- Cross-date transactions: `Store_Transactions.txt` uses the same scan window and attributes payouts/payins by `Transaction_Date`.
+- Status 2 card rows: included for ISCC/ISCCT only when the ticket has exactly one type-14 row in the scan window.
+- Status 8 card rows: included for ISCC/ISCCT only when the payment has no later/final copy in the scan window.
+- Voided payouts: inserted payout rows with a matching void row are excluded.
+- Gift Card Sold in ISCC: only the credit-card-paid portion of gift-card-sold tickets is added to ISCC; cash-paid gift-card purchases do not inflate card totals.
+- Online refund handling: online/token refund rows stay in `Online Credit card`; in-store refund rows with short transaction IDs remain in ISCC/ISCCT and net there.
 
-## Running a stage standalone
+### Standalone template builder
 
 Commands assume repo root, venv on, and `python` on PATH.
-
-### Template only (no `run.py`)
-
-Useful for generating an empty comparison workbook:
 
 ```powershell
 python financial/sales_export_comparison/stages/template_builder.py `
@@ -273,7 +299,7 @@ python financial/sales_export_comparison/stages/template_builder.py `
   --org century_austin
 ```
 
-With explicit stores instead of `--org`:
+With explicit stores:
 
 ```powershell
 python financial/sales_export_comparison/stages/template_builder.py `
@@ -282,30 +308,184 @@ python financial/sales_export_comparison/stages/template_builder.py `
   --stores "4028,4041"
 ```
 
-Optional: `--template`, `--rules-dir`, `--source-label`, `--sheet-date-format`.
+Optional flags include `--template`, `--rules-dir`, `--source-label`, and `--sheet-date-format`.
 
-**Stages 2 and 3** are intended to run through `run.py` (they expect a filled org rule and paths consistent with the main pipeline). If you need to re-fill an existing workbook, use the Python APIs in `generator.py` / `heatmap.py` or run the full pipeline again with the same period and org.
+---
+
+## Organization Rules
+
+Sales and royalties both use org YAML files under:
+
+```text
+financial/sales_export_comparison/rules/
+```
+
+Each org file can define:
+
+- `stores`: store numbers included in the workbook
+- `category_rows`: sales comparison category row positions
+- `centech`, `client`, and `qa` input blocks
+- `mismatch_tolerance`
+- `sheet_date_format`
+- `client_header_label`
+
+Adding a new org usually means copying an existing YAML, changing the store list and column mappings, then running with `--org <new_stem>`.
+
+---
+
+## Royalties Comparison
+
+Detailed royalty instructions live in:
+
+```text
+financial/royalties/README.md
+financial/royalties/ROYALTY_CALCULATIONS.md
+```
+
+### Royalty inputs
+
+The range-mode CenTech export is usually named:
+
+```text
+royalties_report_<start>_to_<end>.xlsx
+```
+
+The runner also accepts these fallback names:
+
+```text
+centech_royalties.xlsx
+centech_royalties.xls
+centech_royalties.csv
+```
+
+Client export:
+
+```text
+client_royalties.csv
+client_royalties.xlsx
+client_royalties.xls
+```
+
+For daily royalty comparison, provide one CenTech/client pair per date. Preferred CenTech daily names:
+
+```text
+royalties_report_2026-05-04_to_2026-05-04.xlsx
+royalties_report_2026-05-05_to_2026-05-05.xlsx
+```
+
+Client daily files are numbered:
+
+```text
+client_royalties_1.csv
+client_royalties_2.csv
+```
+
+The older `centech_royalties_1.xlsx` naming pattern is still accepted when date-named CenTech files are not present.
+
+### Royalty run modes
+
+| Mode | Left side | Right side | Flags |
+|---|---|---|---|
+| `centech_vs_client` | range CenTech export | range client export | default |
+| `centech_vs_client_daily` | daily CenTech files | daily client files | `--daily-inputs` |
+| `centech_vs_client_combined` | range + daily CenTech files | range + daily client files | `--combined-inputs` |
+| `centech_vs_qa` | CenTech export | QA/POS-computed royalties | `--pos-data-dir pos_data` |
+| `qa_vs_client` | QA/POS-computed royalties | client export | `--pos-data-dir pos_data --qa-left` |
+
+Output workbooks are written under:
+
+```text
+financial/royalties/runs/<start>_<end>/<org>/<mode>/output/
+```
+
+Workbook names use the compared labels:
+
+```text
+Royalties_CenTech_vs_Client_<start>_<end>.xlsx
+Royalties_CenTech_vs_QA_<start>_<end>.xlsx
+Royalties_QA_vs_Client_<start>_<end>.xlsx
+```
+
+Royalty QA runs also write:
+
+```text
+pos_computed.csv
+pos_computed_detail.csv
+pos_computed_summary.csv
+pos_computed_skipped_store_days.csv
+```
+
+### Royalty examples
+
+Range comparison:
+
+```powershell
+python financial/royalties/run.py --start 2026-05-04 --end 2026-05-10 --org century
+```
+
+Daily files:
+
+```powershell
+python financial/royalties/run.py --start 2026-05-04 --end 2026-05-10 --org century --daily-inputs
+```
+
+Daily files from another folder:
+
+```powershell
+python financial/royalties/run.py --start 2026-05-04 --end 2026-05-10 --org century --daily-inputs --daily-input-dir inputs/royalties_may_4_10
+```
+
+Range plus daily tabs in one workbook:
+
+```powershell
+python financial/royalties/run.py --start 2026-05-04 --end 2026-05-10 --org century --combined-inputs
+```
+
+CenTech vs QA:
+
+```powershell
+python financial/royalties/run.py --start 2026-06-01 --end 2026-06-07 --org century --pos-data-dir pos_data
+```
+
+QA vs Client:
+
+```powershell
+python financial/royalties/run.py --start 2026-06-01 --end 2026-06-07 --org century --pos-data-dir pos_data --qa-left
+```
+
+Use `--yes` to skip the confirmation prompt in automated runs.
+
+Royalty QA mode uses a royalty-specific lookback/lookahead scan window for payment-date attribution. Use `--strict-date-range` only for diagnostics.
 
 ---
 
 ## Troubleshooting
 
-### `FileNotFoundError` for `Sales_Template.xlsx`
+### `FileNotFoundError` for a template
 
-Create or restore `financial/sales_export_comparison/templates/Sales_Template.xlsx`, or pass `--template` to `run.py` / `template_builder.py`.
+Create or restore the matching template under `financial/.../templates/`, or pass `--template`.
 
 ### `No rule files found` / invalid org
 
 Check `financial/sales_export_comparison/rules/` for `*.yaml` files. The org key is the filename without `.yaml`.
 
-### Wrong columns or empty data
+### Wrong columns or empty sales data
 
-Open the org YAML and verify `date_column`, `store_column`, `category_column`, `debit_column`, and `credit_column` match the export headers exactly. For Excel dates, set `date_parse_format` if the default parsing fails.
+Open the org YAML and verify `date_column`, `store_column`, `category_column`, `debit_column`, and `credit_column` match the export headers exactly. For Excel dates, set `date_parse_format` if default parsing fails.
 
 ### Category rows do not line up
 
-`category_rows` keys must match the normalized category strings after rewrites. Adjust the YAML or add `category_rewrites` / `category_starts_with` on the appropriate side.
+`category_rows` keys must match normalized category strings after rewrites. Adjust the YAML or add `category_rewrites` / `category_starts_with` on the appropriate side.
+
+### Existing QA output is reused
+
+If `pos_computed.csv` already exists, the runner asks whether to regenerate it. Answer `y` to recompute from `pos_data/`, or press Enter to reuse the existing file.
 
 ### Import errors when running scripts
 
-Run from the **repository root** so `financial` resolves as a package, or use `python financial/sales_export_comparison/run.py` as shown above.
+Run from the repository root so `financial` resolves as a package:
+
+```powershell
+python financial/sales_export_comparison/run.py
+python financial/royalties/run.py
+```
