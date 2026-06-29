@@ -59,6 +59,9 @@ class PipelineConfig:
     pos_data_root: Path
     s3_prefix: str
     force_sync: bool
+    timeclock_source_dates: tuple[date, ...]
+    tips_pos_source_date: date | None
+    tips_pos_source_date_through: date | None
 
 
 def _timestamp_now() -> str:
@@ -96,6 +99,17 @@ def _build_parser() -> argparse.ArgumentParser:
             "'end+1' uses the day after the pay period, 'end' uses the pay period end date."
         ),
     )
+    parser.add_argument(
+        "--timeclock-source-date",
+        action="append",
+        default=None,
+        help=(
+            "Read Employee_Time_Clock.txt from this POS folder date. "
+            "Repeat for split or consolidated exports."
+        ),
+    )
+    parser.add_argument("--tips-pos-source-date", default=None)
+    parser.add_argument("--tips-pos-source-date-through", default=None)
     return parser
 
 
@@ -144,6 +158,19 @@ def _resolve_config(args: argparse.Namespace) -> PipelineConfig:
         pos_data_root=Path(args.pos_data_root),
         s3_prefix=args.s3_prefix,
         force_sync=args.force_sync,
+        timeclock_source_dates=tuple(
+            parse_date_flexible(raw) for raw in (args.timeclock_source_date or [])
+        ),
+        tips_pos_source_date=(
+            parse_date_flexible(args.tips_pos_source_date)
+            if args.tips_pos_source_date
+            else None
+        ),
+        tips_pos_source_date_through=(
+            parse_date_flexible(args.tips_pos_source_date_through)
+            if args.tips_pos_source_date_through
+            else None
+        ),
     )
 
 
@@ -160,10 +187,14 @@ def main() -> None:
     print(f"Run folder   : {run_dir}")
     print(f"POS data     : {cfg.pos_data_root}/")
     print(f"Sync folders : {', '.join(fmt_iso(d) for d in sync_dates)}")
-    tc_source = cfg.end_date + (
-        timedelta(days=1) if cfg.use_end_plus_one_timeclock else timedelta(days=0)
+    tc_sources = cfg.timeclock_source_dates or (
+        cfg.end_date
+        + (timedelta(days=1) if cfg.use_end_plus_one_timeclock else timedelta()),
     )
-    print(f"Time clocks  : Employee_Time_Clock.txt from {fmt_iso(tc_source)}")
+    print(
+        "Time clocks  : Employee_Time_Clock.txt from "
+        + ", ".join(fmt_iso(d) for d in tc_sources)
+    )
 
     if run_dir.name != period_key:
         print("Note: Existing run detected. New rerun folder will be created.")
@@ -196,6 +227,7 @@ def main() -> None:
             use_end_plus_one_timeclock=cfg.use_end_plus_one_timeclock,
             pos_data_root=cfg.pos_data_root,
             output_dir=run_dir / "output",
+            timeclock_source_dates=cfg.timeclock_source_dates,
         )
     )
     print(f"[Stage 2] Done. Spillovers: {attendance_result.spillover_count}")
@@ -220,6 +252,8 @@ def main() -> None:
             end_date=cfg.end_date,
             pos_data_root=cfg.pos_data_root,
             output_dir=run_dir / "output",
+            pos_source_date=cfg.tips_pos_source_date,
+            pos_source_date_through=cfg.tips_pos_source_date_through,
         )
     )
     print(f"[Stage 4] Done. Tips summary -> {tips_result.tips_summary_path.name}")
@@ -260,14 +294,15 @@ def main() -> None:
                 break
 
     if webapp_csv:
-        tips_csv = run_dir / "input" / "centech_tips.csv"
-        if not tips_csv.exists():
-            root_tips = _REPO_ROOT / "centech_tips.csv"
-            if root_tips.exists():
+        tips_csv = next((run_dir / "input").glob("Tips*.csv"), None)
+        if tips_csv is None:
+            root_tips = next(_REPO_ROOT.glob("Tips*.csv"), None)
+            if root_tips:
+                tips_csv = run_dir / "input" / root_tips.name
                 root_tips.rename(tips_csv)
-                print(f"[Stage 6] Moved centech_tips.csv -> {tips_csv}")
+                print(f"[Stage 6] Moved {root_tips.name} -> {tips_csv}")
             else:
-                print(f"[Stage 6] Warning: centech_tips.csv not found, tips totals will be calculated.")
+                print("[Stage 6] Warning: Tips*.csv not found, tips totals will be calculated.")
                 tips_csv = None
 
         comparison_result = run_comparison(

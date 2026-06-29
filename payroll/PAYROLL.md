@@ -97,6 +97,24 @@ python payroll/run_payroll.py --start "Mar 9 2026" --end "Mar 22 2026" --timeclo
 python payroll/run_payroll.py --start "Mar 9 2026" --end "Mar 22 2026" --timeclock-source end
 ```
 
+When a pay period is split across consolidated POS snapshots, repeat
+`--timeclock-source-date`. Rows from all selected files are combined and
+deduplicated:
+
+```powershell
+python payroll/run_payroll.py --start "Jun 15 2026" --end "Jun 30 2026" `
+  --timeclock-source-date "Jun 23 2026" `
+  --timeclock-source-date "Jun 30 2026"
+```
+
+For tips stored in a consolidated snapshot through a specific business date:
+
+```powershell
+python payroll/run_payroll.py --start "Jun 15 2026" --end "Jun 30 2026" `
+  --tips-pos-source-date "Jun 23 2026" `
+  --tips-pos-source-date-through "Jun 23 2026"
+```
+
 ### Step 3: Review the sync summary
 
 Before proceeding, the pipeline will print:
@@ -219,6 +237,9 @@ Optional flags:
 --pos-data-root   Override default pos_data/ location
 --output-dir      Override default output directory
 --timeclock-source end+1|end
+--timeclock-source-date DATE
+                  Read a specific Employee_Time_Clock.txt snapshot; repeat
+                  the option to combine split snapshots with deduplication
 ```
 
 Outputs written to `payroll/runs/<period>/output/`:
@@ -230,7 +251,8 @@ Employee_Total_Hours.json
 
 What this stage does:
 
-- Reads start-folder spillover candidates, then reads main `Employee_Time_Clock.txt` rows from either the end+1 folder or the pay period end folder
+- Reads start-folder spillover candidates, then reads main `Employee_Time_Clock.txt` rows from either the default end/end+1 folder or one or more explicit snapshot folders
+- Combines and deduplicates rows when multiple `--timeclock-source-date` options are supplied
 - Clips timeclock entries that spill across the pay period boundaries
 - Maps Employee_ID and Store_ID to their human-readable numbers
 - Excludes internal/non-payroll stores
@@ -293,6 +315,10 @@ Optional flags:
 ```text
 --pos-data-root   Override default pos_data/ location
 --output-dir      Override default output directory
+--pos-source-date DATE
+                  Read selected business dates from one consolidated POS folder
+--pos-source-date-through DATE
+                  Use the consolidated folder only through this business date
 ```
 
 Output written to `payroll/runs/<period>/output/`:
@@ -304,6 +330,8 @@ tips_summary.json
 What this stage does:
 
 - Processes every day in the pay period from `pos_data/`
+- Supports consolidated exports by filtering `Payment_Date` and `Create_Date`
+  to each requested business date, preventing snapshot double-counting
 - For each day: reads `Sales_Ticket.txt`, matches tickets in `Payment.txt` for paid tips, adds Payins from `Store_Transactions.txt`
 - Maps Store_ID to Store_Number using `Store.txt`
 - Outputs per-store tips broken down by date (format: `Mar-09-2026`) plus a running total
@@ -365,6 +393,7 @@ Optional flags:
 ```text
 --generated-csv   Path to payroll_report.csv (default: payroll/runs/<period>/output/payroll_report.csv)
 --webapp-csv      Path to Timesheet*.csv (default: scans input/ then repo root)
+--tips-csv        Path to a CenTech tips CSV containing Store Number and Total Tips
 --output-dir      Override default output directory
 ```
 
@@ -377,6 +406,7 @@ Payroll_Comparison_<period>.xlsx
 What this stage does:
 
 - Reads `payroll_report.csv` (from Stage 5) and the webapp export `Timesheet*.csv`
+- Uses `Tips*.csv` from the run input folder or repository root when available
 - Filters stores by number, excluding internal/non-payroll stores
 - Creates one Excel sheet per store comparing QA (generated) vs Century (webapp) data side by side
 - Highlights employees only in one source (orange = only in generated, yellow = only in webapp)

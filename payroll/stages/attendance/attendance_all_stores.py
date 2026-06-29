@@ -59,6 +59,8 @@ class AttendanceConfig:
     pos_data_root: Path
     output_dir: Path
     use_end_plus_one_timeclock: bool = True
+    timeclock_source_date: date | None = None
+    timeclock_source_dates: tuple[date, ...] = ()
 
 
 @dataclass
@@ -187,15 +189,15 @@ def run(config: AttendanceConfig) -> AttendanceResult:
         f"{config.end_date.strftime('%Y-%m-%d')} 23:59:59", DT_FMT
     )
     extra_day = config.end_date + timedelta(days=1)
-    timeclock_source_date = (
-        extra_day if config.use_end_plus_one_timeclock else config.end_date
-    )
-    timeclock_source_label = (
-        "end+1 day" if config.use_end_plus_one_timeclock else "end date"
+    configured_source_dates = config.timeclock_source_dates
+    if not configured_source_dates and config.timeclock_source_date is not None:
+        configured_source_dates = (config.timeclock_source_date,)
+    timeclock_source_dates = configured_source_dates or (
+        extra_day if config.use_end_plus_one_timeclock else config.end_date,
     )
 
     # Use the selected timeclock source first for mappings.
-    all_date_folders = [timeclock_source_date, config.start_date]
+    all_date_folders = [*timeclock_source_dates, config.start_date]
     employee_mapping = load_employee_mapping(config.pos_data_root, all_date_folders)
     store_mapping = load_store_mapping(config.pos_data_root, all_date_folders)
     print(
@@ -224,20 +226,22 @@ def run(config: AttendanceConfig) -> AttendanceResult:
     else:
         print(f"[attendance] No timeclock at start folder: {start_tc}")
 
-    # 2) Selected source folder - main timeclock data for the pay period
-    main_tc = (
-        config.pos_data_root
-        / fmt_iso(timeclock_source_date)
-        / "Employee_Time_Clock.txt"
-    )
-    if main_tc.exists():
-        rows = load_timeclock_rows(main_tc)
-        print(
-            f"[attendance] {len(rows)} rows from {timeclock_source_label} folder ({fmt_iso(timeclock_source_date)})"
+    # 2) Selected source folders - main timeclock data for the pay period
+    for source_date in timeclock_source_dates:
+        main_tc = (
+            config.pos_data_root
+            / fmt_iso(source_date)
+            / "Employee_Time_Clock.txt"
         )
-        all_rows.extend(rows)
-    else:
-        print(f"[attendance] No timeclock at {timeclock_source_label} folder: {main_tc}")
+        if main_tc.exists():
+            rows = load_timeclock_rows(main_tc)
+            print(
+                f"[attendance] {len(rows)} rows from source folder "
+                f"({fmt_iso(source_date)})"
+            )
+            all_rows.extend(rows)
+        else:
+            print(f"[attendance] No timeclock at source folder: {main_tc}")
 
     # Deduplicate
     seen = set()
@@ -410,6 +414,16 @@ def build_parser() -> argparse.ArgumentParser:
             "'end+1' uses the day after the pay period, 'end' uses the pay period end date."
         ),
     )
+    parser.add_argument(
+        "--timeclock-source-date",
+        type=str,
+        action="append",
+        default=None,
+        help=(
+            "Read main Employee_Time_Clock.txt rows from this POS folder date. "
+            "Repeat for split or consolidated exports."
+        ),
+    )
     return parser
 
 
@@ -453,6 +467,9 @@ def main() -> None:
         if args.timeclock_source
         else _prompt_timeclock_source()
     )
+    timeclock_source_dates = tuple(
+        parse_date_flexible(raw) for raw in (args.timeclock_source_date or [])
+    )
 
     period_key = build_pay_period_key(start_date, end_date)
     output_dir = (
@@ -468,6 +485,7 @@ def main() -> None:
             pos_data_root=Path(args.pos_data_root),
             output_dir=output_dir,
             use_end_plus_one_timeclock=use_end_plus_one_timeclock,
+            timeclock_source_dates=timeclock_source_dates,
         )
     )
 

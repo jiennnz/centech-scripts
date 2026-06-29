@@ -31,6 +31,8 @@ class TipsConfig:
     end_date: date
     pos_data_root: Path
     output_dir: Path
+    pos_source_date: date | None = None
+    pos_source_date_through: date | None = None
 
 
 @dataclass
@@ -68,21 +70,30 @@ def _get_ticket_numbers(folder_path: Path) -> Dict[str, set]:
     return ticket_store_map
 
 
-def _get_tips(folder_path: Path, ticket_store_map: Dict[str, set]) -> Dict[str, float]:
+def _get_tips(
+    folder_path: Path,
+    ticket_store_map: Dict[str, set],
+    business_date: date | None = None,
+) -> Dict[str, float]:
     tip_store_map = defaultdict(float)
     payment_file = folder_path / "Payment.txt"
 
     if payment_file.exists():
         with open(payment_file, "r", encoding="utf-8") as f:
             headers = f.readline().strip().split("|")
-            if all(col in headers for col in ("Ticket_Number", "Tip_Amount", "Tip_Paid")):
+            required = ("Ticket_Number", "Tip_Amount", "Tip_Paid", "Payment_Date")
+            if all(col in headers for col in required):
                 ticket_idx = headers.index("Ticket_Number")
                 tip_idx = headers.index("Tip_Amount")
                 tip_paid_idx = headers.index("Tip_Paid")
+                payment_date_idx = headers.index("Payment_Date")
 
                 for line in f:
                     values = line.strip().split("|")
-                    if len(values) > max(ticket_idx, tip_idx, tip_paid_idx):
+                    if len(values) > max(ticket_idx, tip_idx, tip_paid_idx, payment_date_idx):
+                        payment_date = values[payment_date_idx].strip()[:10]
+                        if business_date is not None and payment_date != fmt_iso(business_date):
+                            continue
                         ticket_number = values[ticket_idx].strip()
                         tip_amount = float(values[tip_idx]) if values[tip_idx] else 0.0
                         tip_paid = values[tip_paid_idx].strip().lower() == "true"
@@ -95,22 +106,30 @@ def _get_tips(folder_path: Path, ticket_store_map: Dict[str, set]) -> Dict[str, 
     return tip_store_map
 
 
-def _add_payins(folder_path: Path, tip_store_map: Dict[str, float]) -> None:
+def _add_payins(
+    folder_path: Path,
+    tip_store_map: Dict[str, float],
+    business_date: date | None = None,
+) -> None:
     store_transactions_file = folder_path / "Store_Transactions.txt"
 
     if store_transactions_file.exists():
         with open(store_transactions_file, "r", encoding="utf-8") as f:
             headers = f.readline().strip().split("|")
-            required = ("Store_ID", "Transaction_Type_Name", "Amount", "Status")
+            required = ("Store_ID", "Transaction_Type_Name", "Amount", "Status", "Create_Date")
             if all(col in headers for col in required):
                 store_idx = headers.index("Store_ID")
                 type_idx = headers.index("Transaction_Type_Name")
                 amount_idx = headers.index("Amount")
                 status_idx = headers.index("Status")
+                create_date_idx = headers.index("Create_Date")
 
                 for line in f:
                     values = line.strip().split("|")
-                    if len(values) > max(store_idx, type_idx, amount_idx, status_idx):
+                    if len(values) > max(store_idx, type_idx, amount_idx, status_idx, create_date_idx):
+                        create_date = values[create_date_idx].strip()[:10]
+                        if business_date is not None and create_date != fmt_iso(business_date):
+                            continue
                         store_id = values[store_idx].strip()
                         transaction_type = values[type_idx].strip()
                         amount = float(values[amount_idx]) if values[amount_idx] else 0.0
@@ -146,19 +165,37 @@ def run(config: TipsConfig) -> TipsResult:
     store_mapping: Dict[str, str] = {}
 
     print(f"[tips] Processing {len(period_dates)} day(s) from {fmt_iso(config.start_date)} to {fmt_iso(config.end_date)}")
+    if config.pos_source_date is not None:
+        if config.pos_source_date_through is not None:
+            print(
+                f"[tips] Reading days through {fmt_iso(config.pos_source_date_through)} "
+                f"from source folder {fmt_iso(config.pos_source_date)}"
+            )
+        else:
+            print(f"[tips] Reading all selected days from source folder {fmt_iso(config.pos_source_date)}")
 
     for d in tqdm(period_dates, desc="[tips] Processing days"):
-        folder_path = config.pos_data_root / fmt_iso(d)
+        source_date = (
+            config.pos_source_date
+            if config.pos_source_date is not None
+            and (
+                config.pos_source_date_through is None
+                or d <= config.pos_source_date_through
+            )
+            else d
+        )
+        folder_path = config.pos_data_root / fmt_iso(source_date)
 
         if not folder_path.exists():
             continue
 
         date_str = fmt_human(d)
+        business_date = d if config.pos_source_date is not None else None
 
         _load_store_mapping(folder_path, store_mapping)
         ticket_store_map = _get_ticket_numbers(folder_path)
-        tip_store_map = _get_tips(folder_path, ticket_store_map)
-        _add_payins(folder_path, tip_store_map)
+        tip_store_map = _get_tips(folder_path, ticket_store_map, business_date)
+        _add_payins(folder_path, tip_store_map, business_date)
 
         for store_id, total_tip in tip_store_map.items():
             store_number = store_mapping.get(store_id, f"Unknown-{store_id}")
@@ -187,6 +224,24 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--end", type=str, help="Pay period end (e.g. 'Mar 22 2026')")
     parser.add_argument("--pos-data-root", type=str, default=DEFAULT_POS_DATA_ROOT)
     parser.add_argument(
+        "--pos-source-date",
+        type=str,
+        default=None,
+        help=(
+            "Read every selected business day from this POS folder date. "
+            "Use for consolidated exports stored under one date folder."
+        ),
+    )
+    parser.add_argument(
+        "--pos-source-date-through",
+        type=str,
+        default=None,
+        help=(
+            "Use --pos-source-date only through this business date; later days "
+            "read their own daily POS folders."
+        ),
+    )
+    parser.add_argument(
         "--output-dir",
         type=str,
         default=None,
@@ -212,6 +267,12 @@ def main() -> None:
 
     start_date = parse_date_flexible(args.start) if args.start else _prompt_date("Start date: ")
     end_date = parse_date_flexible(args.end) if args.end else _prompt_date("End date: ")
+    pos_source_date = parse_date_flexible(args.pos_source_date) if args.pos_source_date else None
+    pos_source_date_through = (
+        parse_date_flexible(args.pos_source_date_through)
+        if args.pos_source_date_through
+        else None
+    )
 
     if start_date > end_date:
         raise SystemExit("Start date must be <= end date.")
@@ -228,6 +289,8 @@ def main() -> None:
         end_date=end_date,
         pos_data_root=Path(args.pos_data_root),
         output_dir=output_dir,
+        pos_source_date=pos_source_date,
+        pos_source_date_through=pos_source_date_through,
     ))
 
 

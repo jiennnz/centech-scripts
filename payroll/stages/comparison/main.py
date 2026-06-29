@@ -116,6 +116,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to generated payroll CSV (default: payroll/runs/<period>/output/payroll_report.csv)")
     parser.add_argument("--webapp-csv", type=str, default=None,
         help="Path to webapp export CSV (default: scans payroll/runs/<period>/input/Timesheet*.csv)")
+    parser.add_argument("--tips-csv", type=str, default=None,
+        help="Path to CenTech tips CSV with Store Number and Total Tips columns")
     parser.add_argument("--output-dir", type=str, default=None,
         help="Output directory (default: payroll/runs/<period>/output)")
     return parser
@@ -169,6 +171,7 @@ def main() -> None:
         generated_csv=generated_csv,
         webapp_csv=webapp_csv,
         output_dir=output_dir,
+        tips_csv=Path(args.tips_csv) if args.tips_csv else None,
     ))
 
 

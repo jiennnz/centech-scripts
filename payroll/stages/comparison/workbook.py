@@ -445,7 +445,7 @@ def add_store_data_to_sheet(
                 })
 
     if centech_tips and store in centech_tips:
-        total_tip_generated = centech_tips[store]
+        total_tip_webapp = centech_tips[store]
 
     tip_rate_generated = total_tip_generated / total_hours_generated if total_hours_generated > 0 else 0
     tip_rate_webapp = total_tip_webapp / total_hours_webapp if total_hours_webapp > 0 else 0
