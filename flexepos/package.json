@@ -1,0 +1,20 @@
+{
+  "name": "centech-flexepos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reusable Playwright automation for approved FlexePOS reports.",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "financial": "node src/financial/run.js",
+    "check": "node --check src/browser.js && node --check src/financial/csd.js && node --check src/financial/run.js && node --check src/financial/rebuild.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "dependencies": {
+    "playwright": "^1.45.0",
+    "yaml": "^2.5.0"
+  }
+}
