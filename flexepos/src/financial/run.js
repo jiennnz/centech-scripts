@@ -88,15 +88,26 @@ async function locateCsd(page) {
   await page.goto("https://fms.flexepos.com/FlexeposWeb/home.seam", {
     waitUntil: "domcontentloaded"
   });
-  const corporateReports = page.locator(".menu-header", {
-    hasText: "Corporate Reports"
-  }).first();
-  await corporateReports.waitFor({ state: "visible" });
-  await corporateReports.click();
+  try {
+    const corporateReports = page.locator(".menu-header", {
+      hasText: "Corporate Reports"
+    }).first();
+    await corporateReports.waitFor({ state: "visible", timeout: 10000 });
+    await corporateReports.click();
 
-  const link = page.getByRole("link", { name: "CSD Daily Sales", exact: true });
-  await link.waitFor({ state: "visible" });
-  return link.getAttribute("href");
+    const link = page.getByRole("link", { name: "CSD Daily Sales", exact: true });
+    await link.waitFor({ state: "visible", timeout: 10000 });
+    return await link.getAttribute("href");
+  } catch (error) {
+    const directUrl =
+      "https://fms.flexepos.com/FlexeposWeb/reports/netsuite.seam?cid=29099";
+    console.warn(
+      `[navigation] CSD menu unavailable; using direct report URL: ${error.message}`
+    );
+    await page.goto(directUrl, { waitUntil: "domcontentloaded" });
+    await page.locator("#parameters\\:store").waitFor({ state: "visible" });
+    return page.url();
+  }
 }
 
 async function run() {
