@@ -44,7 +44,6 @@ EXCLUDED_STORE_NUMBERS = {
     37019,
     4069,
     4089,
-    5043,
 }
 
 OUTPUT_HOURS_SUMMARY = "Employee_Hours_Summary.json"
@@ -243,19 +242,25 @@ def run(config: AttendanceConfig) -> AttendanceResult:
         else:
             print(f"[attendance] No timeclock at source folder: {main_tc}")
 
-    # Deduplicate
-    seen = set()
-    unique_rows = []
+    # Later snapshots contain corrections to punches identified by Creation_Time.
+    rows_by_key = {}
     for row in all_rows:
-        key = (
-            row.get("Store_ID"),
-            row.get("Employee_ID"),
-            row.get("Start"),
-            row.get("End"),
-        )
-        if key not in seen:
-            seen.add(key)
-            unique_rows.append(row)
+        creation_time = row.get("Creation_Time")
+        if creation_time:
+            key = (
+                row.get("Store_ID"),
+                row.get("Employee_ID"),
+                creation_time,
+            )
+        else:
+            key = (
+                row.get("Store_ID"),
+                row.get("Employee_ID"),
+                row.get("Start"),
+                row.get("End"),
+            )
+        rows_by_key[key] = row
+    unique_rows = list(rows_by_key.values())
     print(
         f"[attendance] {len(unique_rows)} unique rows (from {len(all_rows)} total after dedup)."
     )

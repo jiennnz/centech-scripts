@@ -4,8 +4,10 @@ import argparse
 import csv
 import json
 import sys
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -165,15 +167,53 @@ def _compute_coded_amounts(
     store_hours: Dict[str, float],
     tip_summary: Dict,
 ) -> None:
+    entries_by_store: Dict[str, List[Dict]] = defaultdict(list)
     for entry in data:
-        store_number = str(entry["Store Number"])
-        if store_number in tip_summary and store_number in store_hours:
-            tip_total = tip_summary[store_number].get("total", 0)
-            total_hours = store_hours[store_number]
-            if total_hours > 0:
-                tip_rate = tip_total / total_hours
-                coded_amount = (entry["Regular Hours"] + entry["Overtime Hours"]) * tip_rate
-                entry["Coded Amount"] = f"${coded_amount:.2f}"
+        entries_by_store[str(entry["Store Number"])].append(entry)
+
+    for store_number, entries in entries_by_store.items():
+        if store_number not in tip_summary or store_number not in store_hours:
+            continue
+
+        total_hours = Decimal(str(store_hours[store_number]))
+        if total_hours <= 0:
+            continue
+
+        tip_total = Decimal(str(tip_summary[store_number].get("total", 0)))
+        target_cents = int(
+            (tip_total * 100).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
+        )
+        allocations = []
+        allocated_cents = 0
+
+        for entry in entries:
+            hours = Decimal(str(entry["Regular Hours"] + entry["Overtime Hours"]))
+            exact_cents = hours * tip_total * 100 / total_hours
+            base_cents = int(exact_cents.to_integral_value(rounding=ROUND_FLOOR))
+            allocated_cents += base_cents
+            allocations.append(
+                {
+                    "entry": entry,
+                    "cents": base_cents,
+                    "remainder": exact_cents - base_cents,
+                }
+            )
+
+        residual_cents = target_cents - allocated_cents
+        allocations.sort(
+            key=lambda item: (
+                item["remainder"],
+                str(item["entry"]["Employee Number"]),
+            ),
+            reverse=True,
+        )
+        for index in range(residual_cents):
+            allocations[index % len(allocations)]["cents"] += 1
+
+        for allocation in allocations:
+            allocation["entry"]["Coded Amount"] = (
+                f"${allocation['cents'] / 100:.2f}"
+            )
 
 
 def _write_csv(output_path: Path, data: List[Dict]) -> None:
