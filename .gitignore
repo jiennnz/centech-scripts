@@ -5,3 +5,9 @@ __pycache__/
 .venv/
 payroll/runs
 financial/sales_export_comparison/runs
+flexepos/.auth/
+flexepos/runs/
+Centech/env.txt
+Centech/output/
+sales_report_*.xlsx
+scripts/financial/pos_audit/audits/
