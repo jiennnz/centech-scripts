@@ -120,8 +120,6 @@ not leak into `ISCC`.
 Qualifying rows: Payment_Type_ID == 14
   AND Processing_Status_ID is eligible:
         status 4 (Processed)  — always eligible
-        status 8              — always eligible when the row otherwise matches the
-                                ISCC/ISCCT ticket and transaction-shape rules
         status 2 (Open)       — eligible only if this ticket has exactly one
                                 type-14 row across the full cross-date scan window
                                 (3-day lookback + range + 30-day lookahead).
@@ -159,7 +157,7 @@ and original token rows into Online CC.
 | tlen | Tip_Paid | Processing_Status_ID | Ticket in | Result |
 |---|---|---|---|---|
 | 4 | any | 4 | — | Qualifies (short-ID swipe) |
-| 4 | any | 8 | — | Qualifies (short-ID processed/settled row) |
+| any | any | 8 | — | Excluded — provisional payment status |
 | 6 | True | 4 | — | Qualifies (swiped, tip settled) |
 | 32 | any | 4 | in-store ticket type | Qualifies — chip/token in-store; ticket type controls the split |
 | 32 | True | 4 | Ticket_Type_ID=5 | Not ISCC → Online CC |
@@ -220,7 +218,6 @@ Same-day cash gift card purchase:
 ```
 Qualifying rows: Payment_Type_ID == 14
   AND Processing_Status_ID is eligible (same rule as ISCC: status 4 always,
-        status 8 always,
         status 2 only if sole type-14 row across the full cross-date scan window)
   AND Tip_Amount != 0  (includes negative tip refunds)
   AND Ticket_Number NOT IN status_8_tix
@@ -359,16 +356,11 @@ credit = SUM(Tip_Amount)
 ### Register Audit
 ```
 Source: Store_Transactions.txt WHERE Transaction_Type_Name == "Register Audit"
-debit = last non-void row's Amount for the store+date,
-        skipping trailing re-audit rows whose matching DailyJournal
-        entry has Amount == parsed Over/Short (cancelled re-audits)
+debit = last non-void row's Amount for the store+date
 ```
 
-**Cancellation rule**: DailyJournal rows where `Amount == parsed Over/Short` are treated
-as cancelled re-audit rows. The verifier skips those rows when selecting Cash Over/Short
-and skips matching non-void Register Audit transaction amounts from the end of the day.
-If every parseable DailyJournal Register Audit row is cancelled, both Register Audit and
-Cash Over/Short remain zero.
+`DailyJournal.txt` is not used to select Register Audit. When present, it is used
+only for Cash Over/Short Adjustment.
 
 ### Payout
 ```
@@ -410,7 +402,7 @@ transactions and are ignored.
 
 ### Cash Over/Short Adjustment
 ```
-Source: DailyJournal.txt WHERE Action == "Register Audit"
+Optional source: DailyJournal.txt WHERE Action == "Register Audit"
         parsed from Comments field: "Over/Short: <value>"
 
 The verifier walks DailyJournal Register Audit rows from latest to earliest:
@@ -421,6 +413,9 @@ The verifier walks DailyJournal Register Audit rows from latest to earliest:
 For the selected value:
   If value < 0:  debit  = abs(value), credit = 0
   If value >= 0: debit  = 0,          credit = value
+
+If DailyJournal.txt is absent, Cash Over/Short remains 0 and all other QA
+categories are still calculated.
 ```
 
 ---

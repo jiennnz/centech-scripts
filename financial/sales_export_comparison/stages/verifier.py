@@ -7,7 +7,6 @@ QA-vs-CenTech or QA-vs-Client comparison runs.
 from __future__ import annotations
 
 import re
-from collections import Counter
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
@@ -56,6 +55,9 @@ class VerifierConfig:
     end_date: date
     output_csv_path: Path
     include_cross_date_lookahead: bool = True
+    pos_source_date: date | None = None
+    pos_source_date_from: date | None = None
+    pos_source_date_through: date | None = None
 
 
 def _build_cross_date_payments(pos_data_dir: Path, all_dates: list) -> dict[str, pd.DataFrame]:
@@ -193,10 +195,18 @@ def _load_date_frames(data_dir: Path) -> dict[str, pd.DataFrame] | None:
         sts       = pd.read_csv(data_dir / "Sales_Ticket_Summary.txt", sep="|", dtype=str)
         pay       = pd.read_csv(data_dir / "Payment.txt",              sep="|", dtype=str)
         txn       = pd.read_csv(data_dir / "Store_Transactions.txt",   sep="|", dtype=str)
-        dj        = pd.read_csv(data_dir / "DailyJournal.txt",         sep="|", dtype=str)
         store_ref = pd.read_csv(data_dir / "Store.txt",                sep="|", dtype=str)
     except FileNotFoundError:
         return None
+
+    try:
+        dj = pd.read_csv(data_dir / "DailyJournal.txt", sep="|", dtype=str)
+    except FileNotFoundError:
+        # DailyJournal is optional. It is used only for Cash Over/Short;
+        # Register Audit comes from Store_Transactions.
+        dj = pd.DataFrame(
+            columns=["Store_Number", "Action", "Amount", "Comments"]
+        )
 
     # Numeric conversions — once per date, not once per store
     for col in ["Taxable_Amount", "Non_Taxable_Amount", "Total"]:
@@ -240,6 +250,7 @@ def compute_store_day(
     cross_date_pay: pd.DataFrame | None = None,
     cross_date_txn: pd.DataFrame | None = None,
     cross_date_sales: tuple[pd.DataFrame, pd.DataFrame] | None = None,
+    skip_stale_refund_copy_filter: bool = False,
 ) -> list[tuple[str, float, float]] | None:
     """Compute all financial categories for one store + date.
 
@@ -272,6 +283,8 @@ def compute_store_day(
         if not xst.empty:
             store_st = xst[xst["Store_ID"] == str(store_id)]
             if (
+                not skip_stale_refund_copy_filter
+                and
                 "_source_pos_date" in store_st.columns
                 and "_source_pos_date" in xsts.columns
                 and "Refund" in same_day_store_st.columns
@@ -419,12 +432,10 @@ def compute_store_day(
     dj_store = dj[dj["Store_Number"] == str(store_number)]
     ra_dj    = dj_store[dj_store["Action"] == "Register Audit"]
     cash_over_short = 0.0
-    _ra_dj_cancelled = False
     if len(ra_dj):
         # Walk backwards: skip cancelled rows (Amount == OvSh), use the first real one.
         # A second RA where Amount==OvSh means the cashier voided/re-did the audit;
         # the earlier record holds the actual over/short.
-        _any_cancelled = False
         for _, row in ra_dj.iloc[::-1].iterrows():
             m = re.search(r"Over/Short:\s*([-\d.]+)", str(row["Comments"]))
             if not m:
@@ -432,15 +443,9 @@ def compute_store_day(
             cos_val   = float(m.group(1))
             dj_amount = pd.to_numeric(row.get("Amount", None), errors="coerce")
             if pd.notna(dj_amount) and dj_amount == cos_val:
-                _any_cancelled = True
                 continue  # cancelled row — look for an earlier real one
             cash_over_short = cos_val
             break
-        else:
-            # All parseable rows were cancelled (or none were parseable)
-            if _any_cancelled:
-                _ra_dj_cancelled = True
-
     # ── Store_Transactions ─────────────────────────────────────────────────
     payin_rows = store_txn[
         (store_txn["Transaction_Type_Name"] == "Payins")
@@ -456,30 +461,13 @@ def compute_store_day(
     ra_rows = store_txn[store_txn["Transaction_Type_Name"] == "Register Audit"]
     register_audit = 0.0
     if len(ra_rows):
-        # DailyJournal rows where Amount == parsed Over/Short are cancelled re-audits.
-        # Skip matching non-void Store_Transactions rows from the end so the last
-        # surviving register audit amount is the real counted cash total.
-        _cancelled_ra_counts = Counter()
-        for _, row in ra_dj.iterrows():
-            m = re.search(r"Over/Short:\s*([-\d.]+)", str(row["Comments"]))
-            if not m:
-                continue
-            cos_val = float(m.group(1))
-            dj_amount = pd.to_numeric(row.get("Amount", None), errors="coerce")
-            if pd.notna(dj_amount) and dj_amount == cos_val:
-                _cancelled_ra_counts[float(dj_amount)] += 1
-
-        _candidate_ra_rows = ra_rows[ra_rows["Status"] != "Void"] if "Status" in ra_rows.columns else ra_rows
-        for _, row in _candidate_ra_rows.iloc[::-1].iterrows():
-            ra_amount = float(row["Amount"])
-            if _cancelled_ra_counts[ra_amount] > 0:
-                _cancelled_ra_counts[ra_amount] -= 1
-                continue
-            register_audit = ra_amount
-            break
-
-    if _ra_dj_cancelled:
-        register_audit = 0.0
+        candidate_rows = (
+            ra_rows[ra_rows["Status"] != "Void"]
+            if "Status" in ra_rows.columns
+            else ra_rows
+        )
+        if len(candidate_rows):
+            register_audit = float(candidate_rows.iloc[-1]["Amount"])
 
     # Exclude payouts that were subsequently voided — both the Inserted and Void rows share
     # the same Transaction_Date so they both land in store_txn; voided IDs net to zero.
@@ -502,13 +490,16 @@ def compute_store_day(
     # ISCCT / ISCC / Discarded CC use cross-date payments attributed by Payment_Date
     _cdp_14 = _cdp[_cdp["Payment_Type_ID"] == "14"] if not _cdp.empty else pd.DataFrame(columns=_cdp.columns)
     # Status-2 (Open) rows: include only if ticket appears exactly once in type-14 scan window data.
-    # Multiple rows = payment settled later (status-4 sibling exists) or genuine duplicate.
+    # Processing status 8 is provisional and is never included in ISCC/ISCCT.
     if not _cdp_14.empty:
         _t14_counts = _cdp_14.groupby("Ticket_Number")["Ticket_Number"].transform("count")
         _is_status_2_sole = (_cdp_14["Processing_Status_ID"] == "2") & (_t14_counts == 1)
     else:
         _is_status_2_sole = pd.Series(dtype=bool)
-    _is_status_eligible = _cdp_14["Processing_Status_ID"].isin(["4", "8"]) | _is_status_2_sole
+    _is_status_eligible = (
+        (_cdp_14["Processing_Status_ID"] == "4")
+        | _is_status_2_sole
+    )
     _iscct_shape = (
         _cdp_14["_tlen"].isin([4, 6])
         | (
@@ -627,8 +618,8 @@ def compute_store_day(
 
 def _run_date_task(args: tuple) -> list[tuple[str, str, list[tuple[str, float, float]] | None]]:
     """Load date folder once, compute all stores. Replaces per-store-day task dispatch."""
-    date_str, store_list, pos_data_dir, cdp_slice, cdt_slice, cds_slice = args
-    data_dir = pos_data_dir / date_str
+    date_str, store_list, pos_data_dir, source_date_str, cdp_slice, cdt_slice, cds_slice, skip_stale_refund_copy_filter = args
+    data_dir = pos_data_dir / source_date_str
     frames = _load_date_frames(data_dir)
     if frames is None:
         return [(s, date_str, None) for s in store_list]
@@ -638,7 +629,13 @@ def _run_date_task(args: tuple) -> list[tuple[str, str, list[tuple[str, float, f
             tqdm.write(f"[verifier] Skipping non-numeric store: {store_str!r}")
             continue
         result = compute_store_day(
-            int(store_str), date_str, frames, cdp_slice, cdt_slice, cds_slice
+            int(store_str),
+            date_str,
+            frames,
+            cdp_slice,
+            cdt_slice,
+            cds_slice,
+            skip_stale_refund_copy_filter,
         )
         results.append((store_str, date_str, result))
     return results
@@ -661,7 +658,35 @@ def run(config: VerifierConfig) -> int:
         all_dates.append(current)
         current += timedelta(days=1)
 
-    _scan_dates = list(all_dates)
+    def source_date_for(business_date: date) -> date:
+        if config.pos_source_date is None:
+            return business_date
+        if (
+            config.pos_source_date_from is not None
+            and business_date < config.pos_source_date_from
+        ):
+            return business_date
+        if (
+            config.pos_source_date_through is not None
+            and business_date > config.pos_source_date_through
+        ):
+            return business_date
+        return config.pos_source_date
+
+    _scan_dates = list(dict.fromkeys(source_date_for(d) for d in all_dates))
+    if config.pos_source_date is not None and (
+        config.pos_source_date_from is not None
+        or config.pos_source_date_through is not None
+    ):
+        tqdm.write(
+            "[verifier] Reading business dates "
+            f"{config.pos_source_date_from or config.start_date} through "
+            f"{config.pos_source_date_through or config.end_date} from source folder "
+            f"{config.pos_source_date.isoformat()}"
+        )
+    elif config.pos_source_date is not None:
+        _scan_dates = [config.pos_source_date]
+        tqdm.write(f"[verifier] Reading selected business dates from source folder {config.pos_source_date.isoformat()}")
     if config.include_cross_date_lookahead:
         # Extend scan window by 30 days past end_date so payments/transactions that settled
         # in later folders but are dated within the range are captured.
@@ -697,13 +722,16 @@ def run(config: VerifierConfig) -> int:
     tasks: list[tuple] = []
     for current in all_dates:
         date_str = current.isoformat()
+        source_date = source_date_for(current)
         tasks.append((
             date_str,
             config.stores,
             config.pos_data_dir,
+            source_date.isoformat(),
             cross_date_by_date.get(date_str),
             cross_date_txn_by_date.get(date_str),
             cross_date_sales_by_date.get(date_str),
+            source_date != current,
         ))
 
     rows: list[dict] = []

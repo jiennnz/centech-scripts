@@ -45,7 +45,7 @@ def _empty_base_frames() -> dict[str, pd.DataFrame]:
 
 
 class RegisterAuditSelectionTests(unittest.TestCase):
-    def test_skips_self_cancelled_reaudit_rows(self) -> None:
+    def test_uses_last_non_void_store_transaction(self) -> None:
         frames = _empty_base_frames()
         frames.update(
             {
@@ -114,7 +114,7 @@ class RegisterAuditSelectionTests(unittest.TestCase):
         self.assertIsNotNone(result)
 
         rows = {category: (debit, credit) for category, debit, credit in result}
-        self.assertEqual(rows["Register Audit"], (338.0, 0.0))
+        self.assertEqual(rows["Register Audit"], (378.0, 0.0))
         self.assertEqual(rows["Cash Over/Short Adjustment"], (0.0, 0.31))
 
 
@@ -192,7 +192,7 @@ class CancelledTicketCategoryTests(unittest.TestCase):
 
 
 class CardProcessingStatusTests(unittest.TestCase):
-    def test_processing_status_8_is_included_in_iscc_and_iscct(self) -> None:
+    def test_processing_status_8_is_excluded_from_iscc_and_iscct(self) -> None:
         frames = _empty_base_frames()
         frames["st"] = pd.DataFrame(
             [
@@ -251,9 +251,9 @@ class CardProcessingStatusTests(unittest.TestCase):
         self.assertIsNotNone(result)
 
         rows = {category: (debit, credit) for category, debit, credit in result}
-        self.assertEqual(rows["In-Store Credit Card"], (51.67, 0.0))
+        self.assertEqual(rows["In-Store Credit Card"], (0.0, 0.0))
         self.assertEqual(round(rows["In-Store Credit Card Tips"][0], 2), 0.0)
-        self.assertEqual(round(rows["In-Store Credit Card Tips"][1], 2), 4.31)
+        self.assertEqual(round(rows["In-Store Credit Card Tips"][1], 2), 0.0)
 
 
 class CrossDateSalesAttributionTests(unittest.TestCase):

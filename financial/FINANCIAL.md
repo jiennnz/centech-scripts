@@ -283,7 +283,7 @@ Key behaviors:
 - Cross-date payments and ticket sales: `Payment.txt`, `Sales_Ticket.txt`, and `Sales_Ticket_Summary.txt` are scanned across the 3-day lookback and 30-day lookahead window, then attributed by `Payment_Date`.
 - Cross-date transactions: `Store_Transactions.txt` uses the same scan window and attributes payouts/payins by `Transaction_Date`.
 - Status 2 card rows: included for ISCC/ISCCT only when the ticket has exactly one type-14 row in the scan window.
-- Status 8 card rows: included for ISCC/ISCCT only when the payment has no later/final copy in the scan window.
+- Status 8 card rows: excluded from ISCC/ISCCT because they are provisional.
 - Voided payouts: inserted payout rows with a matching void row are excluded.
 - Gift Card Sold in ISCC: only the credit-card-paid portion of gift-card-sold tickets is added to ISCC; cash-paid gift-card purchases do not inflate card totals.
 - Online refund handling: online/token refund rows stay in `Online Credit card`; in-store refund rows with short transaction IDs remain in ISCC/ISCCT and net there.

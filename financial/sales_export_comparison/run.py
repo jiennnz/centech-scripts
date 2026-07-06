@@ -11,6 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from dateutil import parser as date_parser
+from tqdm import tqdm
 
 from financial.sales_export_comparison.rules import available_orgs, load_org_rule
 from financial.sales_export_comparison.stages.diagnostics import DiagnosticsConfig
@@ -51,6 +52,9 @@ class RunConfig:
     qa_on_left: bool = False  # QA fills centech slot (QA vs Client)
     centech_label: str = "CenTech"
     include_cross_date_lookahead: bool = True
+    pos_source_date: date | None = None
+    pos_source_date_from: date | None = None
+    pos_source_date_through: date | None = None
 
 
 def parse_date_flexible(raw: str) -> date:
@@ -339,6 +343,27 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to pos_data/ root; generates pos_computed.csv (QA vs CenTech by default)",
     )
     parser.add_argument(
+        "--pos-source-date",
+        type=str,
+        default=None,
+        help=(
+            "Read every selected business day from this POS folder date when "
+            "generating QA/POS data."
+        ),
+    )
+    parser.add_argument(
+        "--pos-source-date-from",
+        type=str,
+        default=None,
+        help="First business date read from --pos-source-date.",
+    )
+    parser.add_argument(
+        "--pos-source-date-through",
+        type=str,
+        default=None,
+        help="Last business date read from --pos-source-date.",
+    )
+    parser.add_argument(
         "--qa-left",
         action="store_true",
         help="Put QA on left side (QA vs Client) instead of right",
@@ -348,7 +373,10 @@ def _build_parser() -> argparse.ArgumentParser:
         "--strict-date-range",
         action="store_true",
         default=None,
-        help="For QA/POS verification, scan only folders within --start/--end; disables the 30-day cross-date lookahead",
+        help=(
+            "For diagnostic QA/POS verification only, scan folders within --start/--end; "
+            "this disables payment-date lookahead and may not match Client exports."
+        ),
     )
     scan_group.add_argument(
         "--include-cross-date-lookahead",
@@ -379,6 +407,21 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
 
     centech_only = bool(args.centech_only)
     pos_data_dir = Path(args.pos_data_dir) if args.pos_data_dir else None
+    pos_source_date = parse_date_flexible(args.pos_source_date) if args.pos_source_date else None
+    pos_source_date_from = (
+        parse_date_flexible(args.pos_source_date_from)
+        if args.pos_source_date_from
+        else None
+    )
+    pos_source_date_through = (
+        parse_date_flexible(args.pos_source_date_through)
+        if args.pos_source_date_through
+        else None
+    )
+    if (pos_source_date_from or pos_source_date_through) and pos_source_date is None:
+        raise SystemExit(
+            "--pos-source-date-from/through require --pos-source-date."
+        )
     qa_on_left = bool(getattr(args, "qa_left", False))
 
     org_key = args.org if args.org else _prompt_org(rules_dir)
@@ -468,6 +511,9 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         qa_on_left=qa_on_left,
         centech_label="QA" if qa_on_left else "CenTech",
         include_cross_date_lookahead=include_cross_date_lookahead,
+        pos_source_date=pos_source_date,
+        pos_source_date_from=pos_source_date_from,
+        pos_source_date_through=pos_source_date_through,
     )
 
 
@@ -504,6 +550,14 @@ def main() -> None:
     elif config.pos_data_dir is not None and config.qa_on_left:
         print("Data mode    : QA vs Client (QA on left)")
         print(f"POS data dir : {config.pos_data_dir}")
+        if config.pos_source_date is not None:
+            print(f"POS source   : {config.pos_source_date.isoformat()}")
+            if config.pos_source_date_from or config.pos_source_date_through:
+                print(
+                    "POS source window: "
+                    f"{config.pos_source_date_from or config.start_date} through "
+                    f"{config.pos_source_date_through or config.end_date}"
+                )
         print(
             "QA scan mode : "
             + ("date range + 30-day lookahead" if config.include_cross_date_lookahead else "selected date range only")
@@ -514,6 +568,8 @@ def main() -> None:
         print("Data mode    : CenTech vs QA (QA on right)")
         print(f"CenTech CSV  : {config.centech_csv}")
         print(f"POS data dir : {config.pos_data_dir}")
+        if config.pos_source_date is not None:
+            print(f"POS source   : {config.pos_source_date.isoformat()}")
         print(
             "QA scan mode : "
             + ("date range + 30-day lookahead" if config.include_cross_date_lookahead else "selected date range only")
@@ -529,118 +585,149 @@ def main() -> None:
 
     _ensure_run_dirs(run_dir)
 
-    build_template_workbook(
-        template_path=config.template_path,
-        output_path=output_workbook,
-        start_date=config.start_date,
-        end_date=config.end_date,
-        stores=org_rule.stores,
-        source_label=config.source_label,
-        sheet_name_format=org_rule.sheet_date_format,
-        layout=DEFAULT_LAYOUT,
-        centech_only=config.centech_only,
-        centech_label=config.centech_label,
-    )
-    print(f"[template] Workbook skeleton created -> {output_workbook}")
-
+    stage_total = 1
     if not config.skip_data and (config.centech_csv or config.pos_data_dir):
-        centech_path = config.centech_csv
-        source_csv = config.source_csv
-        client_side_config = None
-        centech_side_config = None
-
         if config.pos_data_dir is not None:
-            _ensure_run_dirs(run_dir)
-            if pos_computed_csv.exists():
-                answer = input(f"QA data already exists at {pos_computed_csv}\nRegenerate? [y/N]: ").strip().lower()
-                regenerate = answer in {"y", "yes"}
-            else:
-                regenerate = True
-            if regenerate:
-                qa_rows = run_verifier(
-                    VerifierConfig(
-                        pos_data_dir=config.pos_data_dir,
-                        stores=org_rule.stores,
-                        start_date=config.start_date,
-                        end_date=config.end_date,
-                        output_csv_path=pos_computed_csv,
-                        include_cross_date_lookahead=config.include_cross_date_lookahead,
-                    )
-                )
-                print(f"[verifier] QA CSV written ({qa_rows} rows) -> {pos_computed_csv}")
-            else:
-                print(f"[verifier] Using existing QA CSV -> {pos_computed_csv}")
-
-            if config.qa_on_left:
-                # QA fills centech (left) slot; use qa config so date auto-detection
-                # handles pos_computed.csv (MM/DD/YYYY) without the centech date_parse_format
-                centech_path = pos_computed_csv
-                centech_side_config = org_rule.qa
-                # source_csv = client_export (already resolved in _resolve_config)
-            else:
-                # QA fills source (right) slot; use qa config to avoid online_credit_card handler
-                source_csv = pos_computed_csv
-                client_side_config = org_rule.qa
-
-        if centech_path is None:
-            raise SystemExit("Missing CenTech-side input for generator run.")
-
-        generated = run_generator(
-            WorkbookFillConfig(
-                workbook_path=output_workbook,
-                org_rule=org_rule,
-                centech_path=centech_path,
-                client_path=source_csv,
-                start_date=config.start_date,
-                end_date=config.end_date,
-                client_side_config=client_side_config,
-                centech_side_config=centech_side_config,
-            )
-        )
-        print(
-            f"[generator] Rows written (centech={generated.centech_rows_written}, client={generated.client_rows_written})"
-        )
-
+            stage_total += 1
+        stage_total += 1
         if not config.centech_only:
-            ignored_categories = org_rule.ignored_categories | generated.ignored_categories
-            if generated.ignored_categories:
-                print(
-                    "[heatmap] Ignoring client combined OLO categories: "
-                    + ", ".join(sorted(generated.ignored_categories))
-                )
-            run_heatmap(
-                HeatmapConfig(
-                    workbook_path=output_workbook,
-                    stores=org_rule.stores,
-                    category_rows=org_rule.category_rows,
-                    tolerance=org_rule.mismatch_tolerance,
-                    layout=DEFAULT_LAYOUT,
-                    ignored_categories=ignored_categories,
-                    source_label=config.source_label,
-                    centech_label=config.centech_label,
-                )
-            )
-            print("[heatmap] Mismatch heatmap applied.")
+            stage_total += 1
+        stage_total += 1
+        stage_total += 1
 
-        if centech_path:
-            run_diagnostics(
-                DiagnosticsConfig(
+    with tqdm(total=stage_total, desc="[pipeline] Sales comparison", unit="stage") as stage_bar:
+        stage_bar.set_postfix_str("template")
+        build_template_workbook(
+            template_path=config.template_path,
+            output_path=output_workbook,
+            start_date=config.start_date,
+            end_date=config.end_date,
+            stores=org_rule.stores,
+            source_label=config.source_label,
+            sheet_name_format=org_rule.sheet_date_format,
+            layout=DEFAULT_LAYOUT,
+            centech_only=config.centech_only,
+            centech_label=config.centech_label,
+        )
+        stage_bar.update(1)
+        tqdm.write(f"[template] Workbook skeleton created -> {output_workbook}")
+
+        if not config.skip_data and (config.centech_csv or config.pos_data_dir):
+            centech_path = config.centech_csv
+            source_csv = config.source_csv
+            client_side_config = None
+            centech_side_config = None
+
+            if config.pos_data_dir is not None:
+                _ensure_run_dirs(run_dir)
+                if pos_computed_csv.exists():
+                    answer = input(f"QA data already exists at {pos_computed_csv}\nRegenerate? [y/N]: ").strip().lower()
+                    regenerate = answer in {"y", "yes"}
+                else:
+                    regenerate = True
+                stage_bar.set_postfix_str("verifier")
+                if regenerate:
+                    qa_rows = run_verifier(
+                        VerifierConfig(
+                            pos_data_dir=config.pos_data_dir,
+                            stores=org_rule.stores,
+                            start_date=config.start_date,
+                            end_date=config.end_date,
+                            output_csv_path=pos_computed_csv,
+                            include_cross_date_lookahead=config.include_cross_date_lookahead,
+                            pos_source_date=config.pos_source_date,
+                            pos_source_date_from=config.pos_source_date_from,
+                            pos_source_date_through=config.pos_source_date_through,
+                        )
+                    )
+                    tqdm.write(f"[verifier] QA CSV written ({qa_rows} rows) -> {pos_computed_csv}")
+                else:
+                    tqdm.write(f"[verifier] Using existing QA CSV -> {pos_computed_csv}")
+                stage_bar.update(1)
+
+                if config.qa_on_left:
+                    # QA fills centech (left) slot; use qa config so date auto-detection
+                    # handles pos_computed.csv (MM/DD/YYYY) without the centech date_parse_format
+                    centech_path = pos_computed_csv
+                    centech_side_config = org_rule.qa
+                    # source_csv = client_export (already resolved in _resolve_config)
+                else:
+                    # QA fills source (right) slot; use qa config to avoid online_credit_card handler
+                    source_csv = pos_computed_csv
+                    client_side_config = org_rule.qa
+
+            if centech_path is None:
+                raise SystemExit("Missing CenTech-side input for generator run.")
+
+            stage_bar.set_postfix_str("generator")
+            generated = run_generator(
+                WorkbookFillConfig(
                     workbook_path=output_workbook,
-                    centech_path=centech_path,
                     org_rule=org_rule,
+                    centech_path=centech_path,
+                    client_path=source_csv,
                     start_date=config.start_date,
                     end_date=config.end_date,
-                    tolerance=org_rule.mismatch_tolerance,
+                    client_side_config=client_side_config,
+                    centech_side_config=centech_side_config,
                 )
             )
-            print("[diagnostics] Diagnostics tab written.")
+            stage_bar.update(1)
+            tqdm.write(
+                f"[generator] Rows written (centech={generated.centech_rows_written}, client={generated.client_rows_written})"
+            )
 
-        real_centech = config.centech_csv  # original export, not QA-generated
-        real_source = source_csv if source_csv != pos_computed_csv else None
-        if real_centech and real_source:
-            _archive_inputs_to_run(real_centech, real_source, run_dir / "input")
-        elif real_centech:
-            _archive_centech_to_run(real_centech, run_dir / "input")
+            if not config.centech_only:
+                ignored_categories = org_rule.ignored_categories | generated.ignored_categories
+                if config.run_mode == "centech_vs_qa":
+                    ignored_categories -= {
+                        "Online Credit Card Tips",
+                        "Online Gift Card Tips",
+                    }
+                if generated.ignored_categories:
+                    tqdm.write(
+                        "[heatmap] Ignoring client combined OLO categories: "
+                        + ", ".join(sorted(generated.ignored_categories))
+                    )
+                stage_bar.set_postfix_str("heatmap")
+                run_heatmap(
+                    HeatmapConfig(
+                        workbook_path=output_workbook,
+                        stores=org_rule.stores,
+                        category_rows=org_rule.category_rows,
+                        tolerance=org_rule.mismatch_tolerance,
+                        layout=DEFAULT_LAYOUT,
+                        ignored_categories=ignored_categories,
+                        source_label=config.source_label,
+                        centech_label=config.centech_label,
+                    )
+                )
+                stage_bar.update(1)
+                tqdm.write("[heatmap] Mismatch heatmap applied.")
+
+            if centech_path:
+                stage_bar.set_postfix_str("diagnostics")
+                run_diagnostics(
+                    DiagnosticsConfig(
+                        workbook_path=output_workbook,
+                        centech_path=centech_path,
+                        org_rule=org_rule,
+                        start_date=config.start_date,
+                        end_date=config.end_date,
+                        tolerance=org_rule.mismatch_tolerance,
+                    )
+                )
+                stage_bar.update(1)
+                tqdm.write("[diagnostics] Diagnostics tab written.")
+
+            stage_bar.set_postfix_str("archive")
+            real_centech = config.centech_csv  # original export, not QA-generated
+            real_source = source_csv if source_csv != pos_computed_csv else None
+            if real_centech and real_source:
+                _archive_inputs_to_run(real_centech, real_source, run_dir / "input")
+            elif real_centech:
+                _archive_centech_to_run(real_centech, run_dir / "input")
+            stage_bar.update(1)
 
     print("\n=== Done ===")
     print(f"Workbook: {output_workbook}")

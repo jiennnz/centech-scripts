@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.worksheet.worksheet import Worksheet
+from tqdm import tqdm
 
 from financial.sales_export_comparison.rules import OrgRule, SideInputConfig
 
@@ -40,11 +41,12 @@ def _process_side(
     start_date: date,
     end_date: date,
     sheet_date_format: str,
+    progress_desc: str,
 ) -> int:
     written = 0
     dates = _parse_dates(df[side_cfg.date_column], side_cfg.date_parse_format)
 
-    for i in range(len(df)):
+    for i in tqdm(range(len(df)), desc=progress_desc, unit="row"):
         row = df.iloc[i]
         ts = dates.iloc[i]
         if pd.isna(ts):
@@ -73,7 +75,11 @@ def _process_side(
         if had_prefix and side_cfg.category_strip_prefix_fallback and category not in category_rows:
             category = side_cfg.category_strip_prefix_fallback
 
-        if side_cfg.online_credit_card and side_cfg.memo_column:
+        if (
+            side_cfg.online_credit_card
+            and side_cfg.memo_column
+            and side_cfg.memo_column in df.columns
+        ):
             memo_val = row[side_cfg.memo_column] if side_cfg.memo_column in row.index else ""
             memo = str(memo_val).strip() if pd.notna(memo_val) else ""
             occ_result = _apply_online_credit_card(category, memo, side_cfg.online_credit_card)
@@ -350,8 +356,8 @@ def run(config: WorkbookFillConfig) -> WorkbookFillResult:
             start_date=config.start_date,
             end_date=config.end_date,
             sheet_date_format=rule.sheet_date_format,
+            progress_desc="[generator] Client rows",
         )
-
     centech_n = _process_side(
         wb,
         df_centech,
@@ -361,6 +367,7 @@ def run(config: WorkbookFillConfig) -> WorkbookFillResult:
         start_date=config.start_date,
         end_date=config.end_date,
         sheet_date_format=rule.sheet_date_format,
+        progress_desc="[generator] CenTech rows",
     )
 
     wb.save(config.workbook_path)
