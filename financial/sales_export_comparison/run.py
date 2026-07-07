@@ -47,6 +47,7 @@ class RunConfig:
     centech_csv: Path | None
     source_csv: Path | None
     skip_data: bool
+    source_kind: str = "client"
     centech_only: bool = False
     pos_data_dir: Path | None = None
     qa_on_left: bool = False  # QA fills centech slot (QA vs Client)
@@ -132,10 +133,10 @@ def _prompt_cross_date_lookahead() -> bool:
         print("Enter 1 or 2.")
 
 
-def _prompt_qa_side() -> tuple[str | None, Path | None]:
-    """Ask which side (if any) uses QA/POS-computed data.
+def _prompt_legacy_qa_side() -> tuple[str | None, Path | None]:
+    """Ask which side uses QA/POS-computed data.
 
-    Returns (side, pos_data_dir) where side is 'right', 'left', or None.
+    Kept for compatibility with older call sites.
     """
     default_pos_dir = REPO_ROOT / "pos_data"
     print("\nUse QA (POS computed) data?")
@@ -165,6 +166,37 @@ def _prompt_qa_side() -> tuple[str | None, Path | None]:
         print("Enter 1, 2, or 3.")
 
 
+def _prompt_comparison_mode() -> tuple[str | None, Path | None, str]:
+    """Ask for comparison mode in interactive runs."""
+    default_pos_dir = REPO_ROOT / "pos_data"
+    print("\nComparison mode:")
+    print("  1. CenTech vs Client")
+    print("  2. CenTech vs Flexe")
+    print("  3. CenTech vs QA")
+    print("  4. QA vs Client")
+    print("  5. QA vs Flexe")
+
+    while True:
+        raw = input("Select [1]: ").strip() or "1"
+        if raw == "1":
+            return None, None, "client"
+        if raw == "2":
+            return None, None, "flexe"
+        if raw in {"3", "4", "5"}:
+            side = "right" if raw == "3" else "left"
+            source_kind = "flexe" if raw == "5" else "client"
+            while True:
+                raw_dir = input(f"POS data directory [{default_pos_dir}]: ").strip().strip('"')
+                candidate = Path(raw_dir) if raw_dir else default_pos_dir
+                if candidate.is_dir():
+                    return side, candidate, source_kind
+                from_root = REPO_ROOT / candidate
+                if from_root.is_dir():
+                    return side, from_root, source_kind
+                print(f"Directory not found: {candidate}")
+        print("Enter 1, 2, 3, 4, or 5.")
+
+
 def _find_root_export(prefix: str) -> Path | None:
     candidates = [
         REPO_ROOT / f"{prefix}.csv",
@@ -190,6 +222,10 @@ def _find_run_input_export(run_input_dir: Path, prefix: str) -> Path | None:
         if path.exists():
             return path
     return None
+
+
+def _source_root_prefix(source_kind: str) -> str:
+    return "flexe_export" if source_kind == "flexe" else "client_export"
 
 
 def _resolve_input_path(
@@ -234,7 +270,7 @@ def _ensure_run_dirs(run_dir: Path) -> None:
 
 
 def _archive_inputs_to_run(
-    centech_path: Path, client_path: Path, input_dir: Path
+    centech_path: Path, source_path: Path, input_dir: Path, *, source_kind: str = "client"
 ) -> None:
     """Move exports into this run's input/ folder (same idea as payroll moving Timesheet*.csv)."""
     input_dir.mkdir(parents=True, exist_ok=True)
@@ -259,7 +295,7 @@ def _archive_inputs_to_run(
         print(f"[input] Moved {src.name} -> {dest}")
 
     move_one(centech_path, "centech_export")
-    move_one(client_path, "client_export")
+    move_one(source_path, _source_root_prefix(source_kind))
 
 
 def _archive_centech_to_run(centech_path: Path, input_dir: Path) -> None:
@@ -278,15 +314,35 @@ def _archive_centech_to_run(centech_path: Path, input_dir: Path) -> None:
     print(f"[input] Moved {centech_path.name} -> {dest}")
 
 
+def _archive_source_to_run(source_path: Path, input_dir: Path, *, source_kind: str = "client") -> None:
+    input_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        input_resolved = input_dir.resolve()
+        src_resolved = source_path.resolve()
+    except OSError:
+        return
+    if src_resolved.parent == input_resolved:
+        return
+    dest = input_dir / f"{_source_root_prefix(source_kind)}{source_path.suffix.lower()}"
+    if dest.exists() and dest.resolve() != src_resolved:
+        dest.unlink()
+    shutil.move(str(source_path), str(dest))
+    print(f"[input] Moved {source_path.name} -> {dest}")
+
+
 def _resolve_run_mode(
-    *, centech_only: bool, pos_data_dir: Path | None, qa_on_left: bool
+    *, centech_only: bool, pos_data_dir: Path | None, qa_on_left: bool, source_kind: str
 ) -> str:
     if centech_only:
         return "centech_only"
     if pos_data_dir is not None and qa_on_left:
+        if source_kind == "flexe":
+            return "qa_vs_flexe"
         return "qa_vs_client"
     if pos_data_dir is not None:
         return "centech_vs_qa"
+    if source_kind == "flexe":
+        return "centech_vs_flexe"
     return "centech_vs_client"
 
 
@@ -303,13 +359,21 @@ def _build_parser() -> argparse.ArgumentParser:
         "--source-label",
         type=str,
         default=None,
-        help="Header label for client side (D/E columns)",
+        help="Header label for source side (D/E columns)",
     )
     parser.add_argument(
         "--centech-csv", type=str, default=None, help="Path to CenTech export CSV"
     )
     parser.add_argument(
         "--source-csv", type=str, default=None, help="Path to compared source CSV"
+    )
+    parser.add_argument(
+        "--flexe-source",
+        action="store_true",
+        help=(
+            "Treat --source-csv as a Flexe scrape export. Outputs use Flexe naming "
+            "and the source is archived as flexe_export.*"
+        ),
     )
     parser.add_argument(
         "--template",
@@ -366,7 +430,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--qa-left",
         action="store_true",
-        help="Put QA on left side (QA vs Client) instead of right",
+        help="Put QA on left side (QA vs source) instead of right",
     )
     scan_group = parser.add_mutually_exclusive_group()
     scan_group.add_argument(
@@ -423,19 +487,24 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
             "--pos-source-date-from/through require --pos-source-date."
         )
     qa_on_left = bool(getattr(args, "qa_left", False))
+    source_kind = "flexe" if bool(getattr(args, "flexe_source", False)) else "client"
+    if source_kind == "flexe" and pos_data_dir is not None and not qa_on_left:
+        raise SystemExit("--flexe-source with --pos-data-dir requires --qa-left (QA vs Flexe).")
 
     org_key = args.org if args.org else _prompt_org(rules_dir)
     org_rule = load_org_rule(org_key, rules_dir)
     default_client_label = org_rule.client_header_label or org_rule.org_display_name
 
-    # Interactive QA side prompt when --pos-data-dir not given via args
+    # Interactive comparison-mode prompt when mode is not specified by args.
     if (
         not args.skip_data
         and not centech_only
         and pos_data_dir is None
         and not args.centech_csv
+        and not args.flexe_source
     ):
-        qa_side, prompted_pos_dir = _prompt_qa_side()
+        qa_side, prompted_pos_dir, prompted_source_kind = _prompt_comparison_mode()
+        source_kind = prompted_source_kind
         if qa_side == "right":
             pos_data_dir = prompted_pos_dir
         elif qa_side == "left":
@@ -452,6 +521,8 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
 
     if centech_only:
         source_label = args.source_label or default_client_label
+    elif source_kind == "flexe":
+        source_label = args.source_label or "Flexe"
     elif pos_data_dir is not None and not qa_on_left:
         source_label = args.source_label or "QA"
     elif pos_data_dir is not None and qa_on_left:
@@ -472,6 +543,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         centech_only=centech_only,
         pos_data_dir=pos_data_dir,
         qa_on_left=qa_on_left,
+        source_kind=source_kind,
     )
 
     if not args.skip_data:
@@ -490,7 +562,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
             # Need client export on right when: no QA, or QA is on left
             source_csv = _resolve_input_path(
                 source_csv,
-                root_prefix="client_export",
+                root_prefix=_source_root_prefix(source_kind),
                 run_input_dir=run_input_dir,
             )
 
@@ -505,6 +577,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         run_mode=run_mode,
         centech_csv=centech_csv,
         source_csv=source_csv,
+        source_kind=source_kind,
         skip_data=args.skip_data,
         centech_only=centech_only,
         pos_data_dir=pos_data_dir,
@@ -526,8 +599,10 @@ def main() -> None:
     run_dir = config.output_dir / period_key / config.org_key / config.run_mode
     _MODE_LABEL = {
         "centech_vs_client": "CenTech_vs_Client",
+        "centech_vs_flexe":  "CenTech_vs_Flexe",
         "centech_vs_qa":     "CenTech_vs_QA",
         "qa_vs_client":      "QA_vs_Client",
+        "qa_vs_flexe":       "QA_vs_Flexe",
         "centech_only":      "CenTech_only",
     }
     _mode_label = _MODE_LABEL.get(config.run_mode, config.run_mode)
@@ -548,7 +623,7 @@ def main() -> None:
         print("Data mode    : CenTech only (no client comparison)")
         print(f"CenTech CSV  : {config.centech_csv}")
     elif config.pos_data_dir is not None and config.qa_on_left:
-        print("Data mode    : QA vs Client (QA on left)")
+        print(f"Data mode    : QA vs {config.source_label} (QA on left)")
         print(f"POS data dir : {config.pos_data_dir}")
         if config.pos_source_date is not None:
             print(f"POS source   : {config.pos_source_date.isoformat()}")
@@ -563,7 +638,7 @@ def main() -> None:
             + ("date range + 30-day lookahead" if config.include_cross_date_lookahead else "selected date range only")
         )
         print(f"QA CSV out   : {pos_computed_csv}")
-        print(f"Client CSV   : {config.source_csv}")
+        print(f"{config.source_label} CSV   : {config.source_csv}")
     elif config.pos_data_dir is not None:
         print("Data mode    : CenTech vs QA (QA on right)")
         print(f"CenTech CSV  : {config.centech_csv}")
@@ -577,7 +652,7 @@ def main() -> None:
         print(f"QA CSV out   : {pos_computed_csv}")
     else:
         print(f"CenTech CSV  : {config.centech_csv}")
-        print(f"Source CSV   : {config.source_csv}")
+        print(f"{config.source_label} CSV   : {config.source_csv}")
 
     proceed = input("\nContinue? [Y/n]: ").strip().lower()
     if proceed in {"n", "no"}:
@@ -617,6 +692,8 @@ def main() -> None:
             source_csv = config.source_csv
             client_side_config = None
             centech_side_config = None
+            if config.source_kind == "flexe":
+                client_side_config = org_rule.qa
 
             if config.pos_data_dir is not None:
                 _ensure_run_dirs(run_dir)
@@ -724,9 +801,16 @@ def main() -> None:
             real_centech = config.centech_csv  # original export, not QA-generated
             real_source = source_csv if source_csv != pos_computed_csv else None
             if real_centech and real_source:
-                _archive_inputs_to_run(real_centech, real_source, run_dir / "input")
+                _archive_inputs_to_run(
+                    real_centech,
+                    real_source,
+                    run_dir / "input",
+                    source_kind=config.source_kind,
+                )
             elif real_centech:
                 _archive_centech_to_run(real_centech, run_dir / "input")
+            elif real_source:
+                _archive_source_to_run(real_source, run_dir / "input", source_kind=config.source_kind)
             stage_bar.update(1)
 
     print("\n=== Done ===")

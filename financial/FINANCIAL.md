@@ -142,7 +142,7 @@ You will be prompted for:
 
 - Start and end dates
 - Organization key from `financial/sales_export_comparison/rules/`
-- QA/POS comparison mode, when applicable
+- Comparison mode, including CenTech vs Client, CenTech vs Flexe, CenTech vs QA, QA vs Client, and QA vs Flexe
 - Client/source label for workbook columns D/E
 
 Non-interactive example:
@@ -170,8 +170,10 @@ Continue? [Y/n]:
 | Mode | Left side | Right side | Flags |
 |---|---|---|---|
 | `centech_vs_client` | CenTech export | Client GL export | default |
+| `centech_vs_flexe` | CenTech export | Flexe scrape export | `--flexe-source --source-csv <flexe.csv>` |
 | `centech_vs_qa` | CenTech export | QA/POS-computed sales | `--pos-data-dir pos_data` |
 | `qa_vs_client` | QA/POS-computed sales | Client GL export | `--pos-data-dir pos_data --qa-left` |
+| `qa_vs_flexe` | QA/POS-computed sales | Flexe scrape export | `--pos-data-dir pos_data --qa-left --flexe-source --source-csv <flexe.csv>` |
 | `centech_only` | CenTech export | blank | `--centech-only` |
 | structure only | workbook shell only | blank | `--skip-data` |
 
@@ -185,8 +187,10 @@ Current sales workbook names include the mode:
 
 ```text
 Sales_CenTech_vs_Client_<start>_<end>.xlsx
+Sales_CenTech_vs_Flexe_<start>_<end>.xlsx
 Sales_CenTech_vs_QA_<start>_<end>.xlsx
 Sales_QA_vs_Client_<start>_<end>.xlsx
+Sales_QA_vs_Flexe_<start>_<end>.xlsx
 Sales_CenTech_only_<start>_<end>.xlsx
 ```
 
@@ -215,6 +219,30 @@ python financial/sales_export_comparison/run.py `
   --qa-left `
   --pos-data-dir pos_data `
   --source-csv "financial/sales_export_comparison/runs/2026-04-01_2026-04-30/century_austin/centech_vs_client/input/client_export.csv"
+```
+
+Run CenTech vs Flexe:
+
+```powershell
+python financial/sales_export_comparison/run.py `
+  --start "2026-07-01" --end "2026-07-05" `
+  --org century `
+  --flexe-source `
+  --centech-csv "sales_report_2026-07-01_to_2026-07-05.xlsx" `
+  --source-csv "flexepos/runs/2026-07-01_2026-07-06/century/financial/scraped_data_flexe.csv"
+```
+
+Run QA vs Flexe:
+
+```powershell
+python financial/sales_export_comparison/run.py `
+  --start "2026-07-01" --end "2026-07-05" `
+  --org century `
+  --qa-left `
+  --pos-data-dir pos_data `
+  --include-cross-date-lookahead `
+  --flexe-source `
+  --source-csv "flexepos/runs/2026-07-01_2026-07-06/century/financial/scraped_data_flexe.csv"
 ```
 
 Run CenTech vs QA:
