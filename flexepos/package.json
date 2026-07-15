@@ -7,7 +7,8 @@
   "main": "src/index.js",
   "scripts": {
     "financial": "node src/financial/run.js",
-    "check": "node --check src/browser.js && node --check src/financial/csd.js && node --check src/financial/run.js && node --check src/financial/rebuild.js",
+    "financial:batches": "node src/financial/batches.js",
+    "check": "node --check src/browser.js && node --check src/financial/csd.js && node --check src/financial/run.js && node --check src/financial/batches.js && node --check src/financial/rebuild.js",
     "test": "node --test tests/*.test.js"
   },
   "engines": {
