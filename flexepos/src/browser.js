@@ -84,7 +84,7 @@ async function openAuthenticatedContext(options = {}) {
   const context = await browser.newContext(contextOptions);
   const page = await context.newPage();
   page.setDefaultTimeout(Number(options.timeoutMs || 30000));
-  page.setDefaultNavigationTimeout(Number(options.navigationTimeoutMs || 90000));
+  page.setDefaultNavigationTimeout(Number(options.navigationTimeoutMs || 20000));
   await page.goto(LOGIN_URL, { waitUntil: "domcontentloaded" });
 
   if (!(await isAuthenticated(page))) {

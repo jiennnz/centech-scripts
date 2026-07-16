@@ -8,7 +8,9 @@
   "scripts": {
     "financial": "node src/financial/run.js",
     "financial:batches": "node src/financial/batches.js",
-    "check": "node --check src/browser.js && node --check src/financial/csd.js && node --check src/financial/run.js && node --check src/financial/batches.js && node --check src/financial/rebuild.js",
+    "financial:merge": "node src/financial/merge-batches.js",
+    "royalties": "node src/royalties/run.js",
+    "check": "node --check src/browser.js && node --check src/financial/csd.js && node --check src/financial/run.js && node --check src/financial/batches.js && node --check src/financial/merge-batches.js && node --check src/financial/rebuild.js && node --check src/royalties/run.js",
     "test": "node --test tests/*.test.js"
   },
   "engines": {

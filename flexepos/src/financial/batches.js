@@ -4,8 +4,16 @@
 const path = require("path");
 const { spawn } = require("child_process");
 
+function localIsoDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function parseArgs(argv) {
-  const args = { org: "century", mode: "headed", sessions: "1" };
+  const args = { org: "century", mode: "headed", sessions: "1", runDate: localIsoDate() };
   for (let index = 0; index < argv.length; index += 1) {
     const key = argv[index];
     if (!key.startsWith("--")) throw new Error(`Unexpected argument: ${key}`);
@@ -20,6 +28,9 @@ function parseArgs(argv) {
   }
   if (!["headed", "headless"].includes(args.mode)) {
     throw new Error("--mode must be either headed or headless.");
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(args.runDate)) {
+    throw new Error("--run-date must use YYYY-MM-DD.");
   }
   return args;
 }
@@ -53,7 +64,8 @@ function passThroughArgs(args) {
 
 function runBatch(batch, sessionNumber, args, extraArgs) {
   const authState = `flexepos/.auth/session-${sessionNumber}.json`;
-  const outputDir = `flexepos/runs/${batch.start}_${batch.end}/${args.org}/financial`;
+  const batchRoot = args.outputRoot || `flexepos/runs/${args.runDate}/financial_batches`;
+  const outputDir = `${batchRoot}/${batch.start}_${batch.end}/${args.org}/financial`;
   const repoRoot = path.resolve(__dirname, "..", "..", "..");
   const runnerPath = path.join(repoRoot, "flexepos", "src", "financial", "run.js");
   const childArgs = [
@@ -74,6 +86,7 @@ function runBatch(batch, sessionNumber, args, extraArgs) {
   ];
 
   console.log(`[batch ${sessionNumber}] ${batch.start} -> ${batch.end} using ${authState}`);
+  console.log(`[batch ${sessionNumber}] output -> ${outputDir}`);
   const child = spawn(process.execPath, childArgs, {
     cwd: repoRoot,
     stdio: "inherit",

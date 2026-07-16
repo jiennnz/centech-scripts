@@ -128,8 +128,13 @@ async function run() {
   const completed = await readCompleted(aggregatePath);
   const manifest = [];
   const { browser, page } = await openAuthenticatedContext({
-    statePath: path.join(repoRoot, "flexepos", ".auth", "storage-state.json"),
-    headless: args.mode === "headless"
+    statePath: args.authState
+      ? path.resolve(repoRoot, args.authState)
+      : path.join(repoRoot, "flexepos", ".auth", "storage-state.json"),
+    headless: args.mode === "headless",
+    timeoutMs: args.timeoutMs,
+    navigationTimeoutMs: args.navigationTimeoutMs,
+    loginTimeoutMs: args.loginTimeoutMs
   });
 
   try {

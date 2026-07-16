@@ -76,8 +76,26 @@ To compare QA/POS-computed royalties against a client export:
 python financial\royalties\run.py --start 2026-06-01 --end 2026-06-07 --org century --pos-data-dir pos_data --qa-left
 ```
 
+To compare a CenTech royalty export against a Flexe scrape:
+
+```powershell
+python financial\royalties\run.py --start 2026-07-01 --end 2026-07-07 --org century --flexe-source --source-csv "flexepos/runs/2026-07-01_2026-07-07/century/royalties/client_royalties.csv"
+```
+
+If the scraped royalty file is in the repo root, name it:
+
+```text
+flexe_royalties.csv
+```
+
+Then run:
+
+```powershell
+python financial\royalties\run.py --start 2026-07-01 --end 2026-07-07 --org century --flexe-source
+```
+
 The comparison output is written under `financial/royalties/runs/<period>/<org>/<mode>/output/`,
-where mode is `centech_vs_client`, `centech_vs_client_daily`, `centech_vs_client_combined`, `centech_vs_qa`, or `qa_vs_client`.
+where mode is `centech_vs_client`, `centech_vs_flexe`, `centech_vs_client_daily`, `centech_vs_client_combined`, `centech_vs_qa`, `qa_vs_client`, or `qa_vs_flexe`.
 It includes DateRange comparison tabs, the standard heatmap/discrepancy tabs, and an `Account Mapping Check`
 tab for Account Number / Account Name differences between the two exports.
 

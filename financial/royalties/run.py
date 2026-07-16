@@ -35,6 +35,7 @@ DEFAULT_CLIENT_EXPORT = REPO_ROOT / "client_royalties.csv"
 DEFAULT_POS_DATA_DIR = REPO_ROOT / "pos_data"
 CENTECH_RANGE_PREFIX = "centech_royalties"
 CLIENT_RANGE_PREFIX = "client_royalties"
+FLEXE_RANGE_PREFIX = "flexe_royalties"
 CENTECH_RANGE_EXTENSIONS = (".xlsx", ".xls", ".csv")
 CLIENT_RANGE_EXTENSIONS = (".csv", ".xlsx", ".xls")
 
@@ -57,6 +58,7 @@ class RunConfig:
     combined_inputs: bool = False
     daily_input_dir: Path | None = None
     centech_label: str = "CenTech"
+    source_kind: str = "client"
     include_cross_date_lookahead: bool = True
     yes: bool = False
 
@@ -310,27 +312,33 @@ def _prompt_pos_data_dir() -> Path:
         print(f"Directory not found: {candidate}")
 
 
-def _prompt_comparison_mode() -> tuple[Path | None, bool, bool, bool]:
-    """Return (pos_data_dir, qa_on_left, daily_inputs, combined_inputs)."""
+def _prompt_comparison_mode() -> tuple[Path | None, bool, bool, bool, str]:
+    """Return (pos_data_dir, qa_on_left, daily_inputs, combined_inputs, source_kind)."""
     print("\nRoyalties comparison mode:")
     print("  1. CenTech vs Client (date range)")
     print("  2. CenTech vs Client (daily files)")
     print("  3. CenTech vs Client (date range + daily files)")
     print("  4. CenTech vs QA")
     print("  5. QA vs Client")
+    print("  6. CenTech vs Flexe")
+    print("  7. QA vs Flexe")
     while True:
         raw = input("Select [1]: ").strip() or "1"
         if raw == "1":
-            return None, False, False, False
+            return None, False, False, False, "client"
         if raw == "2":
-            return None, False, True, False
+            return None, False, True, False, "client"
         if raw == "3":
-            return None, False, False, True
+            return None, False, False, True, "client"
         if raw == "4":
-            return _prompt_pos_data_dir(), False, False, False
+            return _prompt_pos_data_dir(), False, False, False, "client"
         if raw == "5":
-            return _prompt_pos_data_dir(), True, False, False
-        print("Enter 1, 2, 3, 4, or 5.")
+            return _prompt_pos_data_dir(), True, False, False, "client"
+        if raw == "6":
+            return None, False, False, False, "flexe"
+        if raw == "7":
+            return _prompt_pos_data_dir(), True, False, False, "flexe"
+        print("Enter 1, 2, 3, 4, 5, 6, or 7.")
 
 
 def _prompt_cross_date_lookahead() -> bool:
@@ -358,6 +366,10 @@ def _archive_input_to_run(path: Path | None, input_dir: Path, base_name: str | N
     shutil.move(str(path), str(dest))
     print(f"[input] Moved {path.name} -> {dest}")
     return dest
+
+
+def _source_prefix(source_kind: str) -> str:
+    return FLEXE_RANGE_PREFIX if source_kind == "flexe" else CLIENT_RANGE_PREFIX
 
 
 def _archive_daily_inputs_to_run(paths: tuple[Path, ...] | None, input_dir: Path) -> tuple[Path, ...] | None:
@@ -395,14 +407,19 @@ def _resolve_run_mode(
     qa_on_left: bool,
     daily_inputs: bool,
     combined_inputs: bool,
+    source_kind: str,
 ) -> str:
     if combined_inputs:
         return "centech_vs_client_combined"
     if daily_inputs:
         return "centech_vs_client_daily"
     if pos_data_dir is None:
+        if source_kind == "flexe":
+            return "centech_vs_flexe"
         return "centech_vs_client"
     if qa_on_left:
+        if source_kind == "flexe":
+            return "qa_vs_flexe"
         return "qa_vs_client"
     return "centech_vs_qa"
 
@@ -433,6 +450,21 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument("--client", type=str, default=None, help="Client royalties export path (default: client_royalties.*)")
+    parser.add_argument(
+        "--source-csv",
+        dest="client",
+        type=str,
+        default=None,
+        help="Alias for --client; useful for Flexe scraped royalty CSVs.",
+    )
+    parser.add_argument(
+        "--flexe-source",
+        action="store_true",
+        help=(
+            "Treat the right-side source as a Flexe royalty scrape. "
+            "Defaults to flexe_royalties.* in repo root or run input."
+        ),
+    )
     parser.add_argument(
         "--daily-inputs",
         action="store_true",
@@ -498,8 +530,16 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
     combined_inputs = bool(args.combined_inputs)
     pos_data_dir = Path(args.pos_data_dir) if args.pos_data_dir else None
     qa_on_left = bool(args.qa_left)
-    if pos_data_dir is None and not args.centech and not args.client and not daily_inputs and not combined_inputs:
-        pos_data_dir, qa_on_left, daily_inputs, combined_inputs = _prompt_comparison_mode()
+    source_kind = "flexe" if bool(args.flexe_source) else "client"
+    if (
+        pos_data_dir is None
+        and not args.centech
+        and not args.client
+        and not daily_inputs
+        and not combined_inputs
+        and not args.flexe_source
+    ):
+        pos_data_dir, qa_on_left, daily_inputs, combined_inputs, source_kind = _prompt_comparison_mode()
 
     if daily_inputs and combined_inputs:
         raise SystemExit("--daily-inputs and --combined-inputs cannot be used together.")
@@ -507,8 +547,12 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         raise SystemExit("--daily-input-dir requires --daily-inputs or --combined-inputs.")
     if daily_inputs and (args.centech or args.client):
         raise SystemExit("--daily-inputs cannot be combined with --centech or --client.")
+    if source_kind == "flexe" and (daily_inputs or combined_inputs):
+        raise SystemExit("--flexe-source only supports date-range royalty comparison.")
     if (daily_inputs or combined_inputs) and (args.pos_data_dir or args.qa_left):
         raise SystemExit("Daily/combined input modes support CenTech vs Client files only.")
+    if source_kind == "flexe" and pos_data_dir is not None and not qa_on_left:
+        raise SystemExit("--flexe-source with --pos-data-dir requires --qa-left (QA vs Flexe).")
     if combined_inputs and start_date == end_date:
         raise SystemExit("--combined-inputs requires a multi-day date range.")
 
@@ -517,7 +561,9 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
     if qa_on_left and pos_data_dir is None:
         raise SystemExit("--qa-left requires --pos-data-dir.")
 
-    if pos_data_dir is not None and not qa_on_left:
+    if source_kind == "flexe":
+        source_label = args.source_label or "Flexe"
+    elif pos_data_dir is not None and not qa_on_left:
         source_label = args.source_label or "QA"
     else:
         source_label = args.source_label or org_rule.client_header_label or "Client"
@@ -538,6 +584,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         qa_on_left=qa_on_left,
         daily_inputs=daily_inputs,
         combined_inputs=combined_inputs,
+        source_kind=source_kind,
     )
     period_key = build_period_key(start_date, end_date)
     run_input_dir = Path(args.output_dir) / period_key / org_key / run_mode / "input"
@@ -565,11 +612,11 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
             client_path = _as_single_path_tuple(
                 _resolve_range_input_path(
                     args.client,
-                    prefix=CLIENT_RANGE_PREFIX,
+                    prefix=_source_prefix(source_kind),
                     extensions=CLIENT_RANGE_EXTENSIONS,
                     run_input_dir=run_input_dir,
-                    label="client export",
-                    prompt_for_existing_run_client=True,
+                    label=f"{source_label} export",
+                    prompt_for_existing_run_client=(source_kind == "client"),
                     yes=bool(args.yes),
                 )
             )
@@ -600,6 +647,7 @@ def _resolve_config(args: argparse.Namespace) -> RunConfig:
         combined_inputs=combined_inputs,
         daily_input_dir=daily_input_dir,
         centech_label="QA" if qa_on_left else "CenTech",
+        source_kind=source_kind,
         include_cross_date_lookahead=include_cross_date_lookahead,
         yes=bool(args.yes),
     )
@@ -627,14 +675,14 @@ def main() -> None:
     print(f"Template     : {config.template_path}")
     print(f"Run mode     : {config.run_mode}")
     if config.pos_data_dir is not None and config.qa_on_left:
-        print("Data mode    : QA vs Client (QA on left)")
+        print(f"Data mode    : QA vs {config.source_label} (QA on left)")
         print(f"POS data dir : {config.pos_data_dir}")
         print(
             "QA scan mode : "
             + ("royalty lookback/lookahead" if config.include_cross_date_lookahead else "selected date range only")
         )
         print(f"QA CSV out   : {pos_computed_csv}")
-        print(f"Client CSV   : {_first_path(config.client_path)}")
+        print(f"{config.source_label} CSV   : {_first_path(config.client_path)}")
     elif config.pos_data_dir is not None:
         print("Data mode    : CenTech vs QA (QA on right)")
         print(f"CenTech XLSX : {_first_path(config.centech_path)}")
@@ -652,10 +700,10 @@ def main() -> None:
         print("Data mode    : Date range + daily CenTech vs Client files")
         print(f"Daily inputs : {config.daily_input_dir}")
         print(f"CenTech files: {len(config.centech_path or ())}")
-        print(f"Client files : {len(config.client_path or ())}")
+        print(f"{config.source_label} files : {len(config.client_path or ())}")
     else:
         print(f"CenTech XLSX : {_first_path(config.centech_path)}")
-        print(f"Client CSV   : {_first_path(config.client_path)}")
+        print(f"{config.source_label} CSV   : {_first_path(config.client_path)}")
     print(f"Output       : {output_workbook}")
 
     if not config.yes:
@@ -677,7 +725,7 @@ def main() -> None:
         client_path = _as_single_path_tuple(_archive_input_to_run(
             _first_path(config.client_path),
             run_dir / "input",
-            CLIENT_RANGE_PREFIX,
+            _source_prefix(config.source_kind),
         ))
     if config.pos_data_dir is not None:
         regenerate = True

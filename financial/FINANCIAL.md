@@ -394,6 +394,14 @@ client_royalties.xlsx
 client_royalties.xls
 ```
 
+Flexe scraped royalty export:
+
+```text
+flexe_royalties.csv
+flexe_royalties.xlsx
+flexe_royalties.xls
+```
+
 For daily royalty comparison, provide one CenTech/client pair per date. Preferred CenTech daily names:
 
 ```text
@@ -415,10 +423,12 @@ The older `centech_royalties_1.xlsx` naming pattern is still accepted when date-
 | Mode | Left side | Right side | Flags |
 |---|---|---|---|
 | `centech_vs_client` | range CenTech export | range client export | default |
+| `centech_vs_flexe` | range CenTech export | Flexe royalty scrape | `--flexe-source --source-csv <flexe.csv>` |
 | `centech_vs_client_daily` | daily CenTech files | daily client files | `--daily-inputs` |
 | `centech_vs_client_combined` | range + daily CenTech files | range + daily client files | `--combined-inputs` |
 | `centech_vs_qa` | CenTech export | QA/POS-computed royalties | `--pos-data-dir pos_data` |
 | `qa_vs_client` | QA/POS-computed royalties | client export | `--pos-data-dir pos_data --qa-left` |
+| `qa_vs_flexe` | QA/POS-computed royalties | Flexe royalty scrape | `--pos-data-dir pos_data --qa-left --flexe-source --source-csv <flexe.csv>` |
 
 Output workbooks are written under:
 
@@ -430,8 +440,10 @@ Workbook names use the compared labels:
 
 ```text
 Royalties_CenTech_vs_Client_<start>_<end>.xlsx
+Royalties_CenTech_vs_Flexe_<start>_<end>.xlsx
 Royalties_CenTech_vs_QA_<start>_<end>.xlsx
 Royalties_QA_vs_Client_<start>_<end>.xlsx
+Royalties_QA_vs_Flexe_<start>_<end>.xlsx
 ```
 
 Royalty QA runs also write:
@@ -479,6 +491,29 @@ QA vs Client:
 
 ```powershell
 python financial/royalties/run.py --start 2026-06-01 --end 2026-06-07 --org century --pos-data-dir pos_data --qa-left
+```
+
+CenTech vs Flexe:
+
+```powershell
+python financial/royalties/run.py `
+  --start 2026-07-01 --end 2026-07-07 `
+  --org century `
+  --flexe-source `
+  --centech "royalties_report_2026-07-01_to_2026-07-07.xlsx" `
+  --source-csv "flexepos/runs/2026-07-01_2026-07-07/century/royalties/client_royalties.csv"
+```
+
+QA vs Flexe:
+
+```powershell
+python financial/royalties/run.py `
+  --start 2026-07-01 --end 2026-07-07 `
+  --org century `
+  --pos-data-dir pos_data `
+  --qa-left `
+  --flexe-source `
+  --source-csv "flexepos/runs/2026-07-01_2026-07-07/century/royalties/client_royalties.csv"
 ```
 
 Use `--yes` to skip the confirmation prompt in automated runs.
