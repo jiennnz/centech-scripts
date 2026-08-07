@@ -232,7 +232,9 @@ def _build_cross_date_txns(
         if not txn_path.exists():
             continue
         try:
-            frames.append(pd.read_csv(txn_path, sep="|", dtype=str))
+            frame = pd.read_csv(txn_path, sep="|", dtype=str)
+            frame["pos_date_found"] = day.isoformat()
+            frames.append(frame)
         except Exception:
             continue
     if not frames:

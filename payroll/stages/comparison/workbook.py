@@ -91,6 +91,13 @@ def _has_same_hours(generated_record: dict, webapp_record: dict) -> bool:
     )
 
 
+def _has_nonzero_hours(record: dict) -> bool:
+    return _hours_key(
+        record["regular_hours"],
+        record["overtime_hours"],
+    ) != (0.0, 0.0)
+
+
 def _append_missing_employee_number(discrepancies: dict[str, list[dict]], store, generated_record: dict, webapp_record: dict) -> None:
     discrepancies["missing_employee_numbers"].append({
         "store": store,
@@ -405,7 +412,7 @@ def add_store_data_to_sheet(
     generated_only_rows = {
         record["row"]
         for record in generated_records
-        if not record["matched"]
+        if not record["matched"] and _has_nonzero_hours(record)
     }
     if generated_only_rows:
         has_hours_discrepancy = True
@@ -417,16 +424,16 @@ def add_store_data_to_sheet(
                     "store": store,
                     "employee_number": _employee_number(row[1]["Employee Number"]),
                     "employee_name": row[1]["Employee Name"],
-                    "centech_regular_hours": _to_float(row[1]["Regular Hours"]),
-                    "centech_overtime_hours": _to_float(row[1]["Overtime Hours"]),
-                    "qa_regular_hours": None,
-                    "qa_overtime_hours": None,
+                    "centech_regular_hours": None,
+                    "centech_overtime_hours": None,
+                    "qa_regular_hours": _to_float(row[1]["Regular Hours"]),
+                    "qa_overtime_hours": _to_float(row[1]["Overtime Hours"]),
                 })
 
     webapp_only_rows = {
         record["row"]
         for record in webapp_records
-        if not record["matched"]
+        if not record["matched"] and _has_nonzero_hours(record)
     }
     if webapp_only_rows:
         has_hours_discrepancy = True
@@ -438,10 +445,10 @@ def add_store_data_to_sheet(
                     "store": store,
                     "employee_number": _employee_number(row[1]["Employee Number"]),
                     "employee_name": None,
-                    "centech_regular_hours": None,
-                    "centech_overtime_hours": None,
-                    "qa_regular_hours": _to_float(row[1]["Regular Hours"]),
-                    "qa_overtime_hours": _to_float(row[1]["Overtime Hours"]),
+                    "centech_regular_hours": _to_float(row[1]["Regular Hours"]),
+                    "centech_overtime_hours": _to_float(row[1]["Overtime Hours"]),
+                    "qa_regular_hours": None,
+                    "qa_overtime_hours": None,
                 })
 
     if centech_tips and store in centech_tips:
