@@ -1,0 +1,6527 @@
+{
+  "store": "2006",
+  "startDate": "2026-07-13",
+  "endDate": "2026-07-26",
+  "employees": [
+    {
+      "employeeName": "victor aguirre",
+      "employeeNumber": "159552",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "11:58",
+          "adjustedStartTime": "",
+          "endTime": "20:00",
+          "adjustedEndTime": "",
+          "workedTime": "8.03"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "11:58",
+          "adjustedStartTime": "",
+          "endTime": "20:21",
+          "adjustedEndTime": "",
+          "workedTime": "8.38"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "16:59",
+          "adjustedStartTime": "",
+          "endTime": "21:41",
+          "adjustedEndTime": "",
+          "workedTime": "4.70"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "22:23",
+          "adjustedEndTime": "",
+          "workedTime": "5.35"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "11:51",
+          "adjustedStartTime": "",
+          "endTime": "17:59",
+          "adjustedEndTime": "",
+          "workedTime": "6.13"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "18:28",
+          "adjustedStartTime": "",
+          "endTime": "20:04",
+          "adjustedEndTime": "",
+          "workedTime": "1.60"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "21:20",
+          "adjustedEndTime": "",
+          "workedTime": "4.33"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "17:48",
+          "adjustedEndTime": "",
+          "workedTime": "0.80"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "11:54",
+          "adjustedStartTime": "",
+          "endTime": "17:02",
+          "adjustedEndTime": "",
+          "workedTime": "5.13"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "16:57",
+          "adjustedStartTime": "",
+          "endTime": "22:25",
+          "adjustedEndTime": "",
+          "workedTime": "5.47"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "16:43",
+          "adjustedStartTime": "",
+          "endTime": "22:19",
+          "adjustedEndTime": "",
+          "workedTime": "5.60"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Juan Barreto",
+      "employeeNumber": "161317",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Dylan Beatty",
+      "employeeNumber": "158786",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "07:25",
+          "adjustedStartTime": "",
+          "endTime": "14:23",
+          "adjustedEndTime": "",
+          "workedTime": "6.97"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "09:13",
+          "adjustedStartTime": "",
+          "endTime": "15:11",
+          "adjustedEndTime": "",
+          "workedTime": "5.97"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "16:05",
+          "adjustedStartTime": "",
+          "endTime": "21:40",
+          "adjustedEndTime": "",
+          "workedTime": "5.58"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "21:45",
+          "adjustedEndTime": "",
+          "workedTime": "4.72"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "17:42",
+          "adjustedStartTime": "",
+          "endTime": "21:50",
+          "adjustedEndTime": "",
+          "workedTime": "4.13"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "17:22",
+          "adjustedStartTime": "",
+          "endTime": "21:25",
+          "adjustedEndTime": "",
+          "workedTime": "4.05"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "12:21",
+          "adjustedStartTime": "",
+          "endTime": "19:20",
+          "adjustedEndTime": "",
+          "workedTime": "6.98"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "09:02",
+          "adjustedStartTime": "",
+          "endTime": "16:03",
+          "adjustedEndTime": "",
+          "workedTime": "7.02"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "17:09",
+          "adjustedStartTime": "",
+          "endTime": "21:38",
+          "adjustedEndTime": "",
+          "workedTime": "4.48"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "17:06",
+          "adjustedStartTime": "",
+          "endTime": "21:14",
+          "adjustedEndTime": "",
+          "workedTime": "4.13"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "21:17",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "22:19",
+          "adjustedEndTime": "",
+          "workedTime": "0.90"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Yared Bekele",
+      "employeeNumber": "161333",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "10:54",
+          "adjustedStartTime": "",
+          "endTime": "15:32",
+          "adjustedEndTime": "",
+          "workedTime": "4.63"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "16:57",
+          "adjustedStartTime": "",
+          "endTime": "19:20",
+          "adjustedEndTime": "",
+          "workedTime": "2.38"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "10:33",
+          "adjustedStartTime": "",
+          "endTime": "15:18",
+          "adjustedEndTime": "",
+          "workedTime": "4.75"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Rosadeja Calloway",
+      "employeeNumber": "161653",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "20:05",
+          "adjustedEndTime": "",
+          "workedTime": "3.08"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "18:37",
+          "adjustedEndTime": "",
+          "workedTime": "1.62"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Destiny Coston",
+      "employeeNumber": "161086",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "12:05",
+          "adjustedStartTime": "",
+          "endTime": "16:59",
+          "adjustedEndTime": "",
+          "workedTime": "4.90"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "16:34",
+          "adjustedStartTime": "",
+          "endTime": "20:19",
+          "adjustedEndTime": "",
+          "workedTime": "3.75"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "10:43",
+          "adjustedStartTime": "",
+          "endTime": "15:08",
+          "adjustedEndTime": "",
+          "workedTime": "4.42"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "11:54",
+          "adjustedStartTime": "",
+          "endTime": "17:18",
+          "adjustedEndTime": "",
+          "workedTime": "5.40"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "12:14",
+          "adjustedStartTime": "",
+          "endTime": "16:57",
+          "adjustedEndTime": "",
+          "workedTime": "4.72"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "16:57",
+          "adjustedStartTime": "",
+          "endTime": "16:57",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "12:06",
+          "adjustedStartTime": "",
+          "endTime": "17:24",
+          "adjustedEndTime": "",
+          "workedTime": "5.30"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Devon Dallas",
+      "employeeNumber": "161295",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "09:00",
+          "adjustedStartTime": "",
+          "endTime": "14:03",
+          "adjustedEndTime": "",
+          "workedTime": "5.05"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "09:00",
+          "adjustedStartTime": "",
+          "endTime": "14:00",
+          "adjustedEndTime": "",
+          "workedTime": "5.00"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "09:06",
+          "adjustedStartTime": "",
+          "endTime": "15:03",
+          "adjustedEndTime": "",
+          "workedTime": "5.95"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "12:02",
+          "adjustedStartTime": "",
+          "endTime": "16:56",
+          "adjustedEndTime": "",
+          "workedTime": "4.90"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "19:06",
+          "adjustedEndTime": "",
+          "workedTime": "2.07"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Carter Duncan",
+      "employeeNumber": "161085",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "16:58",
+          "adjustedStartTime": "",
+          "endTime": "20:01",
+          "adjustedEndTime": "",
+          "workedTime": "3.05"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "11:49",
+          "adjustedStartTime": "",
+          "endTime": "20:06",
+          "adjustedEndTime": "",
+          "workedTime": "8.28"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "22:23",
+          "adjustedEndTime": "",
+          "workedTime": "5.35"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "12:00",
+          "adjustedStartTime": "",
+          "endTime": "17:08",
+          "adjustedEndTime": "",
+          "workedTime": "5.13"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "09:03",
+          "adjustedStartTime": "",
+          "endTime": "14:40",
+          "adjustedEndTime": "",
+          "workedTime": "5.62"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "16:51",
+          "adjustedStartTime": "",
+          "endTime": "18:46",
+          "adjustedEndTime": "",
+          "workedTime": "1.92"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "19:06",
+          "adjustedStartTime": "",
+          "endTime": "22:00",
+          "adjustedEndTime": "",
+          "workedTime": "2.90"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Elise Edgar",
+      "employeeNumber": "161452",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "11:53",
+          "adjustedStartTime": "",
+          "endTime": "14:16",
+          "adjustedEndTime": "",
+          "workedTime": "5.52"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "08:51",
+          "adjustedStartTime": "",
+          "endTime": "15:13",
+          "adjustedEndTime": "",
+          "workedTime": "6.37"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "20:04",
+          "adjustedEndTime": "",
+          "workedTime": "3.07"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "10:22",
+          "adjustedStartTime": "",
+          "endTime": "15:09",
+          "adjustedEndTime": "",
+          "workedTime": "4.78"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "16:50",
+          "adjustedStartTime": "",
+          "endTime": "18:37",
+          "adjustedEndTime": "",
+          "workedTime": "1.78"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Yared Girum",
+      "employeeNumber": "160707",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Grace Glover",
+      "employeeNumber": "153966",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "laray hamilton",
+      "employeeNumber": "160291",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Abdalla Hassan",
+      "employeeNumber": "161334",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "16:57",
+          "adjustedStartTime": "",
+          "endTime": "20:41",
+          "adjustedEndTime": "",
+          "workedTime": "3.73"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "21:03",
+          "adjustedStartTime": "",
+          "endTime": "21:19",
+          "adjustedEndTime": "",
+          "workedTime": "0.27"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "John Henry",
+      "employeeNumber": "160720",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Nina Hughes",
+      "employeeNumber": "160109",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Madison Johnson",
+      "employeeNumber": "161547",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "JaMarion Lovett",
+      "employeeNumber": "161266",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "12:18",
+          "adjustedStartTime": "",
+          "endTime": "16:50",
+          "adjustedEndTime": "",
+          "workedTime": "4.53"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "09:50",
+          "adjustedStartTime": "",
+          "endTime": "15:01",
+          "adjustedEndTime": "",
+          "workedTime": "5.18"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "09:02",
+          "adjustedStartTime": "",
+          "endTime": "14:18",
+          "adjustedEndTime": "",
+          "workedTime": "5.27"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "10:26",
+          "adjustedStartTime": "",
+          "endTime": "15:11",
+          "adjustedEndTime": "",
+          "workedTime": "4.75"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Moussa Magassouba",
+      "employeeNumber": "159621",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "12:01",
+          "adjustedStartTime": "",
+          "endTime": "16:56",
+          "adjustedEndTime": "",
+          "workedTime": "4.92"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "10:36",
+          "adjustedStartTime": "",
+          "endTime": "15:21",
+          "adjustedEndTime": "",
+          "workedTime": "4.75"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "16:52",
+          "adjustedStartTime": "",
+          "endTime": "21:54",
+          "adjustedEndTime": "",
+          "workedTime": "5.03"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "09:00",
+          "adjustedStartTime": "",
+          "endTime": "14:28",
+          "adjustedEndTime": "",
+          "workedTime": "5.47"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "08:00",
+          "adjustedStartTime": "",
+          "endTime": "15:00",
+          "adjustedEndTime": "",
+          "workedTime": "7.00"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "16:52",
+          "adjustedStartTime": "",
+          "endTime": "21:49",
+          "adjustedEndTime": "",
+          "workedTime": "4.95"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Amanda Mason",
+      "employeeNumber": "160232",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "08:43",
+          "adjustedStartTime": "",
+          "endTime": "12:21",
+          "adjustedEndTime": "",
+          "workedTime": "3.63"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "05:58",
+          "adjustedStartTime": "",
+          "endTime": "14:44",
+          "adjustedEndTime": "",
+          "workedTime": "8.77"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "05:45",
+          "adjustedStartTime": "",
+          "endTime": "14:23",
+          "adjustedEndTime": "",
+          "workedTime": "8.63"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "07:00",
+          "adjustedStartTime": "",
+          "endTime": "12:02",
+          "adjustedEndTime": "",
+          "workedTime": "5.03"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "07:00",
+          "adjustedStartTime": "",
+          "endTime": "13:54",
+          "adjustedEndTime": "",
+          "workedTime": "6.90"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "07:00",
+          "adjustedStartTime": "",
+          "endTime": "13:29",
+          "adjustedEndTime": "",
+          "workedTime": "6.48"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "07:00",
+          "adjustedStartTime": "",
+          "endTime": "11:43",
+          "adjustedEndTime": "",
+          "workedTime": "4.72"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "12:20",
+          "adjustedStartTime": "",
+          "endTime": "13:53",
+          "adjustedEndTime": "",
+          "workedTime": "1.55"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "paris matteson",
+      "employeeNumber": "160344",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Harmony Mcglown",
+      "employeeNumber": "",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Mayah Mohler",
+      "employeeNumber": "156872",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Areena Myers",
+      "employeeNumber": "161048",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "16:59",
+          "adjustedStartTime": "",
+          "endTime": "22:57",
+          "adjustedEndTime": "",
+          "workedTime": "5.97"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "17:07",
+          "adjustedStartTime": "",
+          "endTime": "21:57",
+          "adjustedEndTime": "",
+          "workedTime": "4.83"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "11:59",
+          "adjustedStartTime": "",
+          "endTime": "21:14",
+          "adjustedEndTime": "",
+          "workedTime": "9.25"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "12:00",
+          "adjustedStartTime": "",
+          "endTime": "21:26",
+          "adjustedEndTime": "",
+          "workedTime": "9.43"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "08:33",
+          "adjustedStartTime": "",
+          "endTime": "14:33",
+          "adjustedEndTime": "",
+          "workedTime": "6.00"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "20:26",
+          "adjustedStartTime": "",
+          "endTime": "22:07",
+          "adjustedEndTime": "",
+          "workedTime": "1.68"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "11:52",
+          "adjustedStartTime": "",
+          "endTime": "18:32",
+          "adjustedEndTime": "",
+          "workedTime": "6.67"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "21:18",
+          "adjustedEndTime": "",
+          "workedTime": "4.27"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "16:58",
+          "adjustedStartTime": "",
+          "endTime": "22:02",
+          "adjustedEndTime": "",
+          "workedTime": "5.07"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "11:56",
+          "adjustedStartTime": "",
+          "endTime": "17:13",
+          "adjustedEndTime": "",
+          "workedTime": "5.28"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "17:51",
+          "adjustedStartTime": "",
+          "endTime": "20:21",
+          "adjustedEndTime": "",
+          "workedTime": "2.50"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "12:30",
+          "adjustedStartTime": "",
+          "endTime": "19:02",
+          "adjustedEndTime": "",
+          "workedTime": "6.53"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "20:39",
+          "adjustedStartTime": "",
+          "endTime": "22:19",
+          "adjustedEndTime": "",
+          "workedTime": "1.67"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Joseph Nguyen",
+      "employeeNumber": "157814",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "11:04",
+          "adjustedStartTime": "",
+          "endTime": "16:08",
+          "adjustedEndTime": "",
+          "workedTime": "5.07"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "11:01",
+          "adjustedStartTime": "",
+          "endTime": "15:12",
+          "adjustedEndTime": "",
+          "workedTime": "4.18"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "10:35",
+          "adjustedStartTime": "",
+          "endTime": "14:57",
+          "adjustedEndTime": "",
+          "workedTime": "4.37"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "10:37",
+          "adjustedStartTime": "",
+          "endTime": "16:04",
+          "adjustedEndTime": "",
+          "workedTime": "5.45"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "12:01",
+          "adjustedStartTime": "",
+          "endTime": "17:09",
+          "adjustedEndTime": "",
+          "workedTime": "5.13"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "10:22",
+          "adjustedStartTime": "",
+          "endTime": "12:01",
+          "adjustedEndTime": "",
+          "workedTime": "1.65"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "12:26",
+          "adjustedStartTime": "",
+          "endTime": "15:39",
+          "adjustedEndTime": "",
+          "workedTime": "3.22"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "09:00",
+          "adjustedStartTime": "",
+          "endTime": "15:21",
+          "adjustedEndTime": "",
+          "workedTime": "6.35"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "09:00",
+          "adjustedStartTime": "",
+          "endTime": "13:08",
+          "adjustedEndTime": "",
+          "workedTime": "4.13"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "13:40",
+          "adjustedStartTime": "",
+          "endTime": "15:24",
+          "adjustedEndTime": "",
+          "workedTime": "1.73"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Jada Peters",
+      "employeeNumber": "155330",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "michael philabaum",
+      "employeeNumber": "155788",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Isabelle Piazza",
+      "employeeNumber": "155420",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "devon rheubottom",
+      "employeeNumber": "161265",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "11:58",
+          "adjustedStartTime": "",
+          "endTime": "19:33",
+          "adjustedEndTime": "",
+          "workedTime": "5.03"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "16:52",
+          "adjustedStartTime": "",
+          "endTime": "21:00",
+          "adjustedEndTime": "",
+          "workedTime": "4.13"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "16:39",
+          "adjustedStartTime": "",
+          "endTime": "20:35",
+          "adjustedEndTime": "",
+          "workedTime": "3.93"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "16:47",
+          "adjustedStartTime": "",
+          "endTime": "20:17",
+          "adjustedEndTime": "",
+          "workedTime": "3.50"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "21:20",
+          "adjustedEndTime": "",
+          "workedTime": "4.30"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "17:09",
+          "adjustedStartTime": "",
+          "endTime": "21:39",
+          "adjustedEndTime": "",
+          "workedTime": "4.50"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "16:59",
+          "adjustedStartTime": "",
+          "endTime": "20:54",
+          "adjustedEndTime": "",
+          "workedTime": "3.92"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Benjamin Ruff",
+      "employeeNumber": "161216",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "eric sciance",
+      "employeeNumber": "160308",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Ethan Simmons",
+      "employeeNumber": "155750",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Ananda Sims",
+      "employeeNumber": "161112",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "16:51",
+          "adjustedStartTime": "",
+          "endTime": "20:00",
+          "adjustedEndTime": "",
+          "workedTime": "3.15"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "16:53",
+          "adjustedStartTime": "",
+          "endTime": "20:17",
+          "adjustedEndTime": "",
+          "workedTime": "3.40"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "16:36",
+          "adjustedStartTime": "",
+          "endTime": "20:00",
+          "adjustedEndTime": "",
+          "workedTime": "3.40"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "16:43",
+          "adjustedStartTime": "",
+          "endTime": "18:23",
+          "adjustedEndTime": "",
+          "workedTime": "1.67"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "18:50",
+          "adjustedStartTime": "",
+          "endTime": "20:20",
+          "adjustedEndTime": "",
+          "workedTime": "1.05"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "19:53",
+          "adjustedStartTime": "",
+          "endTime": "19:54",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "17:55",
+          "adjustedStartTime": "",
+          "endTime": "20:28",
+          "adjustedEndTime": "",
+          "workedTime": "2.55"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "10:27",
+          "adjustedStartTime": "",
+          "endTime": "15:11",
+          "adjustedEndTime": "",
+          "workedTime": "4.73"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "10:32",
+          "adjustedStartTime": "",
+          "endTime": "15:29",
+          "adjustedEndTime": "",
+          "workedTime": "4.95"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Phadra Sirmon",
+      "employeeNumber": "155356",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Deshawn Solis",
+      "employeeNumber": "159824",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "ashley stacy",
+      "employeeNumber": "160130",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "mikelleon street",
+      "employeeNumber": "156947",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "17:41",
+          "adjustedStartTime": "",
+          "endTime": "22:48",
+          "adjustedEndTime": "",
+          "workedTime": "5.12"
+        },
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "kaleb thompson",
+      "employeeNumber": "157800",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Jacob Timmons",
+      "employeeNumber": "160642",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Payton Waltz",
+      "employeeNumber": "159235",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "09:01",
+          "adjustedStartTime": "",
+          "endTime": "11:51",
+          "adjustedEndTime": "",
+          "workedTime": "2.83"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "06:55",
+          "adjustedStartTime": "",
+          "endTime": "11:51",
+          "adjustedEndTime": "",
+          "workedTime": "4.93"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "12:25",
+          "adjustedStartTime": "",
+          "endTime": "16:37",
+          "adjustedEndTime": "",
+          "workedTime": "4.20"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "06:15",
+          "adjustedStartTime": "",
+          "endTime": "14:17",
+          "adjustedEndTime": "",
+          "workedTime": "8.03"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "06:49",
+          "adjustedStartTime": "",
+          "endTime": "10:41",
+          "adjustedEndTime": "",
+          "workedTime": "9.02"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "11:17",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "15:50",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "13:13",
+          "adjustedStartTime": "",
+          "endTime": "17:10",
+          "adjustedEndTime": "",
+          "workedTime": "3.95"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "16:53",
+          "adjustedStartTime": "",
+          "endTime": "19:00",
+          "adjustedEndTime": "",
+          "workedTime": "2.12"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "19:35",
+          "adjustedStartTime": "",
+          "endTime": "22:03",
+          "adjustedEndTime": "",
+          "workedTime": "2.47"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "06:57",
+          "adjustedStartTime": "",
+          "endTime": "14:30",
+          "adjustedEndTime": "",
+          "workedTime": "7.55"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "07:00",
+          "adjustedStartTime": "",
+          "endTime": "14:51",
+          "adjustedEndTime": "",
+          "workedTime": "7.85"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "06:56",
+          "adjustedStartTime": "",
+          "endTime": "16:28",
+          "adjustedEndTime": "",
+          "workedTime": "9.53"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "11:24",
+          "adjustedStartTime": "",
+          "endTime": "16:57",
+          "adjustedEndTime": "",
+          "workedTime": "5.55"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "12:31",
+          "adjustedStartTime": "",
+          "endTime": "19:08",
+          "adjustedEndTime": "",
+          "workedTime": "6.62"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Megan Wedemeyer",
+      "employeeNumber": "161471",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "17:39",
+          "adjustedStartTime": "",
+          "endTime": "20:02",
+          "adjustedEndTime": "",
+          "workedTime": "2.38"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "18:02",
+          "adjustedStartTime": "",
+          "endTime": "21:19",
+          "adjustedEndTime": "",
+          "workedTime": "3.28"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "21:19",
+          "adjustedStartTime": "",
+          "endTime": "21:19",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "12:01",
+          "adjustedStartTime": "",
+          "endTime": "16:57",
+          "adjustedEndTime": "",
+          "workedTime": "4.93"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "17:27",
+          "adjustedStartTime": "",
+          "endTime": "22:03",
+          "adjustedEndTime": "",
+          "workedTime": "4.60"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "17:02",
+          "adjustedStartTime": "",
+          "endTime": "21:15",
+          "adjustedEndTime": "",
+          "workedTime": "4.22"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "12:01",
+          "adjustedStartTime": "",
+          "endTime": "17:03",
+          "adjustedEndTime": "",
+          "workedTime": "5.03"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "faythe woods",
+      "employeeNumber": "159228",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Jacquelyn Woods",
+      "employeeNumber": "156432",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Tayvion Wright",
+      "employeeNumber": "159999",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "11:56",
+          "adjustedStartTime": "",
+          "endTime": "16:57",
+          "adjustedEndTime": "",
+          "workedTime": "5.02"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "20:16",
+          "adjustedStartTime": "",
+          "endTime": "21:57",
+          "adjustedEndTime": "",
+          "workedTime": "1.68"
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "11:14",
+          "adjustedStartTime": "",
+          "endTime": "16:12",
+          "adjustedEndTime": "",
+          "workedTime": "4.97"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "16:42",
+          "adjustedStartTime": "",
+          "endTime": "20:02",
+          "adjustedEndTime": "",
+          "workedTime": "3.33"
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "16:48",
+          "adjustedStartTime": "",
+          "endTime": "21:45",
+          "adjustedEndTime": "",
+          "workedTime": "4.95"
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "17:00",
+          "adjustedStartTime": "",
+          "endTime": "19:10",
+          "adjustedEndTime": "",
+          "workedTime": "2.17"
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "11:50",
+          "adjustedStartTime": "",
+          "endTime": "12:13",
+          "adjustedEndTime": "",
+          "workedTime": "0.38"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "12:36",
+          "adjustedStartTime": "",
+          "endTime": "21:54",
+          "adjustedEndTime": "",
+          "workedTime": "9.30"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "21:56",
+          "adjustedStartTime": "",
+          "endTime": "22:03",
+          "adjustedEndTime": "",
+          "workedTime": "0.12"
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "17:51",
+          "adjustedEndTime": "",
+          "workedTime": "0.85"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "17:54",
+          "adjustedStartTime": "",
+          "endTime": "21:25",
+          "adjustedEndTime": "",
+          "workedTime": "3.52"
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "16:52",
+          "adjustedStartTime": "",
+          "endTime": "21:20",
+          "adjustedEndTime": "",
+          "workedTime": "4.47"
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "17:01",
+          "adjustedStartTime": "",
+          "endTime": "19:30",
+          "adjustedEndTime": "",
+          "workedTime": "2.48"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "21:27",
+          "adjustedStartTime": "",
+          "endTime": "22:03",
+          "adjustedEndTime": "",
+          "workedTime": "0.60"
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "17:07",
+          "adjustedStartTime": "",
+          "endTime": "21:39",
+          "adjustedEndTime": "",
+          "workedTime": "4.53"
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "13:56",
+          "adjustedStartTime": "",
+          "endTime": "17:07",
+          "adjustedEndTime": "",
+          "workedTime": "3.18"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "17:38",
+          "adjustedStartTime": "",
+          "endTime": "21:15",
+          "adjustedEndTime": "",
+          "workedTime": "3.62"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "21:17",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "11:41",
+          "adjustedStartTime": "",
+          "endTime": "14:16",
+          "adjustedEndTime": "",
+          "workedTime": "2.58"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "17:14",
+          "adjustedStartTime": "",
+          "endTime": "17:14",
+          "adjustedEndTime": "",
+          "workedTime": "0.00"
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "16:47",
+          "adjustedStartTime": "",
+          "endTime": "20:00",
+          "adjustedEndTime": "",
+          "workedTime": "3.22"
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    },
+    {
+      "employeeName": "Grace Young",
+      "employeeNumber": "159479",
+      "payPeriod": "07/13/2026 - 07/26/2026",
+      "status": "success",
+      "timeclocks": [
+        {
+          "date": "07/13/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/14/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/15/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/16/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/17/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/18/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/19/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/20/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/21/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/22/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/23/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/24/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/25/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        },
+        {
+          "date": "07/26/2026",
+          "startTime": "",
+          "adjustedStartTime": "",
+          "endTime": "",
+          "adjustedEndTime": "",
+          "workedTime": ""
+        }
+      ]
+    }
+  ]
+}
