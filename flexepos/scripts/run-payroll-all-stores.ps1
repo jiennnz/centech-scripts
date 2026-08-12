@@ -108,6 +108,8 @@ try {
             $session = $sessionFiles |
                 Where-Object { $_ -notin $usedSessions } |
                 Select-Object -First 1
+            $staleProgressPath = Join-Path $outputDirectory "$store\payroll_progress.json"
+            Remove-Item $staleProgressPath -Force -ErrorAction SilentlyContinue
 
             $job = Start-Job -ArgumentList @(
                 $repoRoot,
@@ -142,7 +144,50 @@ try {
 
             $job | Add-Member -NotePropertyName PayrollStore -NotePropertyValue $store
             $job | Add-Member -NotePropertyName PayrollSession -NotePropertyValue $session
+            $progressId = 11 + [array]::IndexOf($sessionFiles, $session)
+            $job | Add-Member -NotePropertyName PayrollProgressId -NotePropertyValue $progressId
+            $job | Add-Member -NotePropertyName PayrollCompletedEmployees -NotePropertyValue 0
+            $job | Add-Member -NotePropertyName PayrollTotalEmployees -NotePropertyValue 0
+            $job | Add-Member -NotePropertyName PayrollEmployeeStatus -NotePropertyValue 'starting'
             $activeJobs += $job
+        }
+
+        $currentFinishedCount = $completedStores.Count + $failedStores.Count
+        $currentOverallPercent = [math]::Floor(($currentFinishedCount / $stores.Count) * 100)
+        Write-Progress `
+            -Id 1 `
+            -Activity 'Scraping payroll timeclocks' `
+            -Status "$currentFinishedCount of $($stores.Count) complete; $($failedStores.Count) failed" `
+            -PercentComplete $currentOverallPercent
+
+        foreach ($activeJob in @($activeJobs)) {
+            $progressPath = Join-Path $outputDirectory "$($activeJob.PayrollStore)\payroll_progress.json"
+            if (Test-Path $progressPath) {
+                try {
+                    $storeProgress = Get-Content $progressPath -Raw | ConvertFrom-Json
+                    $activeJob.PayrollCompletedEmployees = [int]$storeProgress.completedEmployees
+                    $activeJob.PayrollTotalEmployees = [int]$storeProgress.totalEmployees
+                    $activeJob.PayrollEmployeeStatus = [string]$storeProgress.status
+                }
+                catch {
+                    # The worker may be replacing the progress file while it is read.
+                }
+            }
+
+            $employeePercent = if ($activeJob.PayrollTotalEmployees -gt 0) {
+                [math]::Floor(
+                    ($activeJob.PayrollCompletedEmployees / $activeJob.PayrollTotalEmployees) * 100
+                )
+            }
+            else {
+                0
+            }
+            Write-Progress `
+                -Id $activeJob.PayrollProgressId `
+                -ParentId 1 `
+                -Activity "Store $($activeJob.PayrollStore)" `
+                -Status "$($activeJob.PayrollCompletedEmployees)/$($activeJob.PayrollTotalEmployees) employees; $($activeJob.PayrollEmployeeStatus)" `
+                -PercentComplete $employeePercent
         }
 
         $finishedJobs = @(Wait-Job -Job $activeJobs -Any -Timeout 1)
@@ -182,6 +227,11 @@ try {
             }
 
             Remove-Job -Job $finishedJob -Force
+            Write-Progress `
+                -Id $finishedJob.PayrollProgressId `
+                -ParentId 1 `
+                -Activity "Store $($finishedJob.PayrollStore)" `
+                -Completed
             $activeJobs = @($activeJobs | Where-Object { $_.Id -ne $finishedJob.Id })
         }
 
@@ -189,13 +239,14 @@ try {
         $percent = [math]::Floor(($finishedCount / $stores.Count) * 100)
         $activeStoreLabels = @($activeJobs | ForEach-Object { $_.PayrollStore }) -join ', '
         Write-Progress `
+            -Id 1 `
             -Activity 'Scraping payroll timeclocks' `
             -Status "$finishedCount of $($stores.Count) complete; $($failedStores.Count) failed; active: $activeStoreLabels" `
             -PercentComplete $percent
     }
 }
 finally {
-    Write-Progress -Activity 'Scraping payroll timeclocks' -Completed
+    Write-Progress -Id 1 -Activity 'Scraping payroll timeclocks' -Completed
     foreach ($job in @($activeJobs)) {
         Stop-Job -Job $job -ErrorAction SilentlyContinue
         Remove-Job -Job $job -Force -ErrorAction SilentlyContinue

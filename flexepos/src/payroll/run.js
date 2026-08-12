@@ -173,11 +173,24 @@ async function scrapeResults(page, args) {
   };
 }
 
-async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employeeTimings = []) {
+async function scrapeEmployeeTimeclocks(
+  page,
+  employees,
+  args,
+  debugDir,
+  employeeTimings = [],
+  onProgress = async () => {}
+) {
   const records = [];
-  for (const employee of employees) {
+  for (const [employeeIndex, employee] of employees.entries()) {
     const employeeStartedAt = process.hrtime.bigint();
     const employeeLabel = employee.employeeNumber || employee.employeeName;
+    await onProgress({
+      completedEmployees: employeeIndex,
+      totalEmployees: employees.length,
+      status: "scraping",
+      attempt: 1
+    });
     if (!employee.href) {
       const durationMs = elapsedMs(employeeStartedAt);
       records.push({
@@ -190,6 +203,12 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employe
       });
       employeeTimings.push({ employee: employeeLabel, status: "no_employee_link", durationMs });
       console.log(`[timeclocks] ${employeeLabel} no link (${formatDuration(durationMs)})`);
+      await onProgress({
+        completedEmployees: employeeIndex + 1,
+        totalEmployees: employees.length,
+        status: "no_employee_link",
+        attempt: 1
+      });
       continue;
     }
     let completed = false;
@@ -248,11 +267,23 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employe
         });
         employeeTimings.push({ employee: employeeLabel, status: "success", attempts: attempt, durationMs });
         console.log(`[timeclocks] ${employeeLabel} (${formatDuration(durationMs)}, attempt ${attempt})`);
+        await onProgress({
+          completedEmployees: employeeIndex + 1,
+          totalEmployees: employees.length,
+          status: "success",
+          attempt
+        });
         completed = true;
       } catch (error) {
         lastError = error;
         if (attempt < 2) {
           console.warn(`[timeclocks] ${employeeLabel} attempt ${attempt} failed; retrying.`);
+          await onProgress({
+            completedEmployees: employeeIndex,
+            totalEmployees: employees.length,
+            status: "retrying",
+            attempt: attempt + 1
+          });
         }
       }
     }
@@ -275,6 +306,12 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employe
       const safeEmployee = `${employee.employeeNumber || employee.employeeName}`.replace(/[^0-9A-Za-z_-]/g, "_");
       await page.screenshot({ path: path.join(debugDir, `employee_${safeEmployee}.png`), fullPage: true }).catch(() => {});
       await fs.writeFile(path.join(debugDir, `employee_${safeEmployee}.html`), await page.content(), "utf8").catch(() => {});
+      await onProgress({
+        completedEmployees: employeeIndex + 1,
+        totalEmployees: employees.length,
+        status: "failed",
+        attempt: 2
+      });
     }
   }
   return records;
@@ -291,6 +328,7 @@ async function run() {
   const summaryPath = path.join(outputDir, "payroll_summary.json");
   const timeclocksPath = path.join(outputDir, "employee_timeclocks.json");
   const benchmarkPath = path.join(outputDir, "payroll_benchmark.json");
+  const progressPath = path.join(outputDir, "payroll_progress.json");
   const benchmark = {
     store: args.store,
     startDate: args.start,
@@ -330,8 +368,21 @@ async function run() {
     console.log(`[benchmark] Payroll summary: ${formatDuration(benchmark.payrollSummaryMs)}`);
 
     timeclocksStartedAt = process.hrtime.bigint();
+    const saveProgress = (progress) => fs.writeFile(progressPath, JSON.stringify({
+      store: args.store,
+      startDate: args.start,
+      endDate: args.end,
+      ...progress,
+      updatedAt: new Date().toISOString()
+    }, null, 2) + "\n", "utf8");
+    await saveProgress({
+      completedEmployees: 0,
+      totalEmployees: result.employees.length,
+      status: "starting_timeclocks",
+      attempt: 1
+    });
     const timeclocks = await scrapeEmployeeTimeclocks(
-      page, result.employees, args, debugDir, benchmark.employees
+      page, result.employees, args, debugDir, benchmark.employees, saveProgress
     );
     benchmark.timeclocksMs = elapsedMs(timeclocksStartedAt);
     console.log(`[benchmark] All timeclocks: ${formatDuration(benchmark.timeclocksMs)}`);
@@ -345,6 +396,13 @@ async function run() {
     console.log(`Payroll summary : ${summaryPath}`);
     console.log(`Timeclocks JSON : ${timeclocksPath}`);
     const failedEmployees = timeclocks.filter((record) => record.status === "failed");
+    await saveProgress({
+      completedEmployees: timeclocks.length,
+      totalEmployees: result.employees.length,
+      failedEmployees: failedEmployees.length,
+      status: failedEmployees.length > 0 ? "completed_with_errors" : "completed",
+      attempt: null
+    });
     if (failedEmployees.length > 0) {
       throw new Error(`${failedEmployees.length} employee timeclock scrape(s) failed after retrying.`);
     }

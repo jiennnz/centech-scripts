@@ -99,6 +99,9 @@ npm --prefix flexepos run payroll:all -- 2026-07-27 2026-08-09
 
 An optional third argument overrides the run date; otherwise it defaults to
 today.
+The overall progress bar has one child bar for each active session/store. Each
+child advances after an employee reaches a terminal result. Current state is
+also written to each store's `payroll_progress.json`.
 
 ## Command Checklist
 
