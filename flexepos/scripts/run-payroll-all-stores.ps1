@@ -53,18 +53,51 @@ if ($stores.Count -eq 0) {
 $outputDirectory = Join-Path $repoRoot "flexepos\runs\$RunDate\${StartDate}_${EndDate}\payroll"
 New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 
-$queue = [System.Collections.Queue]::new()
+$completedStores = @()
+$pendingStores = @()
 foreach ($store in $stores) {
+    $storeDirectory = Join-Path $outputDirectory $store
+    $summaryPath = Join-Path $storeDirectory 'payroll_summary.json'
+    $timeclocksPath = Join-Path $storeDirectory 'employee_timeclocks.json'
+    $isComplete = $false
+
+    if ((Test-Path $summaryPath) -and (Test-Path $timeclocksPath)) {
+        try {
+            $summary = Get-Content $summaryPath -Raw | ConvertFrom-Json
+            $timeclockData = Get-Content $timeclocksPath -Raw | ConvertFrom-Json
+            $employeeRecords = @($timeclockData.employees)
+            $failedRecords = @($employeeRecords | Where-Object { $_.status -eq 'failed' })
+            $isComplete = (
+                $summary.employeeCount -gt 0 -and
+                $employeeRecords.Count -eq $summary.employeeCount -and
+                $failedRecords.Count -eq 0
+            )
+        }
+        catch {
+            $isComplete = $false
+        }
+    }
+
+    if ($isComplete) {
+        $completedStores += $store
+    }
+    else {
+        $pendingStores += $store
+    }
+}
+
+$queue = [System.Collections.Queue]::new()
+foreach ($store in $pendingStores) {
     $queue.Enqueue($store)
 }
 
 $timer = [System.Diagnostics.Stopwatch]::StartNew()
 $activeJobs = @()
-$completedStores = @()
 $failedStores = @()
 
 Write-Host "Payroll scrape: $StartDate through $EndDate"
 Write-Host "Stores: $($stores.Count); concurrent sessions: 2"
+Write-Host "Resuming: $($completedStores.Count) complete; $($pendingStores.Count) remaining"
 Write-Host 'Press Ctrl+C to cancel.'
 
 try {

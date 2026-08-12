@@ -173,20 +173,8 @@ async function scrapeResults(page, args) {
   };
 }
 
-async function browserBackTo(page, locator, description) {
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    await page.goBack({ waitUntil: "domcontentloaded" }).catch(() => null);
-    if (await locator.count()) {
-      await locator.first().waitFor({ state: "visible", timeout: 10000 });
-      return;
-    }
-  }
-  throw new Error(`Browser Back did not return to ${description}.`);
-}
-
 async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employeeTimings = []) {
   const records = [];
-  const payrollHeading = page.getByText(new RegExp(`Store\\s+${args.store}\\s+payroll`, "i"));
   for (const employee of employees) {
     const employeeStartedAt = process.hrtime.bigint();
     const employeeLabel = employee.employeeNumber || employee.employeeName;
@@ -204,76 +192,89 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employe
       console.log(`[timeclocks] ${employeeLabel} no link (${formatDuration(durationMs)})`);
       continue;
     }
-    try {
-      const link = page.getByRole("link", { name: employee.employeeName, exact: true }).first();
-      await link.waitFor({ state: "visible", timeout: 10000 });
-      await Promise.all([
-        page.waitForLoadState("domcontentloaded").catch(() => {}),
-        link.click()
-      ]);
+    let completed = false;
+    let lastError = null;
+    for (let attempt = 1; attempt <= 2 && !completed; attempt += 1) {
+      try {
+        await page.goto(employee.href, { waitUntil: "domcontentloaded", timeout: 20000 });
+        const adjust = page.locator("input[type='submit'][value='Adjust Time']").first();
+        await adjust.waitFor({ state: "visible", timeout: 20000 });
+        await Promise.all([
+          page.waitForLoadState("domcontentloaded").catch(() => {}),
+          adjust.click()
+        ]);
+        await page.getByText("Adjusted Start Time", { exact: true }).first()
+          .waitFor({ state: "visible", timeout: 20000 });
 
-      const adjust = page.locator("input[type='submit'][value='Adjust Time']").first();
-      await adjust.waitFor({ state: "visible", timeout: 10000 });
-      await Promise.all([
-        page.waitForLoadState("domcontentloaded").catch(() => {}),
-        adjust.click()
-      ]);
-      await page.getByText("Adjusted Start Time", { exact: true }).first()
-        .waitFor({ state: "visible", timeout: 10000 });
+        const detail = await page.locator("table").evaluateAll((tables) => {
+          const text = (node) => (node?.textContent || "").replace(/\s+/g, " ").trim();
+          const wanted = ["Date", "Start Time", "Adjusted Start Time", "End Time", "Adjusted End Time", "Worked Time"];
+          for (const table of tables) {
+            const rows = [...table.querySelectorAll("tr")];
+            const headerIndex = rows.findIndex((tr) => {
+              const cells = [...tr.cells].map(text);
+              return wanted.every((heading) => cells.includes(heading));
+            });
+            if (headerIndex < 0) continue;
+            return rows.slice(headerIndex + 1).map((tr) => [...tr.cells].map(text).slice(0, wanted.length))
+              .filter((cells) => cells.length && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cells[0]));
+          }
+          return null;
+        });
+        if (!detail) throw new Error("Adjust Time table was not found.");
 
-      const detail = await page.locator("table").evaluateAll((tables) => {
-        const text = (node) => (node?.textContent || "").replace(/\s+/g, " ").trim();
-        const wanted = ["Date", "Start Time", "Adjusted Start Time", "End Time", "Adjusted End Time", "Worked Time"];
-        for (const table of tables) {
-          const rows = [...table.querySelectorAll("tr")];
-          const headerIndex = rows.findIndex((tr) => {
-            const cells = [...tr.cells].map(text);
-            return wanted.every((heading) => cells.includes(heading));
-          });
-          if (headerIndex < 0) continue;
-          return rows.slice(headerIndex + 1).map((tr) => [...tr.cells].map(text).slice(0, wanted.length))
-            .filter((cells) => cells.length && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(cells[0]));
+        const bodyText = clean(await page.locator("body").innerText());
+        const payPeriodMatch = bodyText.match(/Pay period:\s*(\d{1,2}\/\d{1,2}\/\d{4}\s*-\s*\d{1,2}\/\d{1,2}\/\d{4})/i);
+        const expectedPayPeriod = `${flexDate(args.start)} - ${flexDate(args.end)}`;
+        if (!payPeriodMatch || payPeriodMatch[1] !== expectedPayPeriod) {
+          throw new Error(`Employee pay period mismatch; expected ${expectedPayPeriod}.`);
         }
-        return null;
-      });
-      if (!detail) throw new Error("Adjust Time table was not found.");
-
-      const bodyText = clean(await page.locator("body").innerText());
-      const payPeriodMatch = bodyText.match(/Pay period:\s*(\d{1,2}\/\d{1,2}\/\d{4}\s*-\s*\d{1,2}\/\d{1,2}\/\d{4})/i);
-      const expectedPayPeriod = `${flexDate(args.start)} - ${flexDate(args.end)}`;
-      if (!payPeriodMatch || payPeriodMatch[1] !== expectedPayPeriod) {
-        throw new Error(`Employee pay period mismatch; expected ${expectedPayPeriod}.`);
+        const durationMs = elapsedMs(employeeStartedAt);
+        records.push({
+          employeeName: employee.employeeName,
+          employeeNumber: employee.employeeNumber,
+          payPeriod: payPeriodMatch[1],
+          status: "success",
+          attempts: attempt,
+          durationMs,
+          timeclocks: detail.map((cells) => ({
+            date: cells[0] || "",
+            startTime: cells[1] || "",
+            adjustedStartTime: cells[2] || "",
+            endTime: cells[3] || "",
+            adjustedEndTime: cells[4] || "",
+            workedTime: cells[5] || ""
+          }))
+        });
+        employeeTimings.push({ employee: employeeLabel, status: "success", attempts: attempt, durationMs });
+        console.log(`[timeclocks] ${employeeLabel} (${formatDuration(durationMs)}, attempt ${attempt})`);
+        completed = true;
+      } catch (error) {
+        lastError = error;
+        if (attempt < 2) {
+          console.warn(`[timeclocks] ${employeeLabel} attempt ${attempt} failed; retrying.`);
+        }
       }
-      const record = {
+    }
+
+    if (!completed) {
+      const durationMs = elapsedMs(employeeStartedAt);
+      const errorMessage = lastError?.message || "Timeclock scrape failed.";
+      records.push({
         employeeName: employee.employeeName,
         employeeNumber: employee.employeeNumber,
-        payPeriod: payPeriodMatch[1],
-        status: "success",
-        timeclocks: detail.map((cells) => ({
-          date: cells[0] || "",
-          startTime: cells[1] || "",
-          adjustedStartTime: cells[2] || "",
-          endTime: cells[3] || "",
-          adjustedEndTime: cells[4] || "",
-          workedTime: cells[5] || ""
-        }))
-      };
-
-      await browserBackTo(page, page.getByText(/worked hours/i), "the employee hours page");
-      await browserBackTo(page, payrollHeading, "the store payroll summary");
-      const durationMs = elapsedMs(employeeStartedAt);
-      record.durationMs = durationMs;
-      records.push(record);
-      employeeTimings.push({ employee: employeeLabel, status: "success", durationMs });
-      console.log(`[timeclocks] ${employeeLabel} (${formatDuration(durationMs)})`);
-    } catch (error) {
-      const durationMs = elapsedMs(employeeStartedAt);
-      employeeTimings.push({ employee: employeeLabel, status: "failed", durationMs, error: error.message });
+        payPeriod: `${flexDate(args.start)} - ${flexDate(args.end)}`,
+        status: "failed",
+        attempts: 2,
+        durationMs,
+        error: errorMessage,
+        timeclocks: []
+      });
+      employeeTimings.push({ employee: employeeLabel, status: "failed", attempts: 2, durationMs, error: errorMessage });
       console.error(`[timeclocks] ${employeeLabel} failed after ${formatDuration(durationMs)}`);
       const safeEmployee = `${employee.employeeNumber || employee.employeeName}`.replace(/[^0-9A-Za-z_-]/g, "_");
       await page.screenshot({ path: path.join(debugDir, `employee_${safeEmployee}.png`), fullPage: true }).catch(() => {});
       await fs.writeFile(path.join(debugDir, `employee_${safeEmployee}.html`), await page.content(), "utf8").catch(() => {});
-      throw new Error(`Could not scrape timeclocks for employee ${employee.employeeNumber || employee.employeeName}: ${error.message}`);
     }
   }
   return records;
@@ -343,6 +344,10 @@ async function run() {
     console.log(`Payroll CSV     : ${outputPath}`);
     console.log(`Payroll summary : ${summaryPath}`);
     console.log(`Timeclocks JSON : ${timeclocksPath}`);
+    const failedEmployees = timeclocks.filter((record) => record.status === "failed");
+    if (failedEmployees.length > 0) {
+      throw new Error(`${failedEmployees.length} employee timeclock scrape(s) failed after retrying.`);
+    }
   } catch (error) {
     const base = `${args.store}_${args.start}_${args.end}`;
     await page?.screenshot({ path: path.join(debugDir, `${base}.png`), fullPage: true }).catch(() => {});
