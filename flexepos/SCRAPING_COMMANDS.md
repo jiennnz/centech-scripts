@@ -84,6 +84,12 @@ checks `Calculate Overtime` before submitting:
 npm --prefix flexepos run payroll -- --store STORE --start START-DATE --end END-DATE --mode headless --auth-state flexepos/.auth/session-4.json --output-dir runs/RUN-DATE/START-DATE_END-DATE/payroll
 ```
 
+The payroll command prints authentication, payroll-summary, per-employee
+timeclock, aggregate timeclock, and total durations. It also writes
+`payroll_benchmark.json` to the output directory so timings from multiple runs
+can be compared later. Per-employee `durationMs` values are included in
+`employee_timeclocks.json`.
+
 ## Command Checklist
 
 Before returning a command, verify:

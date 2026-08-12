@@ -46,6 +46,19 @@ function clean(value) {
   return String(value ?? "").replace(/\s+/g, " ").trim();
 }
 
+function elapsedMs(startedAt) {
+  return Number(process.hrtime.bigint() - startedAt) / 1_000_000;
+}
+
+function formatDuration(durationMs) {
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return minutes > 0
+    ? `${minutes}m ${seconds}s`
+    : `${(durationMs / 1000).toFixed(3)}s`;
+}
+
 function csvValue(value) {
   const text = String(value ?? "");
   return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
@@ -171,18 +184,24 @@ async function browserBackTo(page, locator, description) {
   throw new Error(`Browser Back did not return to ${description}.`);
 }
 
-async function scrapeEmployeeTimeclocks(page, employees, args, debugDir) {
+async function scrapeEmployeeTimeclocks(page, employees, args, debugDir, employeeTimings = []) {
   const records = [];
   const payrollHeading = page.getByText(new RegExp(`Store\\s+${args.store}\\s+payroll`, "i"));
   for (const employee of employees) {
+    const employeeStartedAt = process.hrtime.bigint();
+    const employeeLabel = employee.employeeNumber || employee.employeeName;
     if (!employee.href) {
+      const durationMs = elapsedMs(employeeStartedAt);
       records.push({
         employeeName: employee.employeeName,
         employeeNumber: employee.employeeNumber,
         payPeriod: `${flexDate(args.start)} - ${flexDate(args.end)}`,
         status: "no_employee_link",
+        durationMs,
         timeclocks: []
       });
+      employeeTimings.push({ employee: employeeLabel, status: "no_employee_link", durationMs });
+      console.log(`[timeclocks] ${employeeLabel} no link (${formatDuration(durationMs)})`);
       continue;
     }
     try {
@@ -225,7 +244,7 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir) {
       if (!payPeriodMatch || payPeriodMatch[1] !== expectedPayPeriod) {
         throw new Error(`Employee pay period mismatch; expected ${expectedPayPeriod}.`);
       }
-      records.push({
+      const record = {
         employeeName: employee.employeeName,
         employeeNumber: employee.employeeNumber,
         payPeriod: payPeriodMatch[1],
@@ -238,12 +257,19 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir) {
           adjustedEndTime: cells[4] || "",
           workedTime: cells[5] || ""
         }))
-      });
+      };
 
       await browserBackTo(page, page.getByText(/worked hours/i), "the employee hours page");
       await browserBackTo(page, payrollHeading, "the store payroll summary");
-      console.log(`[timeclocks] ${employee.employeeNumber || employee.employeeName}`);
+      const durationMs = elapsedMs(employeeStartedAt);
+      record.durationMs = durationMs;
+      records.push(record);
+      employeeTimings.push({ employee: employeeLabel, status: "success", durationMs });
+      console.log(`[timeclocks] ${employeeLabel} (${formatDuration(durationMs)})`);
     } catch (error) {
+      const durationMs = elapsedMs(employeeStartedAt);
+      employeeTimings.push({ employee: employeeLabel, status: "failed", durationMs, error: error.message });
+      console.error(`[timeclocks] ${employeeLabel} failed after ${formatDuration(durationMs)}`);
       const safeEmployee = `${employee.employeeNumber || employee.employeeName}`.replace(/[^0-9A-Za-z_-]/g, "_");
       await page.screenshot({ path: path.join(debugDir, `employee_${safeEmployee}.png`), fullPage: true }).catch(() => {});
       await fs.writeFile(path.join(debugDir, `employee_${safeEmployee}.html`), await page.content(), "utf8").catch(() => {});
@@ -254,6 +280,7 @@ async function scrapeEmployeeTimeclocks(page, employees, args, debugDir) {
 }
 
 async function run() {
+  const runStartedAt = process.hrtime.bigint();
   const args = parseArgs(process.argv.slice(2));
   const repoRoot = path.resolve(__dirname, "..", "..", "..");
   const outputDir = path.resolve(args.outputDir || path.join(repoRoot, "flexepos", "runs", `${args.start}_${args.end}`, "payroll"));
@@ -262,11 +289,31 @@ async function run() {
   const outputPath = path.join(outputDir, "payroll.csv");
   const summaryPath = path.join(outputDir, "payroll_summary.json");
   const timeclocksPath = path.join(outputDir, "employee_timeclocks.json");
-  const { browser, page } = await openAuthenticatedContext({
-    statePath: path.resolve(repoRoot, args.authState || "flexepos/.auth/session-4.json"),
-    headless: args.mode === "headless"
-  });
+  const benchmarkPath = path.join(outputDir, "payroll_benchmark.json");
+  const benchmark = {
+    store: args.store,
+    startDate: args.start,
+    endDate: args.end,
+    startedAt: new Date().toISOString(),
+    authenticationMs: null,
+    payrollSummaryMs: null,
+    timeclocksMs: null,
+    totalMs: null,
+    employees: []
+  };
+  let browser;
+  let page;
+  let timeclocksStartedAt;
   try {
+    const authenticationStartedAt = process.hrtime.bigint();
+    ({ browser, page } = await openAuthenticatedContext({
+      statePath: path.resolve(repoRoot, args.authState || "flexepos/.auth/session-4.json"),
+      headless: args.mode === "headless"
+    }));
+    benchmark.authenticationMs = elapsedMs(authenticationStartedAt);
+    console.log(`[benchmark] Authentication: ${formatDuration(benchmark.authenticationMs)}`);
+
+    const payrollSummaryStartedAt = process.hrtime.bigint();
     const reportUrl = await locatePayroll(page, args.reportUrl);
     await page.goto(reportUrl, { waitUntil: "domcontentloaded" });
     await fillParameters(page, args);
@@ -278,7 +325,15 @@ async function run() {
       store: args.store, startDate: args.start, endDate: args.end,
       employeeCount: result.rows.length, averageWages: result.averageWages, total: result.total
     }, null, 2) + "\n", "utf8");
-    const timeclocks = await scrapeEmployeeTimeclocks(page, result.employees, args, debugDir);
+    benchmark.payrollSummaryMs = elapsedMs(payrollSummaryStartedAt);
+    console.log(`[benchmark] Payroll summary: ${formatDuration(benchmark.payrollSummaryMs)}`);
+
+    timeclocksStartedAt = process.hrtime.bigint();
+    const timeclocks = await scrapeEmployeeTimeclocks(
+      page, result.employees, args, debugDir, benchmark.employees
+    );
+    benchmark.timeclocksMs = elapsedMs(timeclocksStartedAt);
+    console.log(`[benchmark] All timeclocks: ${formatDuration(benchmark.timeclocksMs)}`);
     await fs.writeFile(timeclocksPath, JSON.stringify({
       store: args.store,
       startDate: args.start,
@@ -290,11 +345,21 @@ async function run() {
     console.log(`Timeclocks JSON : ${timeclocksPath}`);
   } catch (error) {
     const base = `${args.store}_${args.start}_${args.end}`;
-    await page.screenshot({ path: path.join(debugDir, `${base}.png`), fullPage: true }).catch(() => {});
-    await fs.writeFile(path.join(debugDir, `${base}.html`), await page.content(), "utf8").catch(() => {});
+    await page?.screenshot({ path: path.join(debugDir, `${base}.png`), fullPage: true }).catch(() => {});
+    if (page) {
+      await fs.writeFile(path.join(debugDir, `${base}.html`), await page.content(), "utf8").catch(() => {});
+    }
     throw error;
   } finally {
-    await browser.close();
+    if (timeclocksStartedAt && benchmark.timeclocksMs === null) {
+      benchmark.timeclocksMs = elapsedMs(timeclocksStartedAt);
+    }
+    benchmark.totalMs = elapsedMs(runStartedAt);
+    benchmark.finishedAt = new Date().toISOString();
+    await fs.writeFile(benchmarkPath, JSON.stringify(benchmark, null, 2) + "\n", "utf8").catch(() => {});
+    console.log(`[benchmark] Total: ${formatDuration(benchmark.totalMs)}`);
+    console.log(`Benchmark JSON  : ${benchmarkPath}`);
+    await browser?.close();
   }
 }
 
