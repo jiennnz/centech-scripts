@@ -118,7 +118,13 @@ try {
                 continue
             }
 
-            $jobOutput = @(Receive-Job -Job $finishedJob)
+            $receiveErrors = @()
+            $jobOutput = @(
+                Receive-Job `
+                    -Job $finishedJob `
+                    -ErrorAction SilentlyContinue `
+                    -ErrorVariable +receiveErrors
+            )
             $result = $jobOutput |
                 Where-Object { $_.PayrollResult -eq $true } |
                 Select-Object -Last 1
@@ -131,6 +137,15 @@ try {
                 $failedStore = if ($null -ne $result) { [string]$result.Store } else { [string]$finishedJob.PayrollStore }
                 $failedStores += $failedStore
                 Write-Warning "Store $failedStore failed; continuing."
+                if ($receiveErrors.Count -gt 0) {
+                    $failureDetail = $receiveErrors |
+                        ForEach-Object { $_.Exception.Message } |
+                        Where-Object { $_ -and $_ -notmatch '^npm warn Unknown env config' } |
+                        Select-Object -Last 1
+                    if ($failureDetail) {
+                        Write-Warning $failureDetail
+                    }
+                }
             }
 
             Remove-Job -Job $finishedJob -Force
