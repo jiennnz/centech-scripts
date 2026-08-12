@@ -90,6 +90,16 @@ timeclock, aggregate timeclock, and total durations. It also writes
 can be compared later. Per-employee `durationMs` values are included in
 `employee_timeclocks.json`.
 
+To scrape every Century store with two concurrent local sessions, a live
+progress bar, per-store benchmarks, and an overall benchmark, run:
+
+```powershell
+npm --prefix flexepos run payroll:all -- 2026-07-27 2026-08-09
+```
+
+An optional third argument overrides the run date; otherwise it defaults to
+today.
+
 ## Command Checklist
 
 Before returning a command, verify:
